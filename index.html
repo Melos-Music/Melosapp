@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#34c759">
 <title>Melos</title>
 <style>
@@ -717,7 +717,13 @@ const QUEUE=[
 ];
 
 function getSupportedMime(){
-  const t=['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm','video/mp4'];
+  const t=[
+    'video/mp4;codecs=avc1,mp4a.40.2',
+    'video/mp4',
+    'video/webm;codecs=vp9,opus',
+    'video/webm;codecs=vp8,opus',
+    'video/webm'
+  ];
   return t.find(m=>MediaRecorder.isTypeSupported(m))||'';
 }
 function fmtTime(s){return `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`}
@@ -971,18 +977,26 @@ async function renderLibrary(){
 function dlVideo(v){
   const blob=new Blob([v.data],{type:v.mimeType});
   const url=URL.createObjectURL(blob);
-  // iOSはa.click()が効かないのでwindow.openを使う
   const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
+  const d=new Date(v.timestamp);
+  const fname=`rec_${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}_${String(d.getHours()).padStart(2,'0')}${String(d.getMinutes()).padStart(2,'0')}.${v.ext}`;
+
   if(isIOS){
-    // プレビューを開いて長押し保存を案内
-    openPreview(v);
-    showToast('動画を長押し→「ビデオを保存」');
+    // iOSは共有シートで「写真に保存」できる
+    if(navigator.share && navigator.canShare && navigator.canShare({files:[new File([blob],fname,{type:v.mimeType})]})){
+      const file=new File([blob],fname,{type:v.mimeType});
+      navigator.share({files:[file],title:'録画'})
+        .then(()=>showToast('保存しました ✓'))
+        .catch(()=>showToast('キャンセルしました'));
+    } else {
+      // フォールバック: ブラウザで開く → 長押し保存
+      window.open(url,'_blank');
+      showToast('動画を長押し → 保存');
+    }
     return;
   }
   const a=document.createElement('a');
-  const d=new Date(v.timestamp);
-  a.href=url;
-  a.download=`rec_${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}_${String(d.getHours()).padStart(2,'0')}${String(d.getMinutes()).padStart(2,'0')}.${v.ext}`;
+  a.href=url; a.download=fname;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
