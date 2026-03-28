@@ -578,16 +578,6 @@ box-shadow:0 4px 20px rgba(52,199,89,0.2);
 
   </div><!-- /scroll-body -->
 
-  <!-- REC indicator bar -->
-
-  <div class="rec-indicator" id="recIndicator">
-    <div class="rec-indicator-inner">
-      <div class="rec-dot-blink"></div>
-      <div class="rec-label">REC</div>
-      <div class="rec-timer-label" id="recTimerLabel">0:00</div>
-    </div>
-  </div>
-
   <!-- Bottom Nav -->
 
   <div class="bottom-nav">
@@ -897,6 +887,7 @@ async function startRecording(){
     const pct=Math.min(recSec/222*100,100);
     document.getElementById('progressFill').style.width=pct+'%';
     document.getElementById('timeElapsed').textContent=fmtTime(recSec);
+    document.getElementById('recTimerLabel').textContent=fmtTime(recSec);
   },1000);
 
   setWave(true);
@@ -918,6 +909,8 @@ function stopRecording(){
   document.getElementById('badgeDot').style.boxShadow='';
   document.getElementById('badgeText').textContent='NOW PLAYING';
   document.getElementById('recBadge').classList.remove('show');
+  document.getElementById('recIndicator').classList.remove('show');
+  document.getElementById('recTimerLabel').textContent='0:00';
 
   playerSec=0;
   document.getElementById('progressFill').style.width='0%';
