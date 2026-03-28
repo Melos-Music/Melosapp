@@ -87,9 +87,9 @@ padding-top:env(safe-area-inset-top, 50px);
 /* ── status strip (ALWAYS #34c759 green) ── */
 .status-strip{
 position:fixed;top:0;left:0;right:0;
-height:env(safe-area-inset-top, 50px);
+height:env(safe-area-inset-top, 0px);
 background:#34c759;
-display:flex;align-items:flex-end;padding:0 14px 5px;gap:8px;z-index:100;
+display:flex;align-items:flex-end;padding:0 14px 4px;gap:8px;z-index:100;
 }
 .strip-dot{width:5px;height:5px;border-radius:50%;background:#054d18;opacity:0.6}
 .strip-dot.pulse{opacity:1;animation:blink .9s ease-in-out infinite}
@@ -242,11 +242,12 @@ box-shadow:0 0 0 8px rgba(52,199,89,0.15),0 8px 24px rgba(0,0,0,0.35);
 /* ── Bottom Nav ── */
 .bottom-nav{
 position:fixed;bottom:0;left:0;right:0;
-height:calc(60px + var(–safe-bot));
+height:calc(52px + env(safe-area-inset-bottom, 0px));
 border-top:1px solid var(–border2);
 display:flex;align-items:flex-start;padding-top:8px;
+padding-bottom:env(safe-area-inset-bottom, 0px);
 justify-content:space-around;z-index:10;
-background:rgba(13,13,13,0.94);backdrop-filter:blur(20px);
+background:rgba(10,10,10,0.98);backdrop-filter:blur(20px);
 }
 
 .bnav-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 18px;cursor:pointer;transition:all .2s;color:var(–txt3)}
@@ -257,12 +258,47 @@ background:rgba(13,13,13,0.94);backdrop-filter:blur(20px);
 
 /* ══ LIBRARY PANEL ══ */
 .library-panel{
-position:fixed;inset:0;z-index:50;background:var(–bg);
+position:fixed;inset:0;z-index:50;
+background:rgba(5,8,6,0.96);
+backdrop-filter:blur(28px) saturate(0.2) brightness(0.6);
 transform:translateX(100%);transition:transform .38s cubic-bezier(0.32,0.72,0,1);
 display:flex;flex-direction:column;
-padding-top:max(var(–safe-top),20px);
+padding-top:max(env(safe-area-inset-top),20px);
 }
 .library-panel.open{transform:translateX(0)}
+
+/* ══ SEARCH PANEL ══ */
+.search-panel{
+position:fixed;inset:0;z-index:50;
+background:rgba(5,8,6,0.96);
+backdrop-filter:blur(28px) saturate(0.2) brightness(0.6);
+transform:translateY(100%);transition:transform .38s cubic-bezier(0.32,0.72,0,1);
+display:flex;flex-direction:column;
+padding-top:max(env(safe-area-inset-top),20px);
+}
+.search-panel.open{transform:translateY(0)}
+.search-header{display:flex;align-items:center;padding:12px 20px 16px;gap:12px;border-bottom:1px solid var(–border2)}
+.search-input-wrap{
+flex:1;display:flex;align-items:center;gap:10px;
+background:var(–card2);border-radius:12px;padding:10px 14px;
+border:1px solid var(–border2);
+}
+.search-input-wrap svg{width:16px;height:16px;color:var(–txt3);flex-shrink:0}
+.search-input{
+flex:1;background:none;border:none;outline:none;
+color:var(–txt);font-family:var(–sans);font-size:15px;
+-webkit-appearance:none;
+}
+.search-input::placeholder{color:var(–txt3)}
+.search-body{flex:1;overflow-y:auto;padding:20px 16px;}
+.search-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;height:160px;color:var(–txt3);font-family:var(–mono);font-size:11px;letter-spacing:0.1em;text-align:center;}
+.search-categories{display:flex;flex-direction:column;gap:8px;}
+.search-cat{padding:14px 16px;border-radius:14px;border:1px solid var(–border2);background:var(–card);display:flex;align-items:center;gap:14px;cursor:pointer;transition:background .2s;}
+.search-cat:active{background:var(–card2)}
+.search-cat-ico{width:36px;height:36px;border-radius:8px;background:var(–g-soft);border:1px solid var(–border);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.search-cat-ico svg{width:18px;height:18px;color:var(–g)}
+.search-cat-name{font-size:14px;font-weight:600;color:var(–txt)}
+.search-cat-sub{font-size:11px;color:var(–txt2);margin-top:2px}
 .lib-header{display:flex;align-items:center;padding:12px 20px 16px;gap:12px;border-bottom:1px solid var(–border2)}
 .lib-title{flex:1;font-family:var(–serif);font-size:22px;color:var(–txt)}
 .lib-count{font-family:var(–mono);font-size:10px;color:var(–txt3);letter-spacing:0.1em}
@@ -558,15 +594,14 @@ box-shadow:0 4px 20px rgba(52,199,89,0.2);
   <!-- Bottom Nav -->
 
   <div class="bottom-nav">
-    <div class="bnav-item active">
+    <div class="bnav-item active" id="navHome">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
       <div class="bnav-label">Home</div>
     </div>
-    <div class="bnav-item">
+    <div class="bnav-item" id="navSearch">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       <div class="bnav-label">Search</div>
     </div>
-    <!-- Library ボタン: 録画ライブラリ -->
     <div class="bnav-item" id="navLibrary">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M3 3h6v18H3z"/><path d="M9 3h6v18H9z"/><rect x="15" y="3" width="6" height="18"/>
@@ -595,6 +630,39 @@ box-shadow:0 4px 20px rgba(52,199,89,0.2);
     <div class="lib-empty">
       <div style="font-size:36px;opacity:0.3">🎬</div>
       <div>NO RECORDINGS YET</div>
+    </div>
+  </div>
+</div>
+
+<!-- SEARCH PANEL -->
+
+<div class="search-panel" id="searchPanel">
+  <div class="search-header">
+    <div class="search-input-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input class="search-input" id="searchInput" type="search" placeholder="Songs, artists, albums..." autocomplete="off">
+    </div>
+    <div style="font-family:var(--sans);font-size:14px;color:var(--g);cursor:pointer;flex-shrink:0;" id="btnCloseSearch">Cancel</div>
+  </div>
+  <div class="search-body">
+    <div class="section-label" style="margin-bottom:16px">Browse Categories</div>
+    <div class="search-categories">
+      <div class="search-cat">
+        <div class="search-cat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+        <div><div class="search-cat-name">New Releases</div><div class="search-cat-sub">Latest tracks & albums</div></div>
+      </div>
+      <div class="search-cat">
+        <div class="search-cat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+        <div><div class="search-cat-name">Top Charts</div><div class="search-cat-sub">Most played this week</div></div>
+      </div>
+      <div class="search-cat">
+        <div class="search-cat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg></div>
+        <div><div class="search-cat-name">Genres</div><div class="search-cat-sub">Synthwave, Ambient, Jazz…</div></div>
+      </div>
+      <div class="search-cat">
+        <div class="search-cat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+        <div><div class="search-cat-name">Playlists</div><div class="search-cat-sub">Curated collections</div></div>
+      </div>
     </div>
   </div>
 </div>
@@ -1138,8 +1206,31 @@ document.getElementById('btnPlay').addEventListener('click',()=>{
 document.getElementById('btnCamSwitch').addEventListener('click',switchCamera);
 
 // Library
-document.getElementById('navLibrary').addEventListener('click',openLibrary);
-document.getElementById('btnCloseLib').addEventListener('click',closeLibrary);
+document.getElementById('navLibrary').addEventListener('click',()=>{
+  setActiveNav('navLibrary');
+  openLibrary();
+});
+document.getElementById('btnCloseLib').addEventListener('click',()=>{
+  closeLibrary();
+  setActiveNav('navHome');
+});
+
+// Search
+document.getElementById('navSearch').addEventListener('click',()=>{
+  setActiveNav('navSearch');
+  document.getElementById('searchPanel').classList.add('open');
+  setTimeout(()=>document.getElementById('searchInput').focus(),400);
+});
+document.getElementById('btnCloseSearch').addEventListener('click',()=>{
+  document.getElementById('searchPanel').classList.remove('open');
+  setActiveNav('navHome');
+});
+
+// Nav active state
+function setActiveNav(id){
+  document.querySelectorAll('.bnav-item').forEach(el=>el.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
 
 // Prev / Next (fake)
 document.getElementById('btnPrev').addEventListener('click',()=>{
