@@ -8,10 +8,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#34c759">
 <title>Melos</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&family=Manrope:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&family=Manrope:wght@300;400;600;700&display=swap');
 :root {
   --g:       #34c759;
   --g2:      #2aad4a;
@@ -39,8 +37,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 /* ── ALWAYS-GREEN BANNER (status bar area) ── */
 .site-banner{
 position:fixed;top:0;left:0;right:0;
-height:env(safe-area-inset-top, 20px);
-min-height:0;
+height:var(–safe-top);
 background:#34c759;
 z-index:300;
 pointer-events:none;
@@ -57,7 +54,7 @@ padding:40px 28px;padding-top:max(var(–safe-top),40px);gap:0;
 .perm-screen::before{
 content:’’;
 position:absolute;top:0;left:0;right:0;
-height:max(var(–safe-top),28px);
+height:var(–safe-top);
 background:#34c759;
 }
 .perm-screen.gone{display:none}
@@ -79,17 +76,15 @@ background:#34c759;
 position:fixed;inset:0;display:flex;flex-direction:column;
 background:var(–bg);
 opacity:0;pointer-events:none;transition:opacity .5s;
-padding-top:max(var(–safe-top),0px);
 }
 .app.visible{opacity:1;pointer-events:all}
 
 /* ── status strip (ALWAYS #34c759 green) ── */
 .status-strip{
 position:absolute;top:0;left:0;right:0;
-height:max(var(–safe-top),28px);
+height:var(–safe-top);
 background:#34c759;
 display:flex;align-items:flex-end;padding:0 14px 5px;gap:8px;z-index:10;
-/* ↑ NEVER changes color */
 }
 .strip-dot{width:5px;height:5px;border-radius:50%;background:#054d18;opacity:0.6}
 .strip-dot.pulse{opacity:1;animation:blink .9s ease-in-out infinite}
@@ -98,7 +93,7 @@ display:flex;align-items:flex-end;padding:0 14px 5px;gap:8px;z-index:10;
 
 /* ── Navbar ── */
 .navbar{
-margin-top:max(var(–safe-top),28px);height:56px;
+margin-top:var(–safe-top);height:56px;
 display:flex;align-items:center;justify-content:space-between;
 padding:0 20px;
 background:linear-gradient(to bottom,rgba(52,199,89,0.15) 0%,transparent 100%);
@@ -651,6 +646,20 @@ box-shadow:0 4px 20px rgba(52,199,89,0.2);
    ─ Preview: via "Video Clips" gallery icon
    ─ Save choice modal after every recording
 ═══════════════════════════════════════════════ */
+
+// ─── Safe-area をJSで正確に取得してCSS変数に反映 ───
+(function(){
+  // iOSのsafe-area-inset-topをpx値で取得
+  const el = document.createElement('div');
+  el.style.cssText = 'position:fixed;top:env(safe-area-inset-top,0px);left:0;width:1px;height:1px;pointer-events:none;';
+  document.documentElement.appendChild(el);
+  const safeTop = el.getBoundingClientRect().top;
+  document.documentElement.removeChild(el);
+  const h = Math.max(safeTop, 0);
+  document.documentElement.style.setProperty('--safe-top', h + 'px');
+  document.documentElement.style.setProperty('--safe-bot',
+    'env(safe-area-inset-bottom, 0px)');
+})();
 
 // ─── IndexedDB ───
 const DB_NAME='melos_v2', DB_STORE='recs';
