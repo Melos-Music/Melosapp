@@ -9,6 +9,7 @@
 <meta name="theme-color" content="#34c759">
 <title>Melos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&family=Manrope:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -38,7 +39,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(
 /* ── ALWAYS-GREEN BANNER (status bar area) ── */
 .site-banner{
 position:fixed;top:0;left:0;right:0;
-height:var(–safe-top);
+height:env(safe-area-inset-top, 20px);
 min-height:0;
 background:#34c759;
 z-index:300;
@@ -961,11 +962,22 @@ async function renderLibrary(){
 function dlVideo(v){
   const blob=new Blob([v.data],{type:v.mimeType});
   const url=URL.createObjectURL(blob);
+  // iOSはa.click()が効かないのでwindow.openを使う
+  const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
+  if(isIOS){
+    // プレビューを開いて長押し保存を案内
+    openPreview(v);
+    showToast('動画を長押し→「ビデオを保存」');
+    return;
+  }
   const a=document.createElement('a');
   const d=new Date(v.timestamp);
   a.href=url;
   a.download=`rec_${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}_${String(d.getHours()).padStart(2,'0')}${String(d.getMinutes()).padStart(2,'0')}.${v.ext}`;
-  a.click(); URL.revokeObjectURL(url);
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
   showToast('Downloading…');
 }
 
@@ -998,7 +1010,20 @@ document.getElementById('btnGallery').addEventListener('click',async()=>{
 
 document.getElementById('btnPreviewClose').addEventListener('click',closePreview);
 document.getElementById('btnPreviewCancel').addEventListener('click',closePreview);
-document.getElementById('btnPreviewDl').addEventListener('click',()=>{if(previewCurrentRec)dlVideo(previewCurrentRec);});
+document.getElementById('btnPreviewDl').addEventListener('click',()=>{
+  if(!previewCurrentRec) return;
+  const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
+  if(isIOS){
+    showToast('動画を長押し→「ビデオを保存」');
+  } else {
+    dlVideo(previewCurrentRec);
+  }
+});
+
+// iOSの場合、プレビューボタンのラベルを変える
+if(/iPad|iPhone|iPod/.test(navigator.userAgent)){
+  document.getElementById('btnPreviewDl').textContent='長押しで保存';
+}
 
 // ─── Queue ───
 function buildQueue(){
