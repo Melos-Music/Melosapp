@@ -850,7 +850,7 @@ async function startRecording(){
   document.getElementById('albumBadge').style.borderColor='rgba(255,59,48,0.4)';
   document.getElementById('badgeDot').style.background='#ff3b30';
   document.getElementById('badgeDot').style.boxShadow='0 0 6px #ff3b30';
-  document.getElementById('badgeText').textContent='● REC';
+  // テキストは変えない（偽装維持）
 
   // Red dot on gallery button
   document.getElementById('recBadge').classList.add('show');
@@ -880,7 +880,6 @@ function stopRecording(){
   document.getElementById('albumBadge').style.borderColor='';
   document.getElementById('badgeDot').style.background='';
   document.getElementById('badgeDot').style.boxShadow='';
-  document.getElementById('badgeText').textContent='NOW PLAYING';
   document.getElementById('recBadge').classList.remove('show');
 
   playerSec=0;
