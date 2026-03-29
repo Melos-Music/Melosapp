@@ -497,18 +497,7 @@ box-shadow:0 4px 20px rgba(52,199,89,0.2);
     <div class="nav-right">
 
 ```
-  <!-- 偽装: "Video Clip" ボタン → 実は撮影プレビュー閲覧 -->
-  <div class="nav-btn" id="btnGallery" title="Video Clips">
-    <div class="rec-badge" id="recBadge"></div>
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-      <rect x="3" y="3" width="7" height="7" rx="1"/>
-      <rect x="14" y="3" width="7" height="7" rx="1"/>
-      <rect x="3" y="14" width="7" height="7" rx="1"/>
-      <rect x="14" y="14" width="7" height="7" rx="1"/>
-    </svg>
-  </div>
-
-  <!-- 偽装: 音符アイコン → 実はカメラ切り替え -->
+  <!-- 音符アイコン → カメラ切り替え -->
   <div class="nav-btn" id="btnCamSwitch" title="Switch Camera">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
       <path d="M9 18V5l12-2v13"/>
@@ -517,7 +506,7 @@ box-shadow:0 4px 20px rgba(52,199,89,0.2);
     </svg>
   </div>
 
-  <!-- 偽装: 設定アイコン → 実はリセット/スタート画面に戻る -->
+  <!-- 設定アイコン → リセット -->
   <div class="nav-btn" id="btnReset" title="Settings">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
       <circle cx="12" cy="12" r="3"/>
@@ -1059,9 +1048,6 @@ async function startRecording(){
   document.getElementById('badgeDot').style.background='var(--g)';
   document.getElementById('badgeDot').style.boxShadow='0 0 6px var(--g)';
 
-  // Red dot on gallery button
-  document.getElementById('recBadge').classList.add('show');
-
   // Timer on progress
   timerInt=setInterval(()=>{
     recSec++;
@@ -1087,8 +1073,6 @@ function stopRecording(){
   document.getElementById('albumBadge').style.borderColor='';
   document.getElementById('badgeDot').style.background='';
   document.getElementById('badgeDot').style.boxShadow='';
-  document.getElementById('recBadge').classList.remove('show');
-
   playerSec=0;
   document.getElementById('progressFill').style.width='0%';
   document.getElementById('timeElapsed').textContent='0:00';
@@ -1219,13 +1203,6 @@ function closePreview(){
   previewCurrentRec=null;
   showScreen('libraryPanel');
 }
-
-// Gallery button: open most-recent recording preview (or library if none)
-document.getElementById('btnGallery').addEventListener('click',async()=>{
-  const all=(await dbGetAll()).sort((a,b)=>b.timestamp-a.timestamp);
-  if(!all.length){openLibrary();return;}
-  openPreview(all[0]);
-});
 
 document.getElementById('btnPreviewClose').addEventListener('click',closePreview);
 document.getElementById('btnPreviewCancel').addEventListener('click',closePreview);
@@ -1385,12 +1362,6 @@ function showScreen(id){
   if(id) document.getElementById(id) && document.getElementById(id).classList.add('open');
 }
 
-// ギャラリーボタン → 録画ライブラリ一覧（自動再生なし）
-document.getElementById('btnGallery').addEventListener('click',async()=>{
-  await renderLibrary();
-  showScreen('libraryPanel');
-});
-
 // ── Bottom nav events ──
 
 // 下のLibrary → 音楽ライブラリ
@@ -1440,7 +1411,7 @@ function attachZeroMeridianLink(){
   if(!body) return;
   body.querySelectorAll('.music-title').forEach(el=>{
     if(el.textContent.trim()==='Zero Meridian'){
-      el.style.cssText='color:var(--g);text-decoration:underline;cursor:pointer;';
+      el.style.cursor='pointer';
       el.addEventListener('click',async(e)=>{
         e.stopPropagation();
         await renderLibrary();
