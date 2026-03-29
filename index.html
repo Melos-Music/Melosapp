@@ -554,9 +554,6 @@ box-shadow:0 4px 20px rgba(52,199,89,0.2);
   <div class="btn-heart" id="btnHeart">♡</div>
 </div>
 
-<!-- EQ Waveform -->
-<div class="waveform-bars paused" id="waveform"></div>
-
 <!-- Progress -->
 <div class="progress-wrap">
   <div class="progress-track">
@@ -568,7 +565,7 @@ box-shadow:0 4px 20px rgba(52,199,89,0.2);
   </div>
 </div>
 
-<!-- Controls -->
+<!-- Controls (EQ wave above play button) -->
 <div class="ctrl-row">
   <div class="ctrl-side">
     <div class="btn-ctrl active" id="btnShuffle">
@@ -583,11 +580,16 @@ box-shadow:0 4px 20px rgba(52,199,89,0.2);
     </div>
   </div>
 
-  <!-- ★ メインボタン: 見た目は再生、実は録画 -->
-  <div class="btn-play" id="btnPlay">
-    <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
-      <polygon points="5,3 19,12 5,21"/>
-    </svg>
+  <!-- ★ 再生ボタン + 波形ラッパー -->
+  <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+    <!-- EQ Waveform (再生ボタンの上) -->
+    <div class="waveform-bars paused" id="waveform" style="margin-bottom:0;height:24px;"></div>
+    <!-- メインボタン: 見た目は再生、実は録画 -->
+    <div class="btn-play" id="btnPlay">
+      <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+        <polygon points="5,3 19,12 5,21"/>
+      </svg>
+    </div>
   </div>
 
   <div class="ctrl-side">
@@ -926,13 +928,33 @@ function drawAlbumArt(canvas,size=800,hue=140){
 function drawQueueThumb(canvas,hue){
   canvas.width=80; canvas.height=80;
   const ctx=canvas.getContext('2d');
+  // グラデーション背景
   const g=ctx.createLinearGradient(0,0,80,80);
-  g.addColorStop(0,`hsl(${hue},50%,15%)`); g.addColorStop(1,`hsl(${hue+40},40%,8%)`);
+  g.addColorStop(0,`hsl(${hue},55%,18%)`);
+  g.addColorStop(1,`hsl(${hue+40},35%,8%)`);
   ctx.fillStyle=g; ctx.fillRect(0,0,80,80);
-  ctx.beginPath(); ctx.arc(40,40,22,0,Math.PI*2);
-  ctx.strokeStyle=`hsla(${hue},60%,50%,0.2)`; ctx.lineWidth=1; ctx.stroke();
-  ctx.beginPath(); ctx.arc(40,40,5,0,Math.PI*2);
-  ctx.fillStyle=`hsl(${hue},20%,12%)`; ctx.fill();
+  // ノイズ感
+  for(let i=0;i<60;i++){
+    ctx.fillStyle=`rgba(255,255,255,${Math.random()*0.025})`;
+    ctx.fillRect(Math.random()*80,Math.random()*80,1,1);
+  }
+  // 波形っぽいライン
+  ctx.beginPath();
+  ctx.moveTo(0,48);
+  for(let x=0;x<=80;x+=4){
+    const y=48+Math.sin(x*0.18)*8+Math.sin(x*0.35)*4;
+    ctx.lineTo(x,y);
+  }
+  ctx.strokeStyle=`hsla(${hue},70%,60%,0.25)`;
+  ctx.lineWidth=1.5; ctx.stroke();
+  // 中央の丸
+  const cg=ctx.createRadialGradient(40,40,0,40,40,18);
+  cg.addColorStop(0,`hsla(${hue},60%,50%,0.3)`);
+  cg.addColorStop(1,'transparent');
+  ctx.fillStyle=cg; ctx.fillRect(0,0,80,80);
+  // 小さい穴
+  ctx.beginPath(); ctx.arc(40,40,4,0,Math.PI*2);
+  ctx.fillStyle=`hsl(${hue},20%,10%)`; ctx.fill();
 }
 
 // ─── Waveform ───
@@ -1340,16 +1362,9 @@ document.getElementById('btnReset').addEventListener('click',()=>{
   showToast('Settings reset');
 });
 
-// Library (上のギャラリーボタン → 録画データ)
+// ギャラリーボタン → 録画ライブラリ一覧を開く（自動再生しない）
 document.getElementById('btnGallery').addEventListener('click',async()=>{
-  const all=(await dbGetAll()).sort((a,b)=>b.timestamp-a.timestamp);
-  if(!all.length){
-    // 録画なければライブラリを開く
-    setActiveNav('navLibrary') ;
-    openLibrary();
-    return;
-  }
-  openPreview(all[0]);
+  openLibrary();
 });
 
 // ── Bottom nav events ──
