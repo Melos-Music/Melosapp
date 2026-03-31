@@ -39,10 +39,11 @@ a{color:inherit;text-decoration:none;}
 /* ── ALWAYS-GREEN BANNER (status bar area) ── */
 .site-banner{
 position:fixed;top:0;left:0;right:0;
-height:var(--safe-top);
+height:calc(var(--safe-top) + 12px);
 background:#34c759;
 z-index:300;
 pointer-events:none;
+clip-path: ellipse(120% 100% at 50% 0%);
 }
 
 /* ══ PERMISSION SCREEN ══ */
@@ -55,11 +56,12 @@ padding-top:max(env(safe-area-inset-top,50px),40px);
 gap:0;
 }
 .perm-screen::before{
-content:’’;
+content:'';
 position:fixed;top:0;left:0;right:0;
-height:env(safe-area-inset-top,50px);
+height:calc(env(safe-area-inset-top,50px) + 12px);
 background:#34c759;
 z-index:201;
+clip-path: ellipse(120% 100% at 50% 0%);
 }
 .perm-wordmark{font-family:var(--serif);font-size:52px;color:var(--g);letter-spacing:-0.01em;line-height:1;margin-bottom:6px}
 .perm-tagline{font-family:var(--mono);font-size:10px;letter-spacing:0.3em;color:var(--txt3);text-transform:uppercase;margin-bottom:48px}
@@ -100,10 +102,11 @@ padding-top:env(safe-area-inset-top, 0px);
 /* ③ 緑バナー - safe-area-inset-topに完全に合わせる */
 .status-strip{
 position:fixed;top:0;left:0;right:0;
-height:env(safe-area-inset-top, 0px);
+height:calc(env(safe-area-inset-top, 0px) + 12px);
 min-height:0;
 background:#34c759;
-display:flex;align-items:flex-end;padding:0 14px 4px;gap:8px;z-index:100;
+display:flex;align-items:flex-end;padding:0 14px 10px;gap:8px;z-index:100;
+clip-path: ellipse(120% 100% at 50% 0%);
 }
 .strip-dot{width:5px;height:5px;border-radius:50%;background:#054d18;opacity:0.6}
 .strip-dot.pulse{opacity:1;animation:blink .9s ease-in-out infinite}
