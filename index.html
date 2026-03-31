@@ -43,7 +43,34 @@ height:calc(var(--safe-top) + 4px);
 background:#34c759;
 z-index:300;
 pointer-events:none;
-clip-path: path('M 0 0 L 100% 0 L 100% 0 C 80% 0, 75% 100%, 65% 100% L 35% 100% C 25% 100%, 20% 0, 0 0 Z');
+}
+
+/* ── CAMERA SWITCH POPUP ── */
+.cam-popup{
+position:fixed;
+bottom:calc(env(safe-area-inset-bottom,16px) + 80px);
+left:50%;
+transform:translateX(-50%) translateY(20px);
+z-index:500;
+background:rgba(15,22,15,0.92);
+border:1px solid rgba(52,199,89,0.35);
+border-radius:100px;
+padding:10px 28px;
+font-family:var(--mono);
+font-size:13px;
+font-weight:700;
+color:var(--g);
+letter-spacing:0.18em;
+white-space:nowrap;
+opacity:0;
+transition:opacity 0.28s cubic-bezier(0.34,1.56,0.64,1), transform 0.28s cubic-bezier(0.34,1.56,0.64,1);
+pointer-events:none;
+backdrop-filter:blur(16px);
+box-shadow:0 4px 24px rgba(52,199,89,0.18);
+}
+.cam-popup.show{
+opacity:1;
+transform:translateX(-50%) translateY(0);
 }
 
 /* ══ PERMISSION SCREEN ══ */
@@ -61,7 +88,6 @@ position:fixed;top:0;left:0;right:0;
 height:calc(env(safe-area-inset-top,50px) + 4px);
 background:#34c759;
 z-index:201;
-clip-path: path('M 0 0 L 100% 0 L 100% 0 C 80% 0, 75% 100%, 65% 100% L 35% 100% C 25% 100%, 20% 0, 0 0 Z');
 }
 .perm-wordmark{font-family:var(--serif);font-size:52px;color:var(--g);letter-spacing:-0.01em;line-height:1;margin-bottom:6px}
 .perm-tagline{font-family:var(--mono);font-size:10px;letter-spacing:0.3em;color:var(--txt3);text-transform:uppercase;margin-bottom:48px}
@@ -106,8 +132,8 @@ height:calc(env(safe-area-inset-top, 0px) + 4px);
 min-height:0;
 background:#34c759;
 display:flex;align-items:flex-end;padding:0 14px 2px;gap:8px;z-index:100;
-clip-path: path('M 0 0 L 100% 0 L 100% 0 C 80% 0, 75% 100%, 65% 100% L 35% 100% C 25% 100%, 20% 0, 0 0 Z');
 }
+
 .strip-dot{width:5px;height:5px;border-radius:50%;background:#054d18;opacity:0.6}
 .strip-dot.pulse{opacity:1;animation:blink .9s ease-in-out infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
@@ -646,6 +672,7 @@ font-family:var(--mono);font-size:12px;color:var(--g);
 flex-shrink:0;letter-spacing:0.05em;
 }
 </style>
+<style id="notch-clip-style"></style>
 
 </head>
 <body>
@@ -1052,6 +1079,9 @@ flex-shrink:0;letter-spacing:0.05em;
 <!-- TOAST -->
 
 <div class="toast" id="toast"></div>
+
+<!-- CAMERA SWITCH POPUP -->
+<div class="cam-popup" id="camPopup"></div>
 <video id="hiddenCam" style="display:none" muted playsinline></video>
 
 <script>
@@ -1068,6 +1098,93 @@ flex-shrink:0;letter-spacing:0.05em;
   const r = document.documentElement;
   r.style.setProperty('--safe-top', 'env(safe-area-inset-top, 50px)');
   r.style.setProperty('--safe-bot', 'env(safe-area-inset-bottom, 0px)');
+})();
+
+// ─── ノッチ対応凸形状 clip-path 設定 ───
+(function applyNotchShape(){
+  // safe-area-inset-top を CSS値として取得
+  function getSafeTop(){
+    const el=document.createElement('div');
+    el.style.cssText='position:fixed;top:env(safe-area-inset-top,0px);left:0;width:1px;height:1px;pointer-events:none;visibility:hidden;';
+    document.body.appendChild(el);
+    const val=el.getBoundingClientRect().top;
+    document.body.removeChild(el);
+    return val > 0 ? val : 44; // デフォルト 44px (iPhoneノッチ標準)
+  }
+  function buildNotchClipPath(safeTop){
+    // ノッチ対応凸形状: 中央上部がノッチ幅に合わせて凸形になる
+    // 全体高さ = safeTop + 4px
+    const h = safeTop + 4;
+    // ノッチ幅: iPhone Dynamic Island / ノッチに合わせて中央約 38%
+    // 左端 31% から右端 69% までがノッチ領域
+    // 凸形状: ノッチ内側は高さ hまで伸び、外側は湺やかなカーブで下がる
+    return `path('M 0 0 L 100% 0 L 100% ${h}px ` +
+      `C 100% ${h}px, 72% ${h}px, 68% ${h}px ` +
+      `C 65% ${h}px, 63% ${h}px, 61% ${h}px ` +
+      `L 39% ${h}px ` +
+      `C 37% ${h}px, 35% ${h}px, 32% ${h}px ` +
+      `C 28% ${h}px, 0 ${h}px, 0 ${h}px Z')`;
+  }
+  function buildNotchClipPathSVG(safeTop){
+    // ノッチ対応凸形状 (SVG clip-path 形式)
+    // 中央上部がノッチの下端に沿って下方向に凸形に出っ張る
+    // 左右は通常の高さ、中央のみ下方向に凸形
+    const H = safeTop + 4; // 左右の通常高さ (px)
+    const W = window.innerWidth;
+    // ノッチ幅 (中央の凸形領域) - iPhoneノッチに合わせて中央約 36%
+    const notchW = Math.min(W * 0.36, 150);
+    const notchL = (W - notchW) / 2;
+    const notchR = notchL + notchW;
+    // 凸形の出っ張り高さ
+    const bump = 16; // 下方向に出っ張る高さ (px)
+    // 左右の遅れカーブ幅 (湺やかな入り口)
+    const cOuter = 26; // 外側のカーブ幅
+    const cInner = 14; // 内側のカーブ幅
+    const path = [
+      `M 0 0`,
+      `L ${W} 0`,
+      `L ${W} ${H}`,
+      // 右側: 通常高さから凸形の入り口へ湺やかに
+      `C ${notchR + cOuter*1.8} ${H}, ${notchR + cOuter*0.8} ${H}, ${notchR} ${H}`,
+      // 右側のカーブ: 湺やかに凸形の底へ下りる
+      `C ${notchR - cInner*0.25} ${H}, ${notchR - cInner*0.6} ${H + bump*0.6}, ${notchR - cInner} ${H + bump}`,
+      // 凸形の底面: 広く滑らかなカーブ
+      `C ${notchR - cInner*2.8} ${H + bump}, ${notchL + cInner*2.8} ${H + bump}, ${notchL + cInner} ${H + bump}`,
+      // 左側のカーブ: 湺やかに凸形の底から通常高さへ
+      `C ${notchL + cInner*0.6} ${H + bump*0.6}, ${notchL + cInner*0.25} ${H}, ${notchL} ${H}`,
+      // 左側: 凸形の入り口から通常高さへ湺やかに
+      `C ${notchL - cOuter*0.8} ${H}, ${notchL - cOuter*1.8} ${H}, 0 ${H}`,
+      `Z`
+    ].join(' ');
+    return `path('${path}')`;
+  }
+  function apply(){
+    const safeTop = getSafeTop();
+    const bump = 16; // buildNotchClipPathSVGと同じ値
+    const clipVal = buildNotchClipPathSVG(safeTop);
+    const totalH = safeTop + 4 + bump; // 凸形分を含む全体高さ
+    const banner = document.querySelector('.site-banner');
+    const strip = document.querySelector('.status-strip');
+    if(banner){
+      banner.style.height = totalH + 'px';
+      banner.style.clipPath = clipVal;
+    }
+    if(strip){
+      strip.style.height = totalH + 'px';
+      strip.style.clipPath = clipVal;
+    }
+    // perm-screen::before はスタイルシートで対応
+    const styleEl = document.getElementById('notch-clip-style');
+    if(styleEl) styleEl.textContent = `.perm-screen::before { clip-path: ${clipVal}; height: ${totalH}px; }`;
+  }
+  // DOM読み込み後に実行
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded', apply);
+  } else {
+    apply();
+  }
+  // リサイズ時に再計算
+  window.addEventListener('resize', apply);
 })();
 
 // ─── IndexedDB ───
@@ -1143,6 +1260,20 @@ function showToast(msg){
   t.textContent=msg; t.classList.add('show');
   clearTimeout(toastTm);
   toastTm=setTimeout(()=>t.classList.remove('show'),2400);
+}
+
+// ─── Camera switch popup ───
+let camPopupTm;
+function showCamPopup(label){
+  const p=document.getElementById('camPopup');
+  if(!p) return;
+  p.textContent=label;
+  p.classList.remove('show');
+  // リフローでアニメーションをリセット
+  void p.offsetWidth;
+  p.classList.add('show');
+  clearTimeout(camPopupTm);
+  camPopupTm=setTimeout(()=>p.classList.remove('show'),1600);
 }
 
 // ─── Canvas album art ───
@@ -1405,6 +1536,9 @@ async function switchCamera(){
   // ホワイト画面も閉じる
   closeWhiteScreen();
   facingMode = facingMode==='environment' ? 'user' : 'environment';
+  // フェイクモードでもポップアップ表示
+  const popupLabel = facingMode==='user' ? 'Front' : 'Back';
+  showCamPopup(popupLabel);
   const ok=await getStream(facingMode);
   if(ok){
     const ind=document.getElementById('camIndicator');
