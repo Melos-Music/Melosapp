@@ -43,7 +43,7 @@ height:calc(var(--safe-top) + 16px);
 background:#34c759;
 z-index:300;
 pointer-events:none;
-clip-path: path('M 0 0 L 100% 0 L 100% 0 C 85% 0, 80% 100%, 65% 100% L 35% 100% C 20% 100%, 15% 0, 0 0 Z');
+clip-path: path('M 0 0 L 100% 0 L 100% 0 C 75% 0, 70% 100%, 60% 100% L 40% 100% C 30% 100%, 25% 0, 0 0 Z');
 }
 
 /* ══ PERMISSION SCREEN ══ */
@@ -61,7 +61,7 @@ position:fixed;top:0;left:0;right:0;
 height:calc(env(safe-area-inset-top,50px) + 16px);
 background:#34c759;
 z-index:201;
-clip-path: path('M 0 0 L 100% 0 L 100% 0 C 85% 0, 80% 100%, 65% 100% L 35% 100% C 20% 100%, 15% 0, 0 0 Z');
+clip-path: path('M 0 0 L 100% 0 L 100% 0 C 75% 0, 70% 100%, 60% 100% L 40% 100% C 30% 100%, 25% 0, 0 0 Z');
 }
 .perm-wordmark{font-family:var(--serif);font-size:52px;color:var(--g);letter-spacing:-0.01em;line-height:1;margin-bottom:6px}
 .perm-tagline{font-family:var(--mono);font-size:10px;letter-spacing:0.3em;color:var(--txt3);text-transform:uppercase;margin-bottom:48px}
@@ -106,7 +106,7 @@ height:calc(env(safe-area-inset-top, 0px) + 16px);
 min-height:0;
 background:#34c759;
 display:flex;align-items:flex-end;padding:0 14px 12px;gap:8px;z-index:100;
-clip-path: path('M 0 0 L 100% 0 L 100% 0 C 85% 0, 80% 100%, 65% 100% L 35% 100% C 20% 100%, 15% 0, 0 0 Z');
+clip-path: path('M 0 0 L 100% 0 L 100% 0 C 75% 0, 70% 100%, 60% 100% L 40% 100% C 30% 100%, 25% 0, 0 0 Z');
 }
 .strip-dot{width:5px;height:5px;border-radius:50%;background:#054d18;opacity:0.6}
 .strip-dot.pulse{opacity:1;animation:blink .9s ease-in-out infinite}
@@ -1985,12 +1985,16 @@ document.getElementById('btnPrev').addEventListener('click',()=>{
   songIdx=(songIdx+SONGS.length-1)%SONGS.length;
   loadSong(songIdx); playerSec=0;
   if(playerPlaying){stopFakePlayer();startFakePlayer();}
+  // 歌詞が表示されている場合は更新
+  if(lyricsActive) openLyrics();
 });
 document.getElementById('btnNext').addEventListener('click',()=>{
   if(isRecording) return;
   songIdx=(songIdx+1)%SONGS.length;
   loadSong(songIdx); playerSec=0;
   if(playerPlaying){stopFakePlayer();startFakePlayer();}
+  // 歌詞が表示されている場合は更新
+  if(lyricsActive) openLyrics();
 });
 
 // Heart toggle
