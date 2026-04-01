@@ -32,48 +32,18 @@
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--txt);font-family:var(--sans);-webkit-font-smoothing:antialiased}
-/* iOSのデフォルトボタンスタイルをリセット（色は維持） */
 button{-webkit-appearance:none;appearance:none;font:inherit;cursor:pointer;}
 a{color:inherit;text-decoration:none;}
 
-/* ── ALWAYS-GREEN BANNER (status bar area) ── */
 .site-banner{
 position:fixed;top:0;left:0;right:0;
-height:calc(var(--safe-top) + 4px);
+height:calc(var(–safe-top) + 4px);
 background:#34c759;
 z-index:300;
 pointer-events:none;
+clip-path: path(‘M 0 0 L 100% 0 L 100% 0 C 80% 0, 75% 100%, 65% 100% L 35% 100% C 25% 100%, 20% 0, 0 0 Z’);
 }
 
-/* ── CAMERA SWITCH POPUP ── */
-.cam-popup{
-position:fixed;
-bottom:calc(env(safe-area-inset-bottom,16px) + 80px);
-left:50%;
-transform:translateX(-50%) translateY(20px);
-z-index:500;
-background:rgba(15,22,15,0.92);
-border:1px solid rgba(52,199,89,0.35);
-border-radius:100px;
-padding:10px 28px;
-font-family:var(--mono);
-font-size:13px;
-font-weight:700;
-color:var(--g);
-letter-spacing:0.18em;
-white-space:nowrap;
-opacity:0;
-transition:opacity 0.28s cubic-bezier(0.34,1.56,0.64,1), transform 0.28s cubic-bezier(0.34,1.56,0.64,1);
-pointer-events:none;
-backdrop-filter:blur(16px);
-box-shadow:0 4px 24px rgba(52,199,89,0.18);
-}
-.cam-popup.show{
-opacity:1;
-transform:translateX(-50%) translateY(0);
-}
-
-/* ══ PERMISSION SCREEN ══ */
 .perm-screen{
 position:fixed;inset:0;z-index:200;
 background:linear-gradient(160deg,#0a180c 0%,#0d0d0d 60%,#050d06 100%);
@@ -83,29 +53,29 @@ padding-top:max(env(safe-area-inset-top,50px),40px);
 gap:0;
 }
 .perm-screen::before{
-content:'';
+content:’’;
 position:fixed;top:0;left:0;right:0;
 height:calc(env(safe-area-inset-top,50px) + 4px);
 background:#34c759;
 z-index:201;
+clip-path: path(‘M 0 0 L 100% 0 L 100% 0 C 80% 0, 75% 100%, 65% 100% L 35% 100% C 25% 100%, 20% 0, 0 0 Z’);
 }
-.perm-wordmark{font-family:var(--serif);font-size:52px;color:var(--g);letter-spacing:-0.01em;line-height:1;margin-bottom:6px}
-.perm-tagline{font-family:var(--mono);font-size:10px;letter-spacing:0.3em;color:var(--txt3);text-transform:uppercase;margin-bottom:48px}
-.perm-card{width:100%;max-width:320px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px;margin-bottom:28px}
-.perm-card-title{font-size:10px;font-weight:600;color:var(--txt3);letter-spacing:0.2em;margin-bottom:16px;text-transform:uppercase;font-family:var(--mono)}
-.perm-row{display:flex;align-items:flex-start;gap:14px;padding:12px 0;border-bottom:1px solid var(--border2)}
+.perm-wordmark{font-family:var(–serif);font-size:52px;color:var(–g);letter-spacing:-0.01em;line-height:1;margin-bottom:6px}
+.perm-tagline{font-family:var(–mono);font-size:10px;letter-spacing:0.3em;color:var(–txt3);text-transform:uppercase;margin-bottom:48px}
+.perm-card{width:100%;max-width:320px;background:var(–card);border:1px solid var(–border);border-radius:20px;padding:24px;margin-bottom:28px}
+.perm-card-title{font-size:10px;font-weight:600;color:var(–txt3);letter-spacing:0.2em;margin-bottom:16px;text-transform:uppercase;font-family:var(–mono)}
+.perm-row{display:flex;align-items:flex-start;gap:14px;padding:12px 0;border-bottom:1px solid var(–border2)}
 .perm-row:last-child{border-bottom:none;padding-bottom:0}
 .perm-row:first-of-type{padding-top:0}
-.perm-ico{width:36px;height:36px;border-radius:10px;background:var(--g-soft);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
-.perm-txt strong{display:block;font-size:13px;font-weight:600;color:var(--txt);margin-bottom:3px}
-.perm-txt span{font-size:11px;color:var(--txt2);line-height:1.5}
-/* ① Continueボタン - 文字色を確実に黒く */
+.perm-ico{width:36px;height:36px;border-radius:10px;background:var(–g-soft);border:1px solid var(–border);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.perm-txt strong{display:block;font-size:13px;font-weight:600;color:var(–txt);margin-bottom:3px}
+.perm-txt span{font-size:11px;color:var(–txt2);line-height:1.5}
 .btn-perm{
 width:100%;max-width:320px;height:54px;border-radius:14px;
 border:none;
 background:#34c759 !important;
 color:#000000 !important;
-font-family:var(--sans);font-size:16px;font-weight:800;
+font-family:var(–sans);font-size:16px;font-weight:800;
 letter-spacing:0.03em;cursor:pointer;
 transition:opacity .2s,transform .15s;
 box-shadow:0 6px 28px rgba(52,199,89,0.35);
@@ -116,30 +86,27 @@ opacity:1 !important;
 .btn-perm:active{transform:scale(0.97);}
 .perm-screen.gone{display:none!important}
 
-/* ══ MAIN APP ══ */
 .app{
 position:fixed;inset:0;display:flex;flex-direction:column;
-background:var(--bg);
+background:var(–bg);
 opacity:0;pointer-events:none;transition:opacity .5s;
 padding-top:env(safe-area-inset-top, 0px);
 }
 .app.visible{opacity:1;pointer-events:all}
 
-/* ③ 緑バナー - safe-area-inset-topに完全に合わせる */
 .status-strip{
 position:fixed;top:0;left:0;right:0;
 height:calc(env(safe-area-inset-top, 0px) + 4px);
 min-height:0;
 background:#34c759;
 display:flex;align-items:flex-end;padding:0 14px 2px;gap:8px;z-index:100;
+clip-path: path(‘M 0 0 L 100% 0 L 100% 0 C 80% 0, 75% 100%, 65% 100% L 35% 100% C 25% 100%, 20% 0, 0 0 Z’);
 }
-
 .strip-dot{width:5px;height:5px;border-radius:50%;background:#054d18;opacity:0.6}
 .strip-dot.pulse{opacity:1;animation:blink .9s ease-in-out infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-.strip-label{font-family:var(--mono);font-size:9px;color:#054d18;letter-spacing:0.25em;opacity:0.7}
+.strip-label{font-family:var(–mono);font-size:9px;color:#054d18;letter-spacing:0.25em;opacity:0.7}
 
-/* ── Navbar ── */
 .navbar{
 height:56px;
 display:flex;align-items:center;justify-content:space-between;
@@ -148,64 +115,59 @@ background:linear-gradient(to bottom,rgba(52,199,89,0.15) 0%,transparent 100%);
 position:relative;z-index:5;flex-shrink:0;
 overflow:hidden;
 }
-.nav-wordmark{font-family:var(--serif);font-size:26px;color:var(--g);letter-spacing:-0.01em;flex-shrink:0}
+.nav-wordmark{font-family:var(–serif);font-size:26px;color:var(–g);letter-spacing:-0.01em;flex-shrink:0}
 .nav-right{display:flex;gap:8px;align-items:center;flex-shrink:0;}
 .nav-btn{
 width:36px;height:36px;border-radius:10px;
-border:1px solid var(--border2);background:var(--card);color:var(--txt2);
+border:1px solid var(–border2);background:var(–card);color:var(–txt2);
 display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;
 position:relative;
 }
 .nav-btn:active{transform:scale(0.91)}
 .nav-btn svg{width:17px;height:17px}
-/* recording indicator dot on camera-switch btn */
 .nav-btn .rec-badge{
 position:absolute;top:-3px;right:-3px;width:8px;height:8px;
-border-radius:50%;background:var(--red);
-border:2px solid var(--bg2);
+border-radius:50%;background:var(–red);
+border:2px solid var(–bg2);
 display:none;
 }
 .nav-btn .rec-badge.show{display:block;animation:blink .9s ease-in-out infinite}
 
-/* ── Scroll body ── */
 .scroll-body{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:0 16px calc(80px + env(safe-area-inset-bottom, 20px))}
 .scroll-body::-webkit-scrollbar{display:none}
 
-/* ── Album hero ── */
 .album-hero{
 position:relative;margin:16px 0 22px;
 border-radius:20px;overflow:hidden;aspect-ratio:1;
-background:var(--card);
-box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 0 1px var(--border);
+background:var(–card);
+box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 0 1px var(–border);
 }
 .album-art-canvas{width:100%;height:100%;display:block}
 .album-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.6) 0%,transparent 50%)}
 .album-badge{
 position:absolute;bottom:14px;left:14px;
 background:rgba(0,0,0,0.6);backdrop-filter:blur(12px);
-border:1px solid var(--border);border-radius:100px;padding:6px 14px;
-font-family:var(--mono);font-size:10px;letter-spacing:0.15em;color:var(--g);
+border:1px solid var(–border);border-radius:100px;padding:6px 14px;
+font-family:var(–mono);font-size:10px;letter-spacing:0.15em;color:var(–g);
 display:flex;align-items:center;gap:6px;transition:all .3s;
 }
-.album-badge-dot{width:5px;height:5px;border-radius:50%;background:var(--g);transition:all .3s}
+.album-badge-dot{width:5px;height:5px;border-radius:50%;background:var(–g);transition:all .3s}
 
-/* ── Song info ── */
 .song-info{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px}
-.song-title{font-family:var(--serif);font-size:26px;line-height:1.1;color:var(--txt);letter-spacing:-0.01em}
-.song-title em{color:var(--g);font-style:italic}
-.song-artist{font-size:13px;color:var(--txt2);margin-top:5px;font-weight:400}
+.song-title{font-family:var(–serif);font-size:26px;line-height:1.1;color:var(–txt);letter-spacing:-0.01em}
+.song-title em{color:var(–g);font-style:italic}
+.song-artist{font-size:13px;color:var(–txt2);margin-top:5px;font-weight:400}
 .btn-heart{
-width:38px;height:38px;border-radius:50%;border:1px solid var(--border2);
-background:transparent;color:var(--g);
+width:38px;height:38px;border-radius:50%;border:1px solid var(–border2);
+background:transparent;color:var(–g);
 display:flex;align-items:center;justify-content:center;
 cursor:pointer;flex-shrink:0;margin-top:2px;transition:all .2s;font-size:18px;
 }
 .btn-heart:active{transform:scale(0.85)}
 
-/* ── Waveform ── */
 .waveform-bars{display:flex;align-items:center;justify-content:center;gap:3px;height:32px;margin-bottom:14px}
 .waveform-bars.paused .bar{animation-play-state:paused!important;height:4px!important}
-.bar{width:3px;border-radius:2px;background:var(--g);opacity:0.7;height:4px;}
+.bar{width:3px;border-radius:2px;background:var(–g);opacity:0.7;height:4px;}
 @keyframes eq1{0%,100%{height:4px}50%{height:22px}}
 @keyframes eq2{0%,100%{height:10px}40%{height:26px}70%{height:8px}}
 @keyframes eq3{0%,100%{height:18px}30%{height:6px}60%{height:28px}}
@@ -219,28 +181,25 @@ cursor:pointer;flex-shrink:0;margin-top:2px;transition:all .2s;font-size:18px;
 @keyframes eq11{0%,100%{height:8px}30%{height:26px}}
 @keyframes eq12{0%,100%{height:22px}60%{height:6px}}
 
-/* ── Progress ── */
 .progress-wrap{margin-bottom:8px}
-.progress-track{height:4px;background:var(--card2);border-radius:2px;overflow:hidden;cursor:pointer}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--g2),var(--g));border-radius:2px;width:0%;transition:width .1s linear;box-shadow:0 0 8px var(--g-glow)}
-.progress-times{display:flex;justify-content:space-between;margin-top:8px;font-family:var(--mono);font-size:11px;color:var(--txt3)}
+.progress-track{height:4px;background:var(–card2);border-radius:2px;overflow:hidden;cursor:pointer}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(–g2),var(–g));border-radius:2px;width:0%;transition:width .1s linear;box-shadow:0 0 8px var(–g-glow)}
+.progress-times{display:flex;justify-content:space-between;margin-top:8px;font-family:var(–mono);font-size:11px;color:var(–txt3)}
 
-/* ── Controls ── */
 .ctrl-row{display:flex;align-items:center;justify-content:space-between;margin:22px 0 22px;padding:0 4px}
 .ctrl-side{display:flex;gap:0;align-items:center}
 .btn-ctrl{
 width:44px;height:44px;border-radius:50%;
 border:none!important;outline:none!important;
 background:transparent!important;
-color:var(--txt2)!important;
+color:var(–txt2)!important;
 -webkit-appearance:none!important;
 display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;
 }
 .btn-ctrl svg{width:20px;height:20px;stroke:currentColor;fill:none;}
-.btn-ctrl:active{transform:scale(0.88);color:var(--txt)!important}
-.btn-ctrl.active{color:var(--g)!important}
+.btn-ctrl:active{transform:scale(0.88);color:var(–txt)!important}
+.btn-ctrl.active{color:var(–g)!important}
 
-/* MAIN PLAY BUTTON */
 .btn-play{
 width:72px;height:72px;border-radius:50%;
 background:radial-gradient(circle at 35% 35%,#3ddc68,#2aad4a) !important;
@@ -258,49 +217,44 @@ content:’’;position:absolute;inset:-8px;border-radius:50%;
 border:1.5px solid rgba(52,199,89,0.2);transition:all .3s;
 }
 .btn-play.recording{
-background:radial-gradient(circle at 35% 35%,#5ddd7a,var(--g2));
+background:radial-gradient(circle at 35% 35%,#5ddd7a,var(–g2));
 box-shadow:0 0 0 8px rgba(52,199,89,0.15),0 8px 24px rgba(0,0,0,0.35);
 }
 .btn-play.recording::after{border-color:rgba(52,199,89,0.4);animation:ring-pulse 1.6s ease-in-out infinite}
 @keyframes ring-pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.2);opacity:0.3}}
 .btn-play:active{transform:scale(0.93)}
 
-/* ── Volume ── */
 .volume-row{display:flex;align-items:center;gap:10px;margin-bottom:28px}
-.vol-ico{color:var(--txt3);flex-shrink:0}
+.vol-ico{color:var(–txt3);flex-shrink:0}
 .vol-ico svg{width:16px;height:16px;display:block}
-.vol-track{flex:1;height:4px;background:var(--card2);border-radius:2px}
+.vol-track{flex:1;height:4px;background:var(–card2);border-radius:2px}
 .vol-fill{height:100%;border-radius:2px;background:rgba(255,255,255,0.15);width:70%}
 
-/* ── Queue ── */
-.section-label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;color:var(--txt3);text-transform:uppercase;margin-bottom:12px}
+.section-label{font-family:var(–mono);font-size:10px;letter-spacing:0.2em;color:var(–txt3);text-transform:uppercase;margin-bottom:12px}
 .queue-list{display:flex;flex-direction:column;gap:2px}
 .queue-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;cursor:default}
 .queue-thumb{width:40px;height:40px;border-radius:8px;flex-shrink:0;overflow:hidden}
 .queue-thumb canvas{width:100%;height:100%;display:block}
 .queue-info{flex:1;min-width:0}
-.queue-name{font-size:13px;font-weight:600;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.queue-artist{font-size:11px;color:var(--txt2);margin-top:2px}
-.queue-dur{font-family:var(--mono);font-size:11px;color:var(--txt3);flex-shrink:0}
+.queue-name{font-size:13px;font-weight:600;color:var(–txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.queue-artist{font-size:11px;color:var(–txt2);margin-top:2px}
+.queue-dur{font-family:var(–mono);font-size:11px;color:var(–txt3);flex-shrink:0}
 
-/* ② ボトムナビ - ホームインジケーターと被らないよう修正 */
 .bottom-nav{
 position:fixed;bottom:0;left:0;right:0;
-border-top:1px solid var(--border2);
+border-top:1px solid var(–border2);
 display:flex;align-items:center;
 padding-top:10px;
 padding-bottom:max(env(safe-area-inset-bottom, 16px), 16px);
 justify-content:space-around;z-index:10;
 background:rgba(10,10,10,0.98);backdrop-filter:blur(20px);
 }
-
-.bnav-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 18px;cursor:pointer;transition:all .2s;color:var(--txt3)}
-.bnav-item.active{color:var(--g)}
+.bnav-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 18px;cursor:pointer;transition:all .2s;color:var(–txt3)}
+.bnav-item.active{color:var(–g)}
 .bnav-item:active{transform:scale(0.91)}
 .bnav-item svg{width:22px;height:22px}
 .bnav-label{font-size:9px;font-weight:600;letter-spacing:0.04em}
 
-/* ══ LIBRARY PANEL ══ */
 .library-panel{
 position:fixed;inset:0;z-index:50;
 background:rgba(5,8,6,0.96);
@@ -311,7 +265,6 @@ padding-top:max(env(safe-area-inset-top),20px);
 }
 .library-panel.open{transform:translateX(0)}
 
-/* ══ SEARCH PANEL ══ */
 .search-panel{
 position:fixed;inset:0;z-index:50;
 background:rgba(5,8,6,0.96);
@@ -321,76 +274,74 @@ display:flex;flex-direction:column;
 padding-top:max(env(safe-area-inset-top),20px);
 }
 .search-panel.open{transform:translateY(0)}
-.search-header{display:flex;align-items:center;padding:12px 20px 16px;gap:12px;border-bottom:1px solid var(--border2)}
+.search-header{display:flex;align-items:center;padding:12px 20px 16px;gap:12px;border-bottom:1px solid var(–border2)}
 .search-input-wrap{
 flex:1;display:flex;align-items:center;gap:10px;
-background:var(--card2);border-radius:12px;padding:10px 14px;
-border:1px solid var(--border2);
+background:var(–card2);border-radius:12px;padding:10px 14px;
+border:1px solid var(–border2);
 }
-.search-input-wrap svg{width:16px;height:16px;color:var(--txt3);flex-shrink:0}
+.search-input-wrap svg{width:16px;height:16px;color:var(–txt3);flex-shrink:0}
 .search-input{
 flex:1;background:none;border:none;outline:none;
-color:var(--txt);font-family:var(--sans);font-size:15px;
+color:var(–txt);font-family:var(–sans);font-size:15px;
 -webkit-appearance:none;
 }
-.search-input::placeholder{color:var(--txt3)}
+.search-input::placeholder{color:var(–txt3)}
 .search-body{flex:1;overflow-y:auto;padding:20px 16px;}
-.search-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;height:160px;color:var(--txt3);font-family:var(--mono);font-size:11px;letter-spacing:0.1em;text-align:center;}
+.search-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;height:160px;color:var(–txt3);font-family:var(–mono);font-size:11px;letter-spacing:0.1em;text-align:center;}
 .search-categories{display:flex;flex-direction:column;gap:8px;}
-.search-cat{padding:14px 16px;border-radius:14px;border:1px solid var(--border2);background:var(--card);display:flex;align-items:center;gap:14px;cursor:pointer;transition:background .2s;}
-.search-cat:active{background:var(--card2)}
-.search-cat-ico{width:36px;height:36px;border-radius:8px;background:var(--g-soft);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.search-cat-ico svg{width:18px;height:18px;color:var(--g)}
-.search-cat-name{font-size:14px;font-weight:600;color:var(--txt)}
-.search-cat-sub{font-size:11px;color:var(--txt2);margin-top:2px}
-.lib-header{display:flex;align-items:center;padding:12px 20px 16px;gap:12px;border-bottom:1px solid var(--border2)}
-.lib-title{flex:1;font-family:var(--serif);font-size:22px;color:var(--txt)}
-.lib-count{font-family:var(--mono);font-size:10px;color:var(--txt3);letter-spacing:0.1em}
-.btn-back{width:36px;height:36px;border-radius:50%;border:1px solid var(--border2);background:var(--card);color:var(--txt2);display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-appearance:none;outline:none;}
+.search-cat{padding:14px 16px;border-radius:14px;border:1px solid var(–border2);background:var(–card);display:flex;align-items:center;gap:14px;cursor:pointer;transition:background .2s;}
+.search-cat:active{background:var(–card2)}
+.search-cat-ico{width:36px;height:36px;border-radius:8px;background:var(–g-soft);border:1px solid var(–border);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.search-cat-ico svg{width:18px;height:18px;color:var(–g)}
+.search-cat-name{font-size:14px;font-weight:600;color:var(–txt)}
+.search-cat-sub{font-size:11px;color:var(–txt2);margin-top:2px}
+.lib-header{display:flex;align-items:center;padding:12px 20px 16px;gap:12px;border-bottom:1px solid var(–border2)}
+.lib-title{flex:1;font-family:var(–serif);font-size:22px;color:var(–txt)}
+.lib-count{font-family:var(–mono);font-size:10px;color:var(–txt3);letter-spacing:0.1em}
+.btn-back{width:36px;height:36px;border-radius:50%;border:1px solid var(–border2);background:var(–card);color:var(–txt2);display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-appearance:none;outline:none;}
 .btn-back:active{transform:scale(0.9)}
 .lib-body{flex:1;overflow-y:auto;padding:12px 16px;-webkit-overflow-scrolling:touch}
 .lib-body::-webkit-scrollbar{display:none}
-.lib-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;height:200px;color:var(--txt3);font-family:var(--mono);font-size:11px;letter-spacing:0.1em;text-align:center}
+.lib-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;height:200px;color:var(–txt3);font-family:var(–mono);font-size:11px;letter-spacing:0.1em;text-align:center}
 
-/* ── Music library item ── */
 .music-item{
 display:flex;align-items:center;gap:12px;
 padding:10px 4px;border-bottom:1px solid rgba(255,255,255,0.04);
 cursor:pointer;transition:background .15s;border-radius:8px;
 }
-.music-item:active{background:var(--card)}
+.music-item:active{background:var(–card)}
 .music-thumb{
 width:44px;height:44px;border-radius:8px;flex-shrink:0;
 overflow:hidden;position:relative;
 }
 .music-thumb canvas{width:100%;height:100%;display:block}
 .music-info{flex:1;min-width:0}
-.music-title{font-size:14px;font-weight:600;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.music-artist{font-size:11px;color:var(--txt2);margin-top:2px}
-.music-dur{font-family:var(--mono);font-size:11px;color:var(--txt3);flex-shrink:0}
+.music-title{font-size:14px;font-weight:600;color:var(–txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.music-artist{font-size:11px;color:var(–txt2);margin-top:2px}
+.music-dur{font-family:var(–mono);font-size:11px;color:var(–txt3);flex-shrink:0}
 .music-more{display:none}
-.rec-card{display:flex;align-items:center;gap:12px;padding:14px;border:1px solid var(--border2);border-radius:14px;margin-bottom:8px;background:var(--card);position:relative;overflow:hidden}
-.rec-card::before{content:’’;position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--g);opacity:0.4}
-.rec-thumb{width:46px;height:46px;border-radius:10px;background:var(--g-soft);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.rec-card{display:flex;align-items:center;gap:12px;padding:14px;border:1px solid var(–border2);border-radius:14px;margin-bottom:8px;background:var(–card);position:relative;overflow:hidden}
+.rec-card::before{content:’’;position:absolute;left:0;top:0;bottom:0;width:2px;background:var(–g);opacity:0.4}
+.rec-thumb{width:46px;height:46px;border-radius:10px;background:var(–g-soft);border:1px solid var(–border);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
 .rec-info{flex:1;min-width:0}
-.rec-date{font-family:var(--mono);font-size:11px;color:var(--g);letter-spacing:0.05em}
-.rec-meta{font-size:11px;color:var(--txt2);margin-top:3px}
+.rec-date{font-family:var(–mono);font-size:11px;color:var(–g);letter-spacing:0.05em}
+.rec-meta{font-size:11px;color:var(–txt2);margin-top:3px}
 .rec-actions{display:flex;gap:6px;flex-shrink:0}
-.rec-btn{width:30px;height:30px;border-radius:8px;border:1px solid var(--border2);background:transparent;color:var(--txt2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;transition:all .2s}
-.rec-btn.play-btn{color:var(--g);border-color:rgba(52,199,89,0.25);font-size:11px}
-.rec-btn.dl{color:var(--g);border-color:rgba(52,199,89,0.25)}
-.rec-btn.del{color:var(--red);border-color:rgba(255,59,48,0.2)}
+.rec-btn{width:30px;height:30px;border-radius:8px;border:1px solid var(–border2);background:transparent;color:var(–txt2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;transition:all .2s}
+.rec-btn.play-btn{color:var(–g);border-color:rgba(52,199,89,0.25);font-size:11px}
+.rec-btn.dl{color:var(–g);border-color:rgba(52,199,89,0.25)}
+.rec-btn.del{color:var(–red);border-color:rgba(255,59,48,0.2)}
 .rec-btn:active{transform:scale(0.88)}
 
-/* ══ PREVIEW MODAL (disguised as “Video Clip”) ══ */
 .preview-modal{
 position:fixed;inset:0;z-index:80;
 background:rgba(0,0,0,0.88);backdrop-filter:blur(20px);
 display:flex;flex-direction:column;align-items:center;justify-content:center;
 opacity:0;pointer-events:none;transition:opacity .3s;
 padding:20px 16px;
-padding-top:max(var(--safe-top),20px);
-padding-bottom:max(var(--safe-bot),20px);
+padding-top:max(var(–safe-top),20px);
+padding-bottom:max(var(–safe-bot),20px);
 }
 .preview-modal.open{opacity:1;pointer-events:all}
 .preview-header{
@@ -398,18 +349,18 @@ width:100%;max-width:480px;
 display:flex;align-items:center;justify-content:space-between;
 margin-bottom:14px;
 }
-.preview-header-title{font-family:var(--serif);font-size:18px;color:var(--txt)}
-.preview-header-sub{font-family:var(--mono);font-size:10px;color:var(--txt3);letter-spacing:0.1em;margin-top:2px}
+.preview-header-title{font-family:var(–serif);font-size:18px;color:var(–txt)}
+.preview-header-sub{font-family:var(–mono);font-size:10px;color:var(–txt3);letter-spacing:0.1em;margin-top:2px}
 .btn-preview-close{
-width:36px;height:36px;border-radius:50%;border:1px solid var(--border2);
-background:var(--card);color:var(--txt2);
+width:36px;height:36px;border-radius:50%;border:1px solid var(–border2);
+background:var(–card);color:var(–txt2);
 display:flex;align-items:center;justify-content:center;cursor:pointer;
 }
 .btn-preview-close:active{transform:scale(0.9)}
 .preview-video-wrap{
 width:100%;max-width:480px;
 border-radius:16px;overflow:hidden;
-border:1px solid var(--border);
+border:1px solid var(–border);
 background:#000;
 flex-shrink:0;
 }
@@ -419,13 +370,12 @@ display:flex;gap:10px;margin-top:14px;width:100%;max-width:480px;
 }
 .preview-btn{
 flex:1;height:46px;border-radius:12px;
-font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;
+font-family:var(–sans);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;
 }
-.preview-btn.dl-btn{background:var(--g);border:none;color:#040c05}
-.preview-btn.close-btn{background:transparent;border:1px solid var(--border2);color:var(--txt2)}
+.preview-btn.dl-btn{background:var(–g);border:none;color:#040c05}
+.preview-btn.close-btn{background:transparent;border:1px solid var(–border2);color:var(–txt2)}
 .preview-btn:active{transform:scale(0.96)}
 
-/* ══ SAVE MODAL ══ */
 .modal-backdrop{
 position:fixed;inset:0;z-index:90;
 background:rgba(0,0,0,0.72);backdrop-filter:blur(16px);
@@ -436,54 +386,52 @@ opacity:0;pointer-events:none;transition:opacity .3s;
 .modal-sheet{
 width:100%;
 background:linear-gradient(to bottom,#181e18,#111611);
-border-radius:24px 24px 0 0;border:1px solid var(--border);border-bottom:none;
-padding:24px 24px max(var(--safe-bot),24px);
+border-radius:24px 24px 0 0;border:1px solid var(–border);border-bottom:none;
+padding:24px 24px max(var(–safe-bot),24px);
 transform:translateY(100%);transition:transform .35s cubic-bezier(0.32,0.72,0,1);
 }
 .modal-backdrop.open .modal-sheet{transform:translateY(0)}
-.modal-handle{width:36px;height:4px;border-radius:2px;background:var(--txt3);margin:0 auto 24px}
+.modal-handle{width:36px;height:4px;border-radius:2px;background:var(–txt3);margin:0 auto 24px}
 .modal-icon{font-size:40px;text-align:center;margin-bottom:14px}
-.modal-title{font-family:var(--serif);font-size:24px;text-align:center;color:var(--txt);margin-bottom:6px}
-.modal-sub{font-size:13px;color:var(--txt2);text-align:center;margin-bottom:8px;line-height:1.6}
+.modal-title{font-family:var(–serif);font-size:24px;text-align:center;color:var(–txt);margin-bottom:6px}
+.modal-sub{font-size:13px;color:var(–txt2);text-align:center;margin-bottom:8px;line-height:1.6}
 .modal-stats{display:flex;justify-content:center;gap:24px;margin:16px 0 28px}
 .mstat{display:flex;flex-direction:column;align-items:center;gap:4px}
-.mstat-val{font-family:var(--mono);font-size:20px;color:var(--g);font-weight:500}
-.mstat-key{font-family:var(--mono);font-size:9px;color:var(--txt3);letter-spacing:0.15em;text-transform:uppercase}
-.modal-divider{width:100%;height:1px;background:var(--border2);margin-bottom:20px}
+.mstat-val{font-family:var(–mono);font-size:20px;color:var(–g);font-weight:500}
+.mstat-key{font-family:var(–mono);font-size:9px;color:var(–txt3);letter-spacing:0.15em;text-transform:uppercase}
+.modal-divider{width:100%;height:1px;background:var(–border2);margin-bottom:20px}
 .btn-save{
 width:100%;height:54px;border-radius:14px;border:none;
-background:var(--g);color:#040c05;font-family:var(--sans);font-size:15px;font-weight:700;
+background:var(–g);color:#040c05;font-family:var(–sans);font-size:15px;font-weight:700;
 cursor:pointer;margin-bottom:10px;transition:all .2s;
 display:flex;align-items:center;justify-content:center;gap:8px;
 box-shadow:0 6px 24px rgba(52,199,89,0.25);
 }
 .btn-save:active{transform:scale(0.97)}
 .btn-discard{
-width:100%;height:50px;border-radius:14px;border:1px solid var(--border2);
-background:transparent;color:var(--red);font-family:var(--sans);font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;
+width:100%;height:50px;border-radius:14px;border:1px solid var(–border2);
+background:transparent;color:var(–red);font-family:var(–sans);font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;
 }
 .btn-discard:active{background:rgba(255,59,48,0.06)}
 
-/* ══ TOAST ══ */
 .toast{
 position:fixed;bottom:90px;left:50%;
 transform:translateX(-50%) translateY(14px);z-index:200;
-background:rgba(15,22,15,0.96);border:1px solid var(--g);border-radius:100px;
-padding:10px 22px;font-family:var(--mono);font-size:11px;color:var(--g);
+background:rgba(15,22,15,0.96);border:1px solid var(–g);border-radius:100px;
+padding:10px 22px;font-family:var(–mono);font-size:11px;color:var(–g);
 letter-spacing:0.12em;white-space:nowrap;
 opacity:0;transition:all .28s;pointer-events:none;backdrop-filter:blur(16px);
 box-shadow:0 4px 20px rgba(52,199,89,0.2);
 }
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* ── Animations ── */
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 .album-hero{animation:fadeUp .5s .1s both}
 .song-info{animation:fadeUp .5s .18s both}
 .progress-wrap{animation:fadeUp .5s .24s both}
 .ctrl-row{animation:fadeUp .5s .3s both}
 .volume-row{animation:fadeUp .5s .35s both}
-/* ── White screen overlay (フロントカメラ時) ── */
+
 .white-screen{
 position:fixed;
 left:0;right:0;bottom:0;
@@ -497,7 +445,7 @@ display:none;
 /* ══ LYRICS PANEL ══ */
 .lyrics-panel{
 position:fixed;inset:0;z-index:60;
-background:var(--bg);
+background:var(–bg);
 transform:translateY(100%);
 transition:transform .4s cubic-bezier(0.32,0.72,0,1);
 display:flex;flex-direction:column;
@@ -509,25 +457,25 @@ padding-top:max(env(safe-area-inset-top),20px);
 display:flex;align-items:center;
 padding:12px 20px 14px;
 gap:12px;
-border-bottom:1px solid var(--border2);
+border-bottom:1px solid var(–border2);
 flex-shrink:0;
 }
 .lyrics-header-info{flex:1;min-width:0;}
 .lyrics-header-title{
-font-family:var(--serif);font-size:16px;
-color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+font-family:var(–serif);font-size:16px;
+color:var(–txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 .lyrics-header-artist{
-font-size:11px;color:var(--txt2);margin-top:2px;
+font-size:11px;color:var(–txt2);margin-top:2px;
 }
 .lyrics-body{
-flex:1;overflow-y:auto;padding:28px 24px 120px;
+flex:1;overflow-y:auto;padding:28px 24px 20px;
 -webkit-overflow-scrolling:touch;
 }
 .lyrics-body::-webkit-scrollbar{display:none}
 
 .lyric-line{
-font-family:var(--serif);
+font-family:var(–serif);
 font-size:22px;
 line-height:1.55;
 color:rgba(240,244,240,0.4);
@@ -537,36 +485,92 @@ cursor:default;
 letter-spacing:-0.01em;
 }
 .lyric-line.active{
-color:var(--txt);
+color:var(–txt);
 font-size:26px;
 }
 .lyric-line.passed{
 color:rgba(240,244,240,0.6);
 }
-/* 録画タイマーを歌詞に埋め込む */
 .lyric-line.rec-embed{
-color:rgba(52,199,89,0.0); /* 完全透明 - 見えない */
+color:rgba(52,199,89,0.0);
 font-size:0;
 margin:0;height:0;overflow:hidden;
 }
 .lyrics-close{
 width:36px;height:36px;border-radius:50%;
-border:1px solid var(--border2);background:var(--card);
-color:var(--txt2);display:flex;align-items:center;justify-content:center;
+border:1px solid var(–border2);background:var(–card);
+color:var(–txt2);display:flex;align-items:center;justify-content:center;
 cursor:pointer;flex-shrink:0;
 }
 .lyrics-close:active{transform:scale(0.9);}
 .lyrics-now-pill{
 display:inline-flex;align-items:center;gap:6px;
-background:var(--g-soft);border:1px solid var(--border);
+background:var(–g-soft);border:1px solid var(–border);
 border-radius:100px;padding:4px 12px;
-font-family:var(--mono);font-size:9px;color:var(--g);letter-spacing:0.15em;
+font-family:var(–mono);font-size:9px;color:var(–g);letter-spacing:0.15em;
 margin-bottom:20px;
 }
 .lyrics-now-pill-dot{
-width:5px;height:5px;border-radius:50%;background:var(--g);
+width:5px;height:5px;border-radius:50%;background:var(–g);
 animation:blink .9s ease-in-out infinite;
 }
+
+/* ══ LYRICS NOW-PLAYING BAR (下部) ══ */
+.lyrics-now-bar{
+position:absolute;
+bottom:0;left:0;right:0;
+background:rgba(13,13,13,0.96);
+backdrop-filter:blur(20px);
+border-top:1px solid var(–border2);
+padding:10px 16px;
+padding-bottom:max(env(safe-area-inset-bottom,12px),12px);
+display:flex;align-items:center;gap:12px;
+z-index:2;
+flex-shrink:0;
+}
+.lyrics-now-art{
+width:36px;height:36px;border-radius:8px;
+overflow:hidden;flex-shrink:0;
+border:1px solid var(–border2);
+}
+.lyrics-now-art canvas{width:100%;height:100%;display:block}
+.lyrics-now-info{
+flex:1;min-width:0;
+}
+.lyrics-now-title{
+font-size:11px;font-weight:600;color:var(–txt);
+white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.lyrics-now-artist{
+font-size:10px;color:var(–txt2);margin-top:1px;
+white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.lyrics-now-meter{
+margin-top:5px;
+height:2px;
+background:var(–card2);
+border-radius:1px;
+overflow:hidden;
+}
+.lyrics-now-meter-fill{
+height:100%;
+background:linear-gradient(90deg,var(–g2),var(–g));
+border-radius:1px;
+width:0%;
+transition:width .1s linear;
+}
+.lyrics-now-eq{
+display:flex;align-items:center;gap:2px;
+height:16px;flex-shrink:0;
+}
+.lyrics-now-eq .lbar{
+width:2px;border-radius:1px;background:var(–g);opacity:0.7;
+}
+@keyframes leq1{0%,100%{height:4px}50%{height:14px}}
+@keyframes leq2{0%,100%{height:8px}40%{height:4px}}
+@keyframes leq3{0%,100%{height:12px}60%{height:4px}}
+@keyframes leq4{0%,100%{height:6px}50%{height:14px}}
+@keyframes leq5{0%,100%{height:10px}30%{height:4px}}
 
 /* ══ CAMERA SETTINGS PANEL ══ */
 .cam-settings-panel{
@@ -580,10 +584,10 @@ padding-top:max(env(safe-area-inset-top),20px);
 .cam-settings-panel.open{transform:translateY(0)}
 .cam-settings-header{
 display:flex;align-items:center;padding:12px 20px 16px;
-gap:12px;border-bottom:1px solid var(--border2);
+gap:12px;border-bottom:1px solid var(–border2);
 }
 .cam-settings-title{
-flex:1;font-family:var(--serif);font-size:22px;color:var(--txt);
+flex:1;font-family:var(–serif);font-size:22px;color:var(–txt);
 }
 .cam-settings-body{
 flex:1;overflow-y:auto;padding:20px 16px;
@@ -591,8 +595,8 @@ flex:1;overflow-y:auto;padding:20px 16px;
 }
 .cam-settings-body::-webkit-scrollbar{display:none}
 .cam-section-label{
-font-family:var(--mono);font-size:10px;letter-spacing:0.2em;
-color:var(--txt3);text-transform:uppercase;margin-bottom:10px;margin-top:24px;
+font-family:var(–mono);font-size:10px;letter-spacing:0.2em;
+color:var(–txt3);text-transform:uppercase;margin-bottom:10px;margin-top:24px;
 }
 .cam-section-label:first-child{margin-top:0}
 .cam-zoom-group{
@@ -600,13 +604,13 @@ display:flex;gap:8px;padding:4px 0 8px;
 }
 .cam-zoom-btn{
 flex:1;height:44px;border-radius:12px;
-border:1px solid var(--border2);background:var(--card);
-color:var(--txt2);font-family:var(--mono);font-size:14px;font-weight:700;
+border:1px solid var(–border2);background:var(–card);
+color:var(–txt2);font-family:var(–mono);font-size:14px;font-weight:700;
 cursor:pointer;transition:all .2s;
 }
 .cam-zoom-btn.active{
-background:var(--g-soft);border-color:rgba(52,199,89,0.4);
-color:var(--g);
+background:var(–g-soft);border-color:rgba(52,199,89,0.4);
+color:var(–g);
 }
 .cam-zoom-btn:active{transform:scale(0.95)}
 .cam-lens-group{
@@ -614,35 +618,35 @@ display:flex;gap:8px;padding:4px 0 8px;
 }
 .cam-lens-btn{
 flex:1;height:44px;border-radius:12px;
-border:1px solid var(--border2);background:var(--card);
-color:var(--txt2);font-family:var(--sans);font-size:13px;font-weight:600;
+border:1px solid var(–border2);background:var(–card);
+color:var(–txt2);font-family:var(–sans);font-size:13px;font-weight:600;
 cursor:pointer;transition:all .2s;
 }
 .cam-lens-btn.active{
-background:var(--g-soft);border-color:rgba(52,199,89,0.4);
-color:var(--g);
+background:var(–g-soft);border-color:rgba(52,199,89,0.4);
+color:var(–g);
 }
 .cam-lens-btn:active{transform:scale(0.95)}
 .cam-toggle-row{
 display:flex;align-items:center;gap:12px;
 padding:14px 16px;border-radius:14px;
-border:1px solid var(--border2);background:var(--card);
+border:1px solid var(–border2);background:var(–card);
 margin-bottom:8px;
 }
 .cam-toggle-info{flex:1}
-.cam-toggle-name{font-size:14px;font-weight:600;color:var(--txt)}
-.cam-toggle-sub{font-size:11px;color:var(--txt2);margin-top:2px}
+.cam-toggle-name{font-size:14px;font-weight:600;color:var(–txt)}
+.cam-toggle-sub{font-size:11px;color:var(–txt2);margin-top:2px}
 .cam-switch{
 position:relative;width:46px;height:26px;flex-shrink:0;
 }
 .cam-switch input{opacity:0;width:0;height:0;position:absolute}
 .cam-switch-track{
 position:absolute;inset:0;border-radius:13px;
-background:var(--card2);border:1px solid var(--border2);
+background:var(–card2);border:1px solid var(–border2);
 transition:background .2s,border-color .2s;cursor:pointer;
 }
 .cam-switch input:checked + .cam-switch-track{
-background:var(--g);border-color:var(--g);
+background:var(–g);border-color:var(–g);
 }
 .cam-switch-thumb{
 position:absolute;top:3px;left:3px;
@@ -654,35 +658,29 @@ pointer-events:none;
 .cam-info-row{
 display:flex;align-items:center;gap:12px;
 padding:14px 16px;border-radius:14px;
-border:1px solid var(--border2);background:var(--card);
+border:1px solid var(–border2);background:var(–card);
 margin-bottom:8px;
 }
 .cam-info-ico{
 width:38px;height:38px;border-radius:10px;
-background:var(--g-soft);border:1px solid var(--border);
+background:var(–g-soft);border:1px solid var(–border);
 display:flex;align-items:center;justify-content:center;
 flex-shrink:0;
 }
-.cam-info-ico svg{width:18px;height:18px;color:var(--g)}
+.cam-info-ico svg{width:18px;height:18px;color:var(–g)}
 .cam-info-label{flex:1}
-.cam-info-name{font-size:14px;font-weight:600;color:var(--txt)}
-.cam-info-sub{font-size:11px;color:var(--txt2);margin-top:2px}
+.cam-info-name{font-size:14px;font-weight:600;color:var(–txt)}
+.cam-info-sub{font-size:11px;color:var(–txt2);margin-top:2px}
 .cam-info-val{
-font-family:var(--mono);font-size:12px;color:var(--g);
+font-family:var(–mono);font-size:12px;color:var(–g);
 flex-shrink:0;letter-spacing:0.05em;
 }
 </style>
 
-
 </head>
 <body>
 
-<!-- Always-green banner for status bar -->
-
 <div class="site-banner"></div>
-
-<!-- WHITE SCREEN (フロントカメラ設定ボタン時) -->
-
 <div class="white-screen" id="whiteScreen" onclick="closeWhiteScreen()"></div>
 
 <!-- LYRICS PANEL -->
@@ -698,6 +696,26 @@ flex-shrink:0;letter-spacing:0.05em;
     </div>
   </div>
   <div class="lyrics-body" id="lyricsBody"></div>
+  <!-- ★ 下部 Now Playing バー -->
+  <div class="lyrics-now-bar" id="lyricsNowBar">
+    <div class="lyrics-now-art">
+      <canvas id="lyricsNowCanvas" width="36" height="36"></canvas>
+    </div>
+    <div class="lyrics-now-info">
+      <div class="lyrics-now-title" id="lyricsNowTitle">Midnight Drive</div>
+      <div class="lyrics-now-artist" id="lyricsNowArtist">Neon Echo</div>
+      <div class="lyrics-now-meter">
+        <div class="lyrics-now-meter-fill" id="lyricsNowMeter"></div>
+      </div>
+    </div>
+    <div class="lyrics-now-eq" id="lyricsNowEq">
+      <div class="lbar" style="height:8px;animation:leq1 0.8s ease-in-out infinite;animation-play-state:paused"></div>
+      <div class="lbar" style="height:5px;animation:leq2 1.1s ease-in-out infinite;animation-delay:.1s;animation-play-state:paused"></div>
+      <div class="lbar" style="height:12px;animation:leq3 0.9s ease-in-out infinite;animation-delay:.2s;animation-play-state:paused"></div>
+      <div class="lbar" style="height:6px;animation:leq4 1.0s ease-in-out infinite;animation-delay:.05s;animation-play-state:paused"></div>
+      <div class="lbar" style="height:10px;animation:leq5 0.75s ease-in-out infinite;animation-delay:.15s;animation-play-state:paused"></div>
+    </div>
+  </div>
 </div>
 
 <!-- PERMISSION SCREEN -->
@@ -709,11 +727,9 @@ flex-shrink:0;letter-spacing:0.05em;
         <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
       </svg>
       <div style="font-family:var(--serif);font-size:22px;color:var(--g);margin-top:12px;letter-spacing:-0.01em;">Melos</div>
-      <!-- Music Prayer リンク（ロゴ下・リアルモード遷移機能付き） -->
       <div id="btnRealMode" style="margin-top:10px;font-family:var(--mono);font-size:10px;color:var(--txt3);letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:color .2s;-webkit-tap-highlight-color:transparent;">Music Prayer</div>
     </div>
   </div>
-  <!-- Start ボタン（フェイクモード） -->
   <div class="btn-perm" id="btnPermStart">Start</div>
 </div>
 
@@ -721,14 +737,10 @@ flex-shrink:0;letter-spacing:0.05em;
 
 <div class="app" id="mainApp">
 
-  <!-- Always-green status strip -->
-
   <div class="status-strip">
     <div class="strip-dot pulse"></div>
     <div class="strip-label">MELOS</div>
   </div>
-
-  <!-- Navbar -->
 
   <div class="navbar">
     <div class="nav-wordmark" style="display:flex;align-items:center;gap:7px;color:#ffffff;">
@@ -740,42 +752,26 @@ flex-shrink:0;letter-spacing:0.05em;
       Melos
     </div>
     <div class="nav-right">
-
-  <!-- F/B カメラインジケーター (文字色を透明に) -->
-  <div id="camIndicator" style="
-    font-family:var(--mono);font-size:11px;font-weight:700;
-    color:transparent;letter-spacing:0.1em;
-    width:24px;height:24px;
-    display:flex;align-items:center;justify-content:center;
-    transition:all .2s;
-  ">B</div>
-
-  <!-- 音符アイコン → カメラ切り替え -->
-  <div class="nav-btn" id="btnCamSwitch" title="Switch Camera">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-      <path d="M9 18V5l12-2v13"/>
-      <circle cx="6" cy="18" r="3"/>
-      <circle cx="18" cy="16" r="3"/>
-    </svg>
+      <div id="camIndicator" style="font-family:var(--mono);font-size:11px;font-weight:700;color:transparent;letter-spacing:0.1em;width:24px;height:24px;display:flex;align-items:center;justify-content:center;transition:all .2s;">B</div>
+      <div class="nav-btn" id="btnCamSwitch" title="Switch Camera">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M9 18V5l12-2v13"/>
+          <circle cx="6" cy="18" r="3"/>
+          <circle cx="18" cy="16" r="3"/>
+        </svg>
+      </div>
+      <div class="nav-btn" id="btnReset" title="Settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </div>
+    </div>
   </div>
-
-  <!-- 設定アイコン → リセット -->
-  <div class="nav-btn" id="btnReset" title="Settings">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-      <circle cx="12" cy="12" r="3"/>
-      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-    </svg>
-  </div>
-
-</div>
-
-  </div>
-
-  <!-- Scroll body -->
 
   <div class="scroll-body">
 
-<!-- Album Hero (長押しで歌詞表示) -->
+```
 <div class="album-hero" id="albumHero">
   <canvas class="album-art-canvas" id="albumCanvas"></canvas>
   <div class="album-overlay"></div>
@@ -785,7 +781,6 @@ flex-shrink:0;letter-spacing:0.05em;
   </div>
 </div>
 
-<!-- Song info -->
 <div class="song-info">
   <div>
     <div class="song-title" id="songTitle"><em>Midnight</em> Drive</div>
@@ -794,7 +789,6 @@ flex-shrink:0;letter-spacing:0.05em;
   <div class="btn-heart" id="btnHeart">♡</div>
 </div>
 
-<!-- Progress -->
 <div class="progress-wrap">
   <div class="progress-track">
     <div class="progress-fill" id="progressFill"></div>
@@ -805,7 +799,6 @@ flex-shrink:0;letter-spacing:0.05em;
   </div>
 </div>
 
-<!-- Controls (EQ wave above play button) -->
 <div class="ctrl-row">
   <div class="ctrl-side">
     <div class="btn-ctrl active" id="btnShuffle">
@@ -819,19 +812,14 @@ flex-shrink:0;letter-spacing:0.05em;
       </svg>
     </div>
   </div>
-
-  <!-- ★ 再生ボタン + 波形ラッパー -->
   <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
-    <!-- EQ Waveform (再生ボタンの上) -->
     <div class="waveform-bars paused" id="waveform" style="margin-bottom:0;height:24px;"></div>
-    <!-- メインボタン: 見た目は再生、実は録画 -->
     <div class="btn-play" id="btnPlay">
       <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
         <polygon points="5,3 19,12 5,21"/>
       </svg>
     </div>
   </div>
-
   <div class="ctrl-side">
     <div class="btn-ctrl" id="btnNext">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -847,7 +835,6 @@ flex-shrink:0;letter-spacing:0.05em;
   </div>
 </div>
 
-<!-- Volume -->
 <div class="volume-row">
   <div class="vol-ico">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -865,13 +852,11 @@ flex-shrink:0;letter-spacing:0.05em;
   </div>
 </div>
 
-<!-- Queue -->
 <div class="section-label">Up Next</div>
 <div class="queue-list" id="queueList"></div>
+```
 
-  </div><!-- /scroll-body -->
-
-  <!-- Bottom Nav -->
+  </div>
 
   <div class="bottom-nav">
     <div class="bnav-item active" id="navHome">
@@ -882,23 +867,21 @@ flex-shrink:0;letter-spacing:0.05em;
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       <div class="bnav-label">Search</div>
     </div>
-    <!-- ★ 下のLibrary → ダミー音楽ライブラリ -->
     <div class="bnav-item" id="navMusicLib">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M3 3h6v18H3z"/><path d="M9 3h6v18H9z"/><rect x="15" y="3" width="6" height="18"/>
       </svg>
       <div class="bnav-label">Library</div>
     </div>
-    <!-- ★ Profile → リセット機能 -->
     <div class="bnav-item" id="navProfile">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       <div class="bnav-label">Profile</div>
     </div>
   </div>
 
-</div><!-- /main app -->
+</div>
 
-<!-- MUSIC LIBRARY PANEL (ダミー) -->
+<!-- MUSIC LIBRARY PANEL -->
 
 <div class="library-panel" id="musicLibPanel">
   <div class="lib-header">
@@ -911,7 +894,7 @@ flex-shrink:0;letter-spacing:0.05em;
   <div class="lib-body" id="musicLibBody"></div>
 </div>
 
-<!-- RECORDINGS PANEL (実データ・上のギャラリーボタンからのみ) -->
+<!-- RECORDINGS PANEL -->
 
 <div class="library-panel" id="libraryPanel">
   <div class="lib-header">
@@ -944,7 +927,7 @@ flex-shrink:0;letter-spacing:0.05em;
     <div class="search-categories">
       <div class="search-cat">
         <div class="search-cat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
-        <div><div class="search-cat-name">New Releases</div><div class="search-cat-sub">Latest tracks & albums</div></div>
+        <div><div class="search-cat-name">New Releases</div><div class="search-cat-sub">Latest tracks &amp; albums</div></div>
       </div>
       <div class="search-cat">
         <div class="search-cat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
@@ -962,7 +945,7 @@ flex-shrink:0;letter-spacing:0.05em;
   </div>
 </div>
 
-<!-- PREVIEW MODAL (偽装: "Video Clips" ビューワー) -->
+<!-- PREVIEW MODAL -->
 
 <div class="preview-modal" id="previewModal">
   <div class="preview-header">
@@ -977,7 +960,6 @@ flex-shrink:0;letter-spacing:0.05em;
   <div class="preview-video-wrap">
     <video class="preview-video" id="previewVideo" controls playsinline webkit-playsinline></video>
   </div>
-  <!-- iOS向け保存案内 (削除済み) -->
   <div id="iosSaveHint" style="display:none;"></div>
   <div class="preview-actions" style="display:none;">
     <button id="btnPreviewCancel"></button>
@@ -985,8 +967,7 @@ flex-shrink:0;letter-spacing:0.05em;
   </div>
 </div>
 
-
-<!-- CAMERA SETTINGS PANEL (リアルモード: ホームボタンで遷移) -->
+<!-- CAMERA SETTINGS PANEL -->
 
 <div class="cam-settings-panel" id="camSettingsPanel">
   <div class="cam-settings-header">
@@ -997,63 +978,51 @@ flex-shrink:0;letter-spacing:0.05em;
   </div>
   <div class="cam-settings-body">
 
-    <!-- ズーム -->
-    <div class="cam-section-label">Zoom</div>
-    <div class="cam-zoom-group">
-      <button class="cam-zoom-btn active" id="camZoom1x" onclick="setCamZoom('1x')">1x</button>
-      <button class="cam-zoom-btn" id="camZoom2x" onclick="setCamZoom('2x')">2x</button>
-      <button class="cam-zoom-btn" id="camZoom3x" onclick="setCamZoom('3x')">3x</button>
-    </div>
+```
+<div class="cam-section-label">Zoom</div>
+<div class="cam-zoom-group">
+  <button class="cam-zoom-btn active" id="camZoom1x" onclick="setCamZoom('1x')">1x</button>
+  <button class="cam-zoom-btn" id="camZoom2x" onclick="setCamZoom('2x')">2x</button>
+  <button class="cam-zoom-btn" id="camZoom3x" onclick="setCamZoom('3x')">3x</button>
+</div>
 
-    <!-- レンズ切替 -->
-    <div class="cam-section-label">Lens</div>
-    <div class="cam-lens-group">
-      <button class="cam-lens-btn" id="camLensUltraWide" onclick="setCamLens('ultrawide')">Ultra Wide</button>
-      <button class="cam-lens-btn active" id="camLensWide" onclick="setCamLens('wide')">Wide</button>
-      <button class="cam-lens-btn" id="camLensStd" onclick="setCamLens('standard')">Standard</button>
-    </div>
 
-    <!-- グリッド表示 -->
-    <div class="cam-section-label">Options</div>
-    <div class="cam-toggle-row">
-      <div class="cam-toggle-info">
-        <div class="cam-toggle-name">Grid Lines</div>
-        <div class="cam-toggle-sub">Composition guide overlay</div>
-      </div>
-      <label class="cam-switch">
-        <input type="checkbox" id="camToggleGrid">
-        <div class="cam-switch-track"></div>
-        <div class="cam-switch-thumb"></div>
-      </label>
-    </div>
+<div class="cam-section-label">Lens</div>
+<div class="cam-lens-group">
+  <button class="cam-lens-btn active" id="camLensWide" onclick="setCamLens('wide')">Wide</button>
+  <button class="cam-lens-btn" id="camLensStd" onclick="setCamLens('standard')">Standard</button>
+</div>
 
-    <!-- 解像度 -->
-    <div class="cam-info-row">
-      <div class="cam-info-ico">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
-        </svg>
-      </div>
-      <div class="cam-info-label">
-        <div class="cam-info-name">Resolution</div>
-        <div class="cam-info-sub">Video capture quality</div>
-      </div>
-      <div class="cam-info-val" id="camResVal">1080p</div>
-    </div>
 
-    <!-- フレームレート -->
-    <div class="cam-info-row">
-      <div class="cam-info-ico">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-        </svg>
-      </div>
-      <div class="cam-info-label">
-        <div class="cam-info-name">Frame Rate</div>
-        <div class="cam-info-sub">Frames per second</div>
-      </div>
-      <div class="cam-info-val" id="camFpsVal">30fps</div>
-    </div>
+
+<div class="cam-section-label">Options</div>
+
+<div class="cam-info-row">
+  <div class="cam-info-ico">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+    </svg>
+  </div>
+  <div class="cam-info-label">
+    <div class="cam-info-name">Resolution</div>
+    <div class="cam-info-sub">Video capture quality</div>
+  </div>
+  <div class="cam-info-val" id="camResVal">1080p</div>
+</div>
+
+<div class="cam-info-row">
+  <div class="cam-info-ico">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+    </svg>
+  </div>
+  <div class="cam-info-label">
+    <div class="cam-info-name">Frame Rate</div>
+    <div class="cam-info-sub">Frames per second</div>
+  </div>
+  <div class="cam-info-val" id="camFpsVal">30fps</div>
+</div>
+```
 
   </div>
 </div>
@@ -1076,33 +1045,16 @@ flex-shrink:0;letter-spacing:0.05em;
   </div>
 </div>
 
-<!-- TOAST -->
-
 <div class="toast" id="toast"></div>
-
-<!-- CAMERA SWITCH POPUP -->
-<div class="cam-popup" id="camPopup"></div>
 <video id="hiddenCam" style="display:none" muted playsinline></video>
 
 <script>
-/* ═══════════════════════════════════════════════
-   STEALTH REC — disguised as "Melos" music app
-   ─ Banner: always #34c759 green (never changes)
-   ─ Camera switch: front ↔ back
-   ─ Preview: via "Video Clips" gallery icon
-   ─ Save choice modal after every recording
-═══════════════════════════════════════════════ */
-
-// ─── Safe-area 取得 ───
 (function(){
   const r = document.documentElement;
   r.style.setProperty('--safe-top', 'env(safe-area-inset-top, 50px)');
   r.style.setProperty('--safe-bot', 'env(safe-area-inset-bottom, 0px)');
 })();
 
-
-
-// ─── IndexedDB ───
 const DB_NAME='melos_v2', DB_STORE='recs';
 let db=null;
 async function openDB(){
@@ -1132,7 +1084,6 @@ async function dbDel(id){
   return new Promise((res,rej)=>{tx.oncomplete=res;tx.onerror=()=>rej(tx.error);});
 }
 
-// ─── State ───
 let stream=null;
 let mediaRecorder=null;
 let chunks=[];
@@ -1143,7 +1094,6 @@ let pendingBlob=null, pendingMime='', pendingSec=0;
 let facingMode='environment';
 let previewCurrentRec=null;
 let songIdx=0;
-// ② フェイクモード vs 本物モード
 let isRealMode=false;
 
 const SONGS=[
@@ -1159,13 +1109,7 @@ const QUEUE=[
 ];
 
 function getSupportedMime(){
-  const t=[
-    'video/mp4;codecs=avc1,mp4a.40.2',
-    'video/mp4',
-    'video/webm;codecs=vp9,opus',
-    'video/webm;codecs=vp8,opus',
-    'video/webm'
-  ];
+  const t=['video/mp4;codecs=avc1,mp4a.40.2','video/mp4','video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm'];
   return t.find(m=>MediaRecorder.isTypeSupported(m))||'';
 }
 function fmtTime(s){return `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`}
@@ -1177,46 +1121,28 @@ function showToast(msg){
   toastTm=setTimeout(()=>t.classList.remove('show'),2400);
 }
 
-// ─── Camera switch popup ───
-let camPopupTm;
-function showCamPopup(label){
-  const p=document.getElementById('camPopup');
-  if(!p) return;
-  p.textContent=label;
-  p.classList.remove('show');
-  // リフローでアニメーションをリセット
-  void p.offsetWidth;
-  p.classList.add('show');
-  clearTimeout(camPopupTm);
-  camPopupTm=setTimeout(()=>p.classList.remove('show'),1600);
-}
-
-// ─── Canvas album art ───
+// ─── ★ NEW Album art: 3 styles + new "aurora" style ───
 function drawAlbumArt(canvas,size=800,hue=140,style=0){
   canvas.width=size; canvas.height=size;
   const ctx=canvas.getContext('2d');
   const cx=size*0.5, cy=size*0.5;
 
-  // スタイル0: レコード盤（デフォルト）
-  // スタイル1: 幾何学グリッド
-  // スタイル2: 波形アート
-
   if(style===1){
     // ── 幾何学グリッドスタイル ──
     const bg=ctx.createLinearGradient(0,size,size,0);
-    bg.addColorStop(0,`hsl(${hue},50%,7%)`);
-    bg.addColorStop(1,`hsl(${hue+30},40%,14%)`);
+    bg.addColorStop(0,`hsl(${hue},55%,6%)`);
+    bg.addColorStop(0.5,`hsl(${hue+20},45%,11%)`);
+    bg.addColorStop(1,`hsl(${hue+40},40%,16%)`);
     ctx.fillStyle=bg; ctx.fillRect(0,0,size,size);
     // グリッドライン
     const step=size/8;
-    ctx.strokeStyle=`hsla(${hue},60%,50%,0.08)`;
+    ctx.strokeStyle=`hsla(${hue},60%,50%,0.07)`;
     ctx.lineWidth=0.8;
     for(let i=0;i<=8;i++){
       ctx.beginPath(); ctx.moveTo(i*step,0); ctx.lineTo(i*step,size); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(0,i*step); ctx.lineTo(size,i*step); ctx.stroke();
     }
-    // 対角線
-    ctx.strokeStyle=`hsla(${hue},70%,60%,0.12)`;
+    ctx.strokeStyle=`hsla(${hue},70%,60%,0.10)`;
     ctx.lineWidth=1;
     for(let i=-8;i<=8;i++){
       ctx.beginPath(); ctx.moveTo(i*step,0); ctx.lineTo(i*step+size,size); ctx.stroke();
@@ -1224,137 +1150,147 @@ function drawAlbumArt(canvas,size=800,hue=140,style=0){
     // 中央の六角形
     ctx.beginPath();
     for(let i=0;i<6;i++){
-      const a=Math.PI/3*i-Math.PI/6;
-      const r=size*0.28;
+      const a=Math.PI/3*i-Math.PI/6, r=size*0.28;
       i===0?ctx.moveTo(cx+r*Math.cos(a),cy+r*Math.sin(a)):ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));
     }
     ctx.closePath();
     ctx.strokeStyle=`hsla(${hue},70%,55%,0.5)`;
     ctx.lineWidth=2; ctx.stroke();
-    // 内側の六角形
     ctx.beginPath();
     for(let i=0;i<6;i++){
-      const a=Math.PI/3*i;
-      const r=size*0.14;
+      const a=Math.PI/3*i, r=size*0.14;
       i===0?ctx.moveTo(cx+r*Math.cos(a),cy+r*Math.sin(a)):ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));
     }
     ctx.closePath();
     ctx.fillStyle=`hsla(${hue},60%,50%,0.15)`; ctx.fill();
     ctx.strokeStyle=`hsla(${hue},70%,60%,0.6)`;
     ctx.lineWidth=1.5; ctx.stroke();
-    // 中心点
     ctx.beginPath(); ctx.arc(cx,cy,size*0.03,0,Math.PI*2);
     ctx.fillStyle=`hsl(${hue},70%,55%)`; ctx.fill();
-    // グロー
     const glow=ctx.createRadialGradient(cx,cy,0,cx,cy,size*0.3);
-    glow.addColorStop(0,`hsla(${hue},80%,60%,0.12)`);
+    glow.addColorStop(0,`hsla(${hue},80%,60%,0.14)`);
     glow.addColorStop(1,'transparent');
     ctx.fillStyle=glow; ctx.fillRect(0,0,size,size);
 
   } else if(style===2){
-    // ── 波形アートスタイル ──
-    const bg=ctx.createLinearGradient(0,0,0,size);
-    bg.addColorStop(0,`hsl(${hue},40%,5%)`);
-    bg.addColorStop(0.5,`hsl(${hue+15},35%,10%)`);
-    bg.addColorStop(1,`hsl(${hue-10},45%,6%)`);
+    // ── オーロラ / 流体グラデーションスタイル (NEW) ──
+    const bg=ctx.createLinearGradient(0,0,size,size);
+    bg.addColorStop(0,`hsl(${hue},55%,6%)`);
+    bg.addColorStop(0.4,`hsl(${hue+30},40%,10%)`);
+    bg.addColorStop(0.8,`hsl(${hue+60},50%,8%)`);
+    bg.addColorStop(1,`hsl(${hue-20},45%,5%)`);
     ctx.fillStyle=bg; ctx.fillRect(0,0,size,size);
-    // 複数の波形レイヤー
-    const layers=[
-      {amp:size*0.12, freq:0.015, phase:0,    alpha:0.35, width:2.5},
-      {amp:size*0.08, freq:0.022, phase:1.2,  alpha:0.25, width:1.8},
-      {amp:size*0.18, freq:0.009, phase:2.5,  alpha:0.15, width:3.5},
-      {amp:size*0.05, freq:0.035, phase:0.8,  alpha:0.45, width:1.2},
+    // オーロラ帯
+    const bands=[
+      {x:size*0.2, y:size*0.3, rx:size*0.5, ry:size*0.15, hShift:0,   alpha:0.18},
+      {x:size*0.6, y:size*0.6, rx:size*0.45, ry:size*0.12, hShift:40,  alpha:0.14},
+      {x:size*0.4, y:size*0.5, rx:size*0.6, ry:size*0.18, hShift:-20, alpha:0.12},
+      {x:size*0.7, y:size*0.2, rx:size*0.35, ry:size*0.10, hShift:60,  alpha:0.10},
     ];
-    layers.forEach(l=>{
-      ctx.beginPath();
-      for(let x=0;x<=size;x+=2){
-        const y=cy+Math.sin(x*l.freq+l.phase)*l.amp+Math.sin(x*l.freq*2.3+l.phase)*l.amp*0.3;
-        x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
-      }
-      ctx.strokeStyle=`hsla(${hue},65%,55%,${l.alpha})`;
-      ctx.lineWidth=l.width; ctx.stroke();
-    });
-    // 縦のグロー帯
-    for(let i=0;i<5;i++){
-      const x=size*(0.15+i*0.18);
-      const g=ctx.createLinearGradient(x-size*0.04,0,x+size*0.04,0);
-      g.addColorStop(0,'transparent');
-      g.addColorStop(0.5,`hsla(${hue},70%,55%,0.06)`);
+    bands.forEach(b=>{
+      const g=ctx.createRadialGradient(b.x,b.y,0,b.x,b.y,b.rx);
+      g.addColorStop(0,`hsla(${hue+b.hShift},75%,55%,${b.alpha})`);
+      g.addColorStop(0.5,`hsla(${hue+b.hShift+20},65%,45%,${b.alpha*0.5})`);
       g.addColorStop(1,'transparent');
-      ctx.fillStyle=g; ctx.fillRect(0,0,size,size);
+      ctx.save();
+      ctx.scale(1, b.ry/b.rx);
+      ctx.fillStyle=g;
+      ctx.beginPath(); ctx.arc(b.x, b.y*(b.rx/b.ry), b.rx, 0, Math.PI*2);
+      ctx.fill();
+      ctx.restore();
+    });
+    // 星粒子
+    for(let i=0;i<200;i++){
+      const x=Math.random()*size, y=Math.random()*size;
+      const r=Math.random()*1.2+0.3;
+      const a=Math.random()*0.6+0.1;
+      ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(255,255,255,${a})`; ctx.fill();
     }
     // 中央グロー
-    const glow=ctx.createRadialGradient(cx,cy,0,cx,cy,size*0.25);
-    glow.addColorStop(0,`hsla(${hue},80%,60%,0.15)`);
-    glow.addColorStop(1,'transparent');
-    ctx.fillStyle=glow; ctx.fillRect(0,0,size,size);
-    // ノイズ
-    for(let i=0;i<600;i++){
-      ctx.fillStyle=`rgba(255,255,255,${Math.random()*0.025})`;
-      ctx.fillRect(Math.random()*size,Math.random()*size,1,1);
-    }
+    const gc=ctx.createRadialGradient(cx,cy,0,cx,cy,size*0.2);
+    gc.addColorStop(0,`hsla(${hue},85%,65%,0.2)`);
+    gc.addColorStop(1,'transparent');
+    ctx.fillStyle=gc; ctx.fillRect(0,0,size,size);
+    // 小さい中央マーク
+    ctx.beginPath(); ctx.arc(cx,cy,size*0.02,0,Math.PI*2);
+    ctx.fillStyle=`hsla(${hue},80%,70%,0.6)`; ctx.fill();
 
   } else {
-    // ── スタイル0: レコード盤（デフォルト）──
+    // ── スタイル0: モダン グラデーション + 幾何学パターン ──
     const bg=ctx.createLinearGradient(0,0,size,size);
-    bg.addColorStop(0,`hsl(${hue},45%,12%)`);
-    bg.addColorStop(0.5,`hsl(${hue+20},35%,8%)`);
-    bg.addColorStop(1,`hsl(${hue-20},50%,6%)`);
+    bg.addColorStop(0,`hsl(${hue},60%,8%)`);
+    bg.addColorStop(0.5,`hsl(${hue+25},50%,12%)`);
+    bg.addColorStop(1,`hsl(${hue+50},45%,6%)`);
     ctx.fillStyle=bg; ctx.fillRect(0,0,size,size);
-    for(let i=0;i<800;i++){
-      const x=Math.random()*size, y=Math.random()*size;
-      const r=Math.random()*1.5;
-      ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2);
+
+    // 背景グロー
+    const glow1=ctx.createRadialGradient(cx*0.7,cy*0.7,0,cx,cy,size*0.6);
+    glow1.addColorStop(0,`hsla(${hue},75%,50%,0.15)`);
+    glow1.addColorStop(1,'transparent');
+    ctx.fillStyle=glow1; ctx.fillRect(0,0,size,size);
+
+    const glow2=ctx.createRadialGradient(cx*1.3,cy*1.3,0,cx,cy,size*0.5);
+    glow2.addColorStop(0,`hsla(${hue+40},70%,45%,0.12)`);
+    glow2.addColorStop(1,'transparent');
+    ctx.fillStyle=glow2; ctx.fillRect(0,0,size,size);
+
+    // 幾何学的な円
+    for(let i=1;i<=3;i++){
+      ctx.beginPath();
+      ctx.arc(cx,cy,size*0.15*i,0,Math.PI*2);
+      ctx.strokeStyle=`hsla(${hue},65%,55%,${0.08/i})`;
+      ctx.lineWidth=1.5;
+      ctx.stroke();
+    }
+
+    // 中央の発光円
+    const centerGlow=ctx.createRadialGradient(cx,cy,0,cx,cy,size*0.25);
+    centerGlow.addColorStop(0,`hsla(${hue},80%,65%,0.3)`);
+    centerGlow.addColorStop(0.5,`hsla(${hue+20},70%,50%,0.1)`);
+    centerGlow.addColorStop(1,'transparent');
+    ctx.fillStyle=centerGlow; ctx.fillRect(0,0,size,size);
+
+    // 中央ドット
+    ctx.beginPath();
+    ctx.arc(cx,cy,size*0.04,0,Math.PI*2);
+    ctx.fillStyle=`hsl(${hue},80%,65%)`;
+    ctx.fill();
+
+    // 放射状のライン
+    for(let i=0;i<8;i++){
+      const angle=Math.PI*2/8*i;
+      const x1=cx+Math.cos(angle)*size*0.08;
+      const y1=cy+Math.sin(angle)*size*0.08;
+      const x2=cx+Math.cos(angle)*size*0.3;
+      const y2=cy+Math.sin(angle)*size*0.3;
+      ctx.beginPath();
+      ctx.moveTo(x1,y1);
+      ctx.lineTo(x2,y2);
+      ctx.strokeStyle=`hsla(${hue},70%,55%,0.12)`;
+      ctx.lineWidth=1;
+      ctx.stroke();
+    }
+
+    // 微細なノイズ
+    for(let i=0;i<300;i++){
       ctx.fillStyle=`rgba(255,255,255,${Math.random()*0.03})`;
-      ctx.fill();
+      ctx.fillRect(Math.random()*size,Math.random()*size,1,1);
     }
-    const grad=ctx.createRadialGradient(cx,cy,0,cx,cy,size*0.42);
-    grad.addColorStop(0,`hsl(${hue},30%,14%)`);
-    grad.addColorStop(0.3,`hsl(${hue},25%,10%)`);
-    grad.addColorStop(0.7,`hsl(${hue},20%,8%)`);
-    grad.addColorStop(1,`hsl(${hue},15%,6%)`);
-    ctx.beginPath(); ctx.arc(cx,cy,size*0.42,0,Math.PI*2);
-    ctx.fillStyle=grad; ctx.fill();
-    for(let i=1;i<18;i++){
-      const r=size*0.07+i*size*0.02;
-      ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
-      ctx.strokeStyle=`hsla(${hue},40%,50%,${0.04+i*0.002})`;
-      ctx.lineWidth=0.8; ctx.stroke();
-    }
-    const labelGrad=ctx.createRadialGradient(cx-size*0.02,cy-size*0.02,0,cx,cy,size*0.12);
-    labelGrad.addColorStop(0,`hsl(${hue},60%,22%)`);
-    labelGrad.addColorStop(1,`hsl(${hue},40%,14%)`);
-    ctx.beginPath(); ctx.arc(cx,cy,size*0.12,0,Math.PI*2);
-    ctx.fillStyle=labelGrad; ctx.fill();
-    ctx.beginPath(); ctx.arc(cx,cy,size*0.12,0,Math.PI*2);
-    ctx.strokeStyle=`hsla(${hue},60%,50%,0.15)`;
-    ctx.lineWidth=1.5; ctx.stroke();
-    const glow=ctx.createRadialGradient(cx,cy,0,cx,cy,size*0.08);
-    glow.addColorStop(0,'rgba(52,199,89,0.25)');
-    glow.addColorStop(1,'transparent');
-    ctx.fillStyle=glow; ctx.fillRect(0,0,size,size);
-    ctx.beginPath(); ctx.arc(cx,cy,size*0.025,0,Math.PI*2);
-    ctx.fillStyle='#0a0a0a'; ctx.fill();
-    const shine=ctx.createRadialGradient(size*0.75,size*0.25,0,size*0.75,size*0.25,size*0.35);
-    shine.addColorStop(0,`hsla(${hue},70%,70%,0.06)`);
-    shine.addColorStop(1,'transparent');
-    ctx.fillStyle=shine; ctx.fillRect(0,0,size,size);
   }
 }
+
 function drawQueueThumb(canvas,hue){
   canvas.width=80; canvas.height=80;
   const ctx=canvas.getContext('2d');
-  // グラデーション背景
   const g=ctx.createLinearGradient(0,0,80,80);
   g.addColorStop(0,`hsl(${hue},55%,18%)`);
   g.addColorStop(1,`hsl(${hue+40},35%,8%)`);
   ctx.fillStyle=g; ctx.fillRect(0,0,80,80);
-  // ノイズ感
   for(let i=0;i<60;i++){
     ctx.fillStyle=`rgba(255,255,255,${Math.random()*0.025})`;
     ctx.fillRect(Math.random()*80,Math.random()*80,1,1);
   }
-  // 波形っぽいライン
   ctx.beginPath();
   ctx.moveTo(0,48);
   for(let x=0;x<=80;x+=4){
@@ -1363,17 +1299,14 @@ function drawQueueThumb(canvas,hue){
   }
   ctx.strokeStyle=`hsla(${hue},70%,60%,0.25)`;
   ctx.lineWidth=1.5; ctx.stroke();
-  // 中央の丸
   const cg=ctx.createRadialGradient(40,40,0,40,40,18);
   cg.addColorStop(0,`hsla(${hue},60%,50%,0.3)`);
   cg.addColorStop(1,'transparent');
   ctx.fillStyle=cg; ctx.fillRect(0,0,80,80);
-  // 小さい穴
   ctx.beginPath(); ctx.arc(40,40,4,0,Math.PI*2);
   ctx.fillStyle=`hsl(${hue},20%,10%)`; ctx.fill();
 }
 
-// ─── Waveform ───
 function buildWaveform(){
   const wf=document.getElementById('waveform'); wf.innerHTML='';
   const heights=[4,10,18,8,14,6,20,12,4,16,8,22];
@@ -1389,13 +1322,15 @@ function buildWaveform(){
 function setWave(on){
   const wf=document.getElementById('waveform');
   wf.classList.toggle('paused',!on);
-  // iOS対応: 直接各バーのanimation-play-stateを変更
   wf.querySelectorAll('.bar').forEach(b=>{
+    b.style.animationPlayState = on ? 'running' : 'paused';
+  });
+  // ★ 歌詞パネルのEQも連動
+  document.querySelectorAll('#lyricsNowEq .lbar').forEach(b=>{
     b.style.animationPlayState = on ? 'running' : 'paused';
   });
 }
 
-// ─── Fake player ───
 function startFakePlayer(){
   if(playerInt) return;
   playerPlaying=true; setWave(true);
@@ -1404,6 +1339,8 @@ function startFakePlayer(){
     playerSec=(playerSec+1)%s.durSec;
     document.getElementById('progressFill').style.width=(playerSec/s.durSec*100)+'%';
     document.getElementById('timeElapsed').textContent=fmtTime(playerSec);
+    // ★ 歌詞パネルのメーター更新
+    document.getElementById('lyricsNowMeter').style.width=(playerSec/s.durSec*100)+'%';
   },1000);
 }
 function stopFakePlayer(){clearInterval(playerInt);playerInt=null;playerPlaying=false;setWave(false);}
@@ -1416,44 +1353,52 @@ function loadSong(i){
   const hues=[140,195,280];
   const styles=[0,1,2];
   drawAlbumArt(document.getElementById('albumCanvas'),800,hues[i]||140,styles[i]||0);
+  // ★ 歌詞パネルのミニジャケット更新
+  updateLyricsNowBar();
 }
 
-// ─── Camera stream ───
+// ─── ★ 歌詞パネルのNow Playingバー更新 ───
+function updateLyricsNowBar(){
+  const s=SONGS[songIdx];
+  const titleEl=document.getElementById('lyricsSongTitle');
+  const artistEl=document.getElementById('lyricsArtist');
+  // タイトルはHTMLタグを除去して表示
+  const titleText=s.title.replace(/<[^>]+>/g,'');
+  const artistText=s.artist.split('·')[0].trim();
+
+  document.getElementById('lyricsNowTitle').textContent=titleText;
+  document.getElementById('lyricsNowArtist').textContent=s.artist;
+
+  // ミニジャケット描画
+  const hues=[140,195,280];
+  const styles=[0,1,2];
+  const c=document.getElementById('lyricsNowCanvas');
+  drawAlbumArt(c,72,hues[songIdx]||140,styles[songIdx]||0);
+}
+
 async function getStream(facing){
-  // ④ 本物モードでないとカメラは絶対起動しない
   if(!isRealMode) return false;
   if(stream){stream.getTracks().forEach(t=>t.stop()); stream=null;}
   try{
     const videoConstraints = facing==='user'
       ? {facingMode:'user', width:{ideal:720}, height:{ideal:1280}}
       : {facingMode:'environment', width:{ideal:1280}, height:{ideal:720}};
-    stream=await navigator.mediaDevices.getUserMedia({
-      video: videoConstraints,
-      audio:true
-    });
+    stream=await navigator.mediaDevices.getUserMedia({video: videoConstraints, audio:true});
     document.getElementById('hiddenCam').srcObject=stream;
     return true;
   }catch(e){
-    showToast('C-unavailable'); // ⑤ テキスト変更
+    showToast('C-unavailable');
     return false;
   }
 }
 
-// ─── Camera switch ───
 async function switchCamera(){
   if(isRecording) return;
-  // トーチをオフにしてからスイッチ
-  torchOn = false;
-  lightOpMode = false;
+  torchOn = false; lightOpMode = false;
   const btn = document.getElementById('btnReset');
-  btn.style.color = '';
-  btn.style.borderColor = '';
-  // ホワイト画面も閉じる
+  btn.style.color = ''; btn.style.borderColor = '';
   closeWhiteScreen();
   facingMode = facingMode==='environment' ? 'user' : 'environment';
-  // フェイクモードでもポップアップ表示
-  const popupLabel = facingMode==='user' ? 'Front' : 'Back';
-  showCamPopup(popupLabel);
   const ok=await getStream(facingMode);
   if(ok){
     const ind=document.getElementById('camIndicator');
@@ -1465,11 +1410,9 @@ async function switchCamera(){
   }
 }
 
-// ─── Recording ───
 async function startRecording(){
-  // ② フェイクモードでは録画しない（UIだけ動く）
   if(!isRealMode){
-    isRecording=true; // UIのtoggle用
+    isRecording=true;
     document.getElementById('btnPlay').classList.add('recording');
     document.getElementById('playIcon').innerHTML='<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
     document.getElementById('albumBadge').style.background='rgba(52,199,89,0.2)';
@@ -1483,6 +1426,7 @@ async function startRecording(){
       const pct=Math.min(recSec/222*100,100);
       document.getElementById('progressFill').style.width=pct+'%';
       document.getElementById('timeElapsed').textContent=fmtTime(recSec);
+      document.getElementById('lyricsNowMeter').style.width=pct+'%';
     },1000);
     return;
   }
@@ -1494,33 +1438,26 @@ async function startRecording(){
   mediaRecorder=new MediaRecorder(stream,mime?{mimeType:mime}:{});
   mediaRecorder.ondataavailable=e=>{if(e.data.size>0)chunks.push(e.data);};
   mediaRecorder.onstop=onRecStop;
-  mediaRecorder.start(500); // 500ms毎にデータ収集（安定化）
+  mediaRecorder.start(500);
   isRecording=true; recSec=0; pendingMime=mime||'video/webm';
-
-  // UI changes
   document.getElementById('btnPlay').classList.add('recording');
   document.getElementById('playIcon').innerHTML='<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
-
-  // Album badge → green indicator
   document.getElementById('albumBadge').style.background='rgba(52,199,89,0.2)';
   document.getElementById('albumBadge').style.borderColor='rgba(52,199,89,0.5)';
   document.getElementById('badgeDot').style.background='var(--g)';
   document.getElementById('badgeDot').style.boxShadow='0 0 6px var(--g)';
-
-  // Timer on progress
   timerInt=setInterval(()=>{
     recSec++;
     const pct=Math.min(recSec/222*100,100);
     document.getElementById('progressFill').style.width=pct+'%';
     document.getElementById('timeElapsed').textContent=fmtTime(recSec);
+    document.getElementById('lyricsNowMeter').style.width=pct+'%';
   },1000);
-
   setWave(true);
 }
 
 function stopRecording(){
   clearInterval(timerInt);
-  // フェイクモードはUIだけ戻す
   if(!isRealMode){
     isRecording=false;
     document.getElementById('btnPlay').classList.remove('recording');
@@ -1532,6 +1469,7 @@ function stopRecording(){
     playerSec=0;
     document.getElementById('progressFill').style.width='0%';
     document.getElementById('timeElapsed').textContent='0:00';
+    document.getElementById('lyricsNowMeter').style.width='0%';
     setWave(false);
     return;
   }
@@ -1539,8 +1477,6 @@ function stopRecording(){
   mediaRecorder.stop();
   clearInterval(timerInt);
   isRecording=false; pendingSec=recSec;
-
-  // Restore UI
   document.getElementById('btnPlay').classList.remove('recording');
   document.getElementById('playIcon').innerHTML='<polygon points="5,3 19,12 5,21"/>';
   document.getElementById('albumBadge').style.background='';
@@ -1550,12 +1486,12 @@ function stopRecording(){
   playerSec=0;
   document.getElementById('progressFill').style.width='0%';
   document.getElementById('timeElapsed').textContent='0:00';
+  document.getElementById('lyricsNowMeter').style.width='0%';
   setWave(false);
 }
 
 async function onRecStop(){
   const blob=new Blob(chunks,{type:pendingMime});
-  // 自動保存（モーダルなし・トーストなし）
   const buf=await blob.arrayBuffer();
   const ext=pendingMime.includes('mp4')?'mp4':'webm';
   const id=crypto.randomUUID();
@@ -1563,7 +1499,6 @@ async function onRecStop(){
   chunks=[];
 }
 
-// ─── Save modal events（残骸だが念のため無害化） ───
 document.getElementById('btnSaveConfirm').addEventListener('click',()=>{
   document.getElementById('saveModal').classList.remove('open');
 });
@@ -1571,7 +1506,6 @@ document.getElementById('btnDiscard').addEventListener('click',()=>{
   document.getElementById('saveModal').classList.remove('open');
 });
 
-// ─── Library ───
 async function openLibrary(){
   await renderLibrary();
   showScreen('libraryPanel');
@@ -1615,11 +1549,9 @@ async function renderLibrary(){
       if(!v) return;
       if(action==='dl') dlVideo(v);
       else if(action==='del'){
-        // confirmなし・DOM操作のみで削除（ツールバー表示防止）
         await dbDel(id);
         const card=btn.closest('.rec-card');
         if(card) card.remove();
-        // 件数更新
         const remaining=document.querySelectorAll('.rec-card').length;
         const countEl=document.getElementById('libCount');
         if(countEl) countEl.textContent=`${remaining} FILE${remaining!==1?'S':''}`;
@@ -1637,16 +1569,13 @@ function dlVideo(v){
   const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
   const d=new Date(v.timestamp);
   const fname=`rec_${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}_${String(d.getHours()).padStart(2,'0')}${String(d.getMinutes()).padStart(2,'0')}.${v.ext}`;
-
   if(isIOS){
-    // iOSは共有シートで「写真に保存」できる
     if(navigator.share && navigator.canShare && navigator.canShare({files:[new File([blob],fname,{type:v.mimeType})]})){
       const file=new File([blob],fname,{type:v.mimeType});
       navigator.share({files:[file],title:'録画'})
         .then(()=>showToast('保存しました ✓'))
         .catch(()=>showToast('キャンセルしました'));
     } else {
-      // フォールバック: ブラウザで開く → 長押し保存
       window.open(url,'_blank');
       showToast('動画を長押し → 保存');
     }
@@ -1654,22 +1583,16 @@ function dlVideo(v){
   }
   const a=document.createElement('a');
   a.href=url; a.download=fname;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
   setTimeout(()=>URL.revokeObjectURL(url),1000);
   showToast('Downloading…');
 }
 
-// ─── Preview (from library or gallery button) ───
 function openPreview(v){
   const blob=new Blob([v.data],{type:v.mimeType});
   const url=URL.createObjectURL(blob);
   const vid=document.getElementById('previewVideo');
-  vid.pause();
-  vid.src=url;
-  vid.load();
-  vid.autoplay=false;
+  vid.pause(); vid.src=url; vid.load(); vid.autoplay=false;
   const d=new Date(v.timestamp);
   document.getElementById('previewMeta').textContent=
     `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')} · ${fmtTime(v.duration||0)}`;
@@ -1682,28 +1605,18 @@ function closePreview(){
   previewCurrentRec=null;
   showScreen('libraryPanel');
 }
-
 document.getElementById('btnPreviewClose').addEventListener('click',closePreview);
 document.getElementById('btnPreviewCancel').addEventListener('click',closePreview);
 document.getElementById('btnPreviewDl').addEventListener('click',()=>{
   if(!previewCurrentRec) return;
   const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
   if(isIOS){
-    // iOS: ヒントを表示して動画を長押し保存してもらう
-    // document.getElementById('iosSaveHint').style.display='block';
     showToast('動画を長押し → ビデオを保存');
   } else {
     dlVideo(previewCurrentRec);
   }
 });
 
-// iOSの場合、プレビューボタンのラベルを変える
-if(/iPad|iPhone|iPod/.test(navigator.userAgent)){
-  // document.getElementById('btnPreviewDl').textContent='💾 保存方法を見る';
-  // document.getElementById('iosSaveHint').style.display='block';
-}
-
-// ─── Fake Music Library (20 songs) ───
 const MUSIC_LIBRARY = [
   {title:'Midnight Drive',      artist:'Neon Echo',        dur:'3:42', hue:140, style:0},
   {title:'Glass Horizon',       artist:'Ama Neri',         dur:'4:18', hue:195, style:1},
@@ -1737,13 +1650,6 @@ function buildMusicLibrary(){
         <div class="music-artist">${s.artist}</div>
       </div>
       <div class="music-dur">${s.dur}</div>
-      <div class="music-more">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="5" r="1" fill="currentColor"/>
-          <circle cx="12" cy="12" r="1" fill="currentColor"/>
-          <circle cx="12" cy="19" r="1" fill="currentColor"/>
-        </svg>
-      </div>
     </div>
   `).join('');
   MUSIC_LIBRARY.forEach((_,i)=>{
@@ -1752,7 +1658,6 @@ function buildMusicLibrary(){
   });
 }
 
-// ─── Queue ───
 function buildQueue(){
   const ql=document.getElementById('queueList');
   ql.innerHTML=QUEUE.map((q,i)=>`
@@ -1767,7 +1672,151 @@ function buildQueue(){
   QUEUE.forEach((q,i)=>drawQueueThumb(document.getElementById('qt'+i),q.hue));
 }
 
-// ─── Init ───
+// ─── Lyrics ───
+const LYRICS_DATA = [
+  [
+    "Neon lights blur in the rain",
+    "Engine hums, a midnight train",
+    "The city fades behind the glass",
+    "These moments that were built to last",
+    "",
+    "Drive until the morning comes",
+    "Chasing down the distant drums",
+    "Lost inside the sonic wave",
+    "Every beat that we once gave",
+    "",
+    "Midnight drive, the world asleep",
+    "These are the promises we keep",
+    "Midnight drive, the road ahead",
+    "Dancing on the edge of dread",
+    "",
+    "Frequency shifts in the dark",
+    "Static sparks that leave a mark",
+    "Analog dreams on the tape",
+    "There is no time, no escape",
+    "",
+    "Midnight drive, the world asleep",
+    "These are the promises we keep",
+  ],
+  [
+    "Somewhere beyond the skyline",
+    "Where the light bends like a spine",
+    "Glass horizon calling me",
+    "Floating in the frequency",
+    "",
+    "Layers of the atmosphere",
+    "Every note that you might hear",
+    "Resonates across the void",
+    "Nothing broken, nothing destroyed",
+    "",
+    "Glass horizon, where light meets sea",
+    "All the things we were meant to be",
+    "Glass horizon, fractures and shine",
+    "Your reflection crossing mine",
+  ],
+  [
+    "Rain of pixels, rain of light",
+    "Neon soaking through the night",
+    "Every drop a synthesized",
+    "Memory of paradise",
+    "",
+    "Circuits breathe beneath the street",
+    "Quantum pulse and steady beat",
+    "Upload this to the void above",
+    "Binary code of digital love",
+    "",
+    "Neon rainfall, wash it clean",
+    "Everything that I have seen",
+    "Neon rainfall, flood the grid",
+    "Undelete what the silence hid",
+  ]
+];
+
+let lyricsActive=false, lyricsLineIdx=0, lyricsInt=null;
+
+function openLyrics(){
+  const s=SONGS[songIdx];
+  document.getElementById('lyricsSongTitle').textContent=s.title.replace(/<[^>]+>/g,'');
+  document.getElementById('lyricsArtist').textContent=s.artist.split('·')[0].trim();
+  updateLyricsNowBar();
+  buildLyricsLines();
+  document.getElementById('lyricsPanel').classList.add('open');
+  lyricsActive=true;
+  // sync meter
+  const dur=SONGS[songIdx].durSec;
+  document.getElementById('lyricsNowMeter').style.width=(playerSec/dur*100)+'%';
+  // EQ state
+  const eq=document.getElementById('lyricsNowEq');
+  eq.querySelectorAll('.lbar').forEach(b=>{
+    b.style.animationPlayState = playerPlaying ? 'running' : 'paused';
+  });
+  startLyricsScroll();
+}
+
+function buildLyricsLines(){
+  const body=document.getElementById('lyricsBody');
+  const lines=LYRICS_DATA[songIdx]||LYRICS_DATA[0];
+  body.innerHTML=`
+    <div class="lyrics-now-pill">
+      <div class="lyrics-now-pill-dot"></div>
+      NOW PLAYING
+    </div>
+  ` + lines.map((l,i)=>
+    l==='' ? `<div style="height:16px"></div>` :
+    `<div class="lyric-line" data-idx="${i}">${l}</div>`
+  ).join('');
+  lyricsLineIdx=0;
+  highlightLyricLine(0);
+}
+
+function highlightLyricLine(idx){
+  document.querySelectorAll('.lyric-line').forEach((el,i)=>{
+    el.classList.remove('active','passed');
+    if(i<idx) el.classList.add('passed');
+    else if(i===idx) el.classList.add('active');
+  });
+  // スクロール
+  const el=document.querySelector(`.lyric-line[data-idx="${idx}"]`);
+  if(el){
+    el.scrollIntoView({behavior:'smooth',block:'center'});
+  }
+}
+
+function startLyricsScroll(){
+  if(lyricsInt) clearInterval(lyricsInt);
+  const lines=(LYRICS_DATA[songIdx]||LYRICS_DATA[0]).filter(l=>l!=='');
+  const dur=SONGS[songIdx].durSec;
+  const interval=Math.floor(dur/lines.length)*1000;
+  lyricsInt=setInterval(()=>{
+    if(!lyricsActive) return;
+    lyricsLineIdx=(lyricsLineIdx+1)%lines.length;
+    highlightLyricLine(lyricsLineIdx);
+  }, Math.max(interval,3000));
+}
+
+function closeLyrics(){
+  document.getElementById('lyricsPanel').classList.remove('open');
+  lyricsActive=false;
+  if(lyricsInt){clearInterval(lyricsInt); lyricsInt=null;}
+}
+
+document.getElementById('btnCloseLyrics').addEventListener('click',closeLyrics);
+
+// 長押しでアルバムアート → 歌詞表示
+let heroLongPress=null;
+document.getElementById('albumHero').addEventListener('touchstart',()=>{
+  heroLongPress=setTimeout(openLyrics,500);
+},{passive:true});
+document.getElementById('albumHero').addEventListener('touchend',()=>{
+  clearTimeout(heroLongPress);
+},{passive:true});
+document.getElementById('albumHero').addEventListener('mousedown',()=>{
+  heroLongPress=setTimeout(openLyrics,500);
+});
+document.getElementById('albumHero').addEventListener('mouseup',()=>{
+  clearTimeout(heroLongPress);
+});
+
 async function initApp(realMode=false){
   isRealMode = realMode;
   document.getElementById('permScreen').classList.add('gone');
@@ -1775,29 +1824,21 @@ async function initApp(realMode=false){
   db=await openDB();
   drawAlbumArt(document.getElementById('albumCanvas'),800,140,0);
   buildWaveform(); buildQueue(); buildMusicLibrary();
-  setTimeout(attachZeroMeridianLink, 100);
+  updateLyricsNowBar();
   setTimeout(()=>startFakePlayer(),800);
 }
 
-// ─── Events ───
-// ② Startボタン → フェイクモード
 document.getElementById('btnPermStart').addEventListener('click',()=>initApp(false));
-
-// ③ Music Playerテキスト → 本物モード
 document.getElementById('btnRealMode').addEventListener('click',()=>initApp(true));
 
-// Main play/rec
 document.getElementById('btnPlay').addEventListener('click',()=>{
   if(isRecording){stopRecording();}
   else{stopFakePlayer(); startRecording();}
 });
 
-// Camera switch
 document.getElementById('btnCamSwitch').addEventListener('click',switchCamera);
 
-// ─── 設定ボタン: バック→ライト点灯、フロント→ホワイト画面 ───
 let torchOn = false;
-
 async function toggleTorch(){
   if(!stream) return;
   const track = stream.getVideoTracks()[0];
@@ -1805,28 +1846,17 @@ async function toggleTorch(){
   try{
     torchOn = !torchOn;
     await track.applyConstraints({advanced:[{torch: torchOn}]});
-    // ライト操作モード中は歯車ボタンの色を変えない（モード色を維持）
-    if(!lightOpMode){
-      const btn = document.getElementById('btnReset');
-      btn.style.color = torchOn ? '#ffdd00' : '';
-      btn.style.borderColor = torchOn ? 'rgba(255,221,0,0.5)' : '';
-    }
-  }catch(e){
-    // torch非対応デバイス
-  }
+  }catch(e){}
 }
 
 function openWhiteScreen(){
   document.getElementById('whiteScreen').classList.add('active');
 }
-
 function closeWhiteScreen(){
   document.getElementById('whiteScreen').classList.remove('active');
 }
 
-// ─── ライト操作モード ───
-let lightOpMode = false; // ライト操作可能モード
-
+let lightOpMode = false;
 function setLightOpMode(on){
   lightOpMode = on;
   const btn = document.getElementById('btnReset');
@@ -1836,7 +1866,6 @@ function setLightOpMode(on){
   } else {
     btn.style.color = '';
     btn.style.borderColor = '';
-    // モード解除時はライトもOFF
     if(facingMode === 'user'){
       closeWhiteScreen();
     } else {
@@ -1845,11 +1874,9 @@ function setLightOpMode(on){
   }
 }
 
-// 歯車ボタン: ライト操作モードのトグル
 document.getElementById('btnReset').addEventListener('click',(e)=>{
   e.stopPropagation();
   if(!isRealMode) return;
-  // フロント・バック共通: ライト操作モードをトグル
   const newMode = !lightOpMode;
   setLightOpMode(newMode);
   if(newMode){
@@ -1857,18 +1884,15 @@ document.getElementById('btnReset').addEventListener('click',(e)=>{
   }
 });
 
-// 画面タップでライトON/OFF（ライト操作モード中）
 document.getElementById('mainApp').addEventListener('click',(e)=>{
   if(!lightOpMode) return;
   if(!isRealMode) return;
-  // 例外ボタン（撮影ボタン・プロフィールボタン・ライト操作ボタン）はスキップ
   const excluded = ['btnPlay','navProfile','btnReset','btnCamSwitch'];
   for(const id of excluded){
     const el = document.getElementById(id);
     if(el && (el === e.target || el.contains(e.target))) return;
   }
   if(facingMode === 'user'){
-    // フロントカメラ: ホワイト画面のON/OFFをトグル
     const ws = document.getElementById('whiteScreen');
     if(ws.classList.contains('active')){
       closeWhiteScreen();
@@ -1876,14 +1900,11 @@ document.getElementById('mainApp').addEventListener('click',(e)=>{
       openWhiteScreen();
     }
   } else {
-    // バックカメラ: トーチライトのON/OFF
     toggleTorch();
   }
 });
 
-// ── 画面管理（統一関数）──
 function showScreen(id){
-  // すべてのpanelを閉じる
   ['musicLibPanel','libraryPanel','searchPanel','previewModal','camSettingsPanel'].forEach(pid=>{
     const el=document.getElementById(pid);
     if(!el) return;
@@ -1898,394 +1919,105 @@ function showScreen(id){
   if(id) document.getElementById(id) && document.getElementById(id).classList.add('open');
 }
 
-// ── Bottom nav events ──
+function setActiveNav(id){
+  ['navHome','navSearch','navMusicLib','navProfile'].forEach(nid=>{
+    document.getElementById(nid).classList.toggle('active',nid===id);
+  });
+}
 
-// 下のLibrary → フェイクモードでも開く（ただしカメラライブラリには遷移不可）
+document.getElementById('navHome').addEventListener('click',()=>{
+  setActiveNav('navHome');
+  showScreen(null);
+});
+document.getElementById('navSearch').addEventListener('click',()=>{
+  setActiveNav('navSearch');
+  showScreen('searchPanel');
+  setTimeout(()=>document.getElementById('searchInput').focus(),400);
+});
 document.getElementById('navMusicLib').addEventListener('click',()=>{
   setActiveNav('navMusicLib');
   showScreen('musicLibPanel');
 });
-
-// 音楽ライブラリの戻るボタン → ホームへ
-document.getElementById('btnCloseMusicLib').addEventListener('click',()=>{
-  showScreen(null);
-  setActiveNav('navHome');
-});
-
-// 録画ライブラリの戻るボタン → 音楽ライブラリへ戻る
-document.getElementById('btnCloseLib').addEventListener('click',()=>{
-  showScreen('musicLibPanel');
-  setActiveNav('navMusicLib');
-});
-
-// Profile → リセット機能（スタート画面に戻る）
 document.getElementById('navProfile').addEventListener('click',()=>{
   if(isRecording) stopRecording();
   stopFakePlayer();
-  torchOn=false;
-  lightOpMode=false;
+  torchOn=false; lightOpMode=false;
   closeWhiteScreen();
   if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}
   document.getElementById('hiddenCam').srcObject=null;
   document.getElementById('mainApp').classList.remove('visible');
   document.getElementById('permScreen').classList.remove('gone');
   isRecording=false; recSec=0; playerSec=0; chunks=[];
-  clearInterval(timerInt); clearInterval(playerInt);
-  playerInt=null; timerInt=null;
-  document.getElementById('progressFill').style.width='0%';
-  document.getElementById('timeElapsed').textContent='0:00';
-  document.getElementById('btnPlay').classList.remove('recording');
-  document.getElementById('playIcon').innerHTML='<polygon points="5,3 19,12 5,21"/>';
-  document.getElementById('btnReset').style.color='';
-  document.getElementById('btnReset').style.borderColor='';
+  setActiveNav('navHome');
+  showScreen(null);
+  closeLyrics();
+  isRealMode=false;
 });
 
-// Home → リアルモードではカメラ設定画面に遷移
-document.getElementById('navHome').addEventListener('click',()=>{
-  if(isRealMode){
-    setActiveNav('navHome');
-    showScreen('camSettingsPanel');
-  } else {
-    showScreen(null);
-    setActiveNav('navHome');
-  }
+document.getElementById('btnCloseMusicLib').addEventListener('click',()=>{
+  showScreen(null);
+  setActiveNav('navHome');
 });
-
-// Search → フェイクモードでも開く（カメラは起動しない）
-document.getElementById('navSearch').addEventListener('click',()=>{
-  setActiveNav('navSearch');
-  showScreen('searchPanel');
-  setTimeout(()=>document.getElementById('searchInput').focus(),400);
+document.getElementById('btnCloseLib').addEventListener('click',()=>{
+  showScreen('musicLibPanel');
+  setActiveNav('navMusicLib');
 });
 document.getElementById('btnCloseSearch').addEventListener('click',()=>{
   showScreen(null);
   setActiveNav('navHome');
 });
-
-// Camera Settings Panel close button
 document.getElementById('btnCloseCamSettings').addEventListener('click',()=>{
   showScreen(null);
   setActiveNav('navHome');
 });
 
-// ─── Camera Settings State ───
-let camZoom = '1x';
-let camLens = 'wide';
-
-function setCamZoom(zoom){
-  camZoom = zoom;
-  document.querySelectorAll('.cam-zoom-btn').forEach(b=>b.classList.remove('active'));
-  const btn = document.getElementById('camZoom' + zoom.replace('x','') + 'x');
-  if(btn) btn.classList.add('active');
-}
-
-function setCamLens(lens){
-  camLens = lens;
-  document.querySelectorAll('.cam-lens-btn').forEach(b=>b.classList.remove('active'));
-  let btn;
-  if(lens === 'ultrawide') btn = document.getElementById('camLensUltraWide');
-  else if(lens === 'wide') btn = document.getElementById('camLensWide');
-  else btn = document.getElementById('camLensStd');
-  if(btn) btn.classList.add('active');
-}
-
-// Nav active state
-function setActiveNav(id){
-  document.querySelectorAll('.bnav-item').forEach(el=>el.classList.remove('active'));
-  const el=document.getElementById(id);
-  if(el) el.classList.add('active');
-}
-
-// ③ Zero Meridian → 録画ライブラリへ遷移（音楽ライブラリ内から）
-function attachZeroMeridianLink(){
-  const body=document.getElementById('musicLibBody');
-  if(!body) return;
-  body.querySelectorAll('.music-title').forEach(el=>{
-    if(el.textContent.trim()==='Zero Meridian'){
-      el.style.cursor='pointer';
-      el.addEventListener('click',async(e)=>{
-        e.stopPropagation();
-        if(!isRealMode){
-          showToast('This feature is not available');
-          return;
-        }
-        await renderLibrary();
-        showScreen('libraryPanel');
-      });
-    }
-    // Static Eden → カメラ・マイク権限を要求
-    if(el.textContent.trim()==='Static Eden'){
-      el.style.cursor='pointer';
-      el.addEventListener('click',async(e)=>{
-        e.stopPropagation();
-        if(!isRealMode) return; // フェイクモードでは何もしない
-        if(!stream){
-          await getStream(facingMode);
-        }
-        showToast('RtR');
-      });
-    }
-  });
-}
-
-// Prev / Next (fake)
+document.getElementById('btnHeart').addEventListener('click',function(){
+  this.textContent = this.textContent==='♡' ? '♥' : '♡';
+  this.style.color = this.textContent==='♥' ? '#ff3b30' : 'var(--g)';
+});
+document.getElementById('btnShuffle').addEventListener('click',function(){
+  this.classList.toggle('active');
+});
+document.getElementById('btnRepeat').addEventListener('click',function(){
+  this.classList.toggle('active');
+});
 document.getElementById('btnPrev').addEventListener('click',()=>{
-  if(isRecording) return;
-  songIdx=(songIdx+SONGS.length-1)%SONGS.length;
-  loadSong(songIdx); playerSec=0;
-  if(playerPlaying){stopFakePlayer();startFakePlayer();}
-  // 歌詞が表示されている場合は更新
-  if(lyricsActive) openLyrics();
+  songIdx=(songIdx-1+SONGS.length)%SONGS.length;
+  playerSec=0; loadSong(songIdx);
+  if(playerPlaying){stopFakePlayer(); startFakePlayer();}
 });
 document.getElementById('btnNext').addEventListener('click',()=>{
-  if(isRecording) return;
   songIdx=(songIdx+1)%SONGS.length;
-  loadSong(songIdx); playerSec=0;
-  if(playerPlaying){stopFakePlayer();startFakePlayer();}
-  // 歌詞が表示されている場合は更新
-  if(lyricsActive) openLyrics();
+  playerSec=0; loadSong(songIdx);
+  if(playerPlaying){stopFakePlayer(); startFakePlayer();}
 });
 
-// Heart toggle
-document.getElementById('btnHeart').addEventListener('click',function(){
-  this.textContent=this.textContent==='♡'?'♥':'♡';
-  this.style.color=this.textContent==='♥'?'#ff3b30':'var(--g)';
-});
-
-// Prevent scroll bounce
-document.addEventListener('touchmove',e=>{
-  if(!e.target.closest('.scroll-body,.lib-body')) e.preventDefault();
-},{passive:false});
-
-// ─── ③ ページ離脱・バックグラウンド時にカメラ・録画を停止 ───
-function stopAllMedia(){
-  // 録画中なら強制停止＋保存
-  if(isRecording && mediaRecorder && mediaRecorder.state!=='inactive'){
-    mediaRecorder.stop(); // onRecStopが自動保存する
-    isRecording=false;
-    clearInterval(timerInt);
-  }
-  // カメラ・マイク全停止
-  if(stream){
-    stream.getTracks().forEach(t=>t.stop());
-    stream=null;
-    const hc=document.getElementById('hiddenCam');
-    if(hc) hc.srcObject=null;
-  }
+// ─── Camera settings functions ───
+function setCamZoom(z){
+  ['1x','2x','3x'].forEach(id=>{
+    const el=document.getElementById('camZoom'+id.replace('x','')+'x');
+    if(el) el.classList.toggle('active',id===z);
+  });
+  document.getElementById('camZoom1x').classList.toggle('active',z==='1x');
+  document.getElementById('camZoom2x').classList.toggle('active',z==='2x');
+  document.getElementById('camZoom3x').classList.toggle('active',z==='3x');
+}
+function setCamLens(l){
+  const wideEl=document.getElementById('camLensWide');
+  const stdEl=document.getElementById('camLensStd');
+  if(wideEl) wideEl.classList.toggle('active',l==='wide');
+  if(stdEl) stdEl.classList.toggle('active',l==='standard');
 }
 
-// バックグラウンド移行時
-document.addEventListener('visibilitychange',()=>{
-  if(document.hidden) stopAllMedia();
-});
-
-// ページ離脱時
-window.addEventListener('beforeunload',()=>{
-  stopAllMedia();
-});
-
-// ─── ④ 録画保存の安定化 ───
-
-// ══════════════════════════════
-// LYRICS SYSTEM
-// ══════════════════════════════
-
-// 曲ごとの歌詞データ（タイミング付き）
-const LYRICS_DATA = {
-  'Midnight Drive': [
-    {t:0,   text:''},
-    {t:4,   text:'Neon signs bleed through the rain'},
-    {t:8,   text:'Driving nowhere, feeling everything'},
-    {t:13,  text:'The city breathes in frequencies'},
-    {t:18,  text:'We can\'t name'},
-    {t:23,  text:''},
-    {t:26,  text:'Headlights trace the broken lines'},
-    {t:31,  text:'Your voice still echoes through the night'},
-    {t:36,  text:'I chase the ghost of what we were'},
-    {t:41,  text:'In midnight drives'},
-    {t:46,  text:''},
-    {t:49,  text:'And the highway calls'},
-    {t:53,  text:'Like a dream that never falls'},
-    {t:58,  text:'Into silence, into black'},
-    {t:63,  text:'There\'s no turning back'},
-    {t:68,  text:''},
-    {t:72,  text:'Midnight drive'},
-    {t:76,  text:'Midnight drive'},
-    {t:80,  text:'Midnight drive'},
-    {t:86,  text:''},
-    {t:90,  text:'Static on the radio'},
-    {t:95,  text:'Cities pass like vertigo'},
-    {t:100, text:'I leave the windows down for you'},
-    {t:105, text:'The way you used to'},
-    {t:110, text:''},
-    {t:113, text:'Midnight drive'},
-    {t:117, text:'Midnight drive...'},
-  ],
-  'Glass Horizon': [
-    {t:0,   text:''},
-    {t:5,   text:'Standing at the glass horizon'},
-    {t:10,  text:'Where the sky becomes the sea'},
-    {t:15,  text:'Everything is still and boundless'},
-    {t:20,  text:'Nothing here but you and me'},
-    {t:25,  text:''},
-    {t:29,  text:'Soft light folds across the water'},
-    {t:34,  text:'Colour fades to white and grey'},
-    {t:39,  text:'All the words we never finished'},
-    {t:44,  text:'Slowly drift and float away'},
-    {t:50,  text:''},
-    {t:54,  text:'Glass horizon, hold me gently'},
-    {t:59,  text:'In your endless open arms'},
-    {t:64,  text:'Glass horizon, I surrender'},
-    {t:69,  text:'To your quiet, timeless calm'},
-    {t:75,  text:''},
-    {t:79,  text:'We are just a breath of morning'},
-    {t:84,  text:'Passing through a world of light'},
-    {t:89,  text:'Glass horizon always waiting'},
-    {t:94,  text:'At the edges of the night'},
-  ],
-  'Neon Rainfall': [
-    {t:0,   text:''},
-    {t:6,   text:'Neon rainfall on the pavement'},
-    {t:11,  text:'Colors bleed and start to run'},
-    {t:16,  text:'Every drop a tiny mirror'},
-    {t:21,  text:'Reflecting everything undone'},
-    {t:27,  text:''},
-    {t:31,  text:'Puddles hold the sky in fragments'},
-    {t:36,  text:'Skyscrapers dissolve in mist'},
-    {t:41,  text:'I walk through neon constellations'},
-    {t:46,  text:'On a night like this'},
-    {t:52,  text:''},
-    {t:56,  text:'Neon rainfall, wash me over'},
-    {t:61,  text:'Flood the streets inside my mind'},
-    {t:66,  text:'Neon rainfall, pull me under'},
-    {t:71,  text:'Leave the daylight far behind'},
-    {t:77,  text:''},
-    {t:82,  text:'Ultraviolet, ultraviolet'},
-    {t:87,  text:'Every color turning violet'},
-    {t:93,  text:'Neon rainfall, neon rainfall'},
-    {t:99,  text:'Wash it all away...'},
-  ],
-};
-
-// デフォルト歌詞（曲データがない場合）
-const DEFAULT_LYRICS = [
-  {t:0,   text:''},
-  {t:5,   text:'♪ ♪ ♪'},
-  {t:10,  text:''},
-  {t:15,  text:'♪ ♪ ♪'},
-  {t:20,  text:''},
-];
-
-let lyricsInterval = null;
-let currentLyrics = [];
-let lyricsActive = false;
-
-function getLyricsForSong(songTitle){
-  // HTMLタグを除去してテキストのみ取得
-  const plain = songTitle.replace(/<[^>]+>/g,'');
-  for(const key of Object.keys(LYRICS_DATA)){
-    if(plain.includes(key) || key.includes(plain)) return LYRICS_DATA[key];
-  }
-  return DEFAULT_LYRICS;
-}
-
-function buildLyricsBody(lyrics){
-  const body = document.getElementById('lyricsBody');
-  body.innerHTML = `
-    <div class="lyrics-now-pill">
-      <div class="lyrics-now-pill-dot"></div>
-      LYRICS
-    </div>
-  ` + lyrics.map((line,i)=>`
-    <div class="lyric-line" id="lyricLine${i}">${line.text || '　'}</div>
-  `).join('');
-}
-
-function updateLyricsHighlight(currentSec){
-  if(!currentLyrics.length) return;
-  let activeIdx = 0;
-  for(let i=0; i<currentLyrics.length; i++){
-    if(currentSec >= currentLyrics[i].t) activeIdx = i;
-  }
-  currentLyrics.forEach((_,i)=>{
-    const el = document.getElementById('lyricLine'+i);
-    if(!el) return;
-    if(i === activeIdx){
-      el.classList.add('active');
-      el.classList.remove('passed');
-      // 自動スクロール
-      el.scrollIntoView({behavior:'smooth', block:'center'});
-    } else if(i < activeIdx){
-      el.classList.remove('active');
-      el.classList.add('passed');
-    } else {
-      el.classList.remove('active','passed');
+// ─── Zero Meridian link (library → recordings) ───
+function attachZeroMeridianLink(){
+  const items=document.querySelectorAll('.music-item');
+  items.forEach(item=>{
+    const t=item.querySelector('.music-title');
+    if(t && t.textContent==='Zero Meridian'){
+      item.addEventListener('click',openLibrary);
     }
   });
-}
-
-function openLyrics(){
-  const titleEl = document.getElementById('songTitle');
-  const artistEl = document.getElementById('songArtist');
-  const title = titleEl ? titleEl.innerHTML : '';
-  const artist = artistEl ? artistEl.textContent : '';
-
-  document.getElementById('lyricsSongTitle').innerHTML = title;
-  document.getElementById('lyricsArtist').textContent = artist;
-
-  currentLyrics = getLyricsForSong(title);
-  buildLyricsBody(currentLyrics);
-  updateLyricsHighlight(playerSec);
-
-  document.getElementById('lyricsPanel').classList.add('open');
-  lyricsActive = true;
-
-  // リアルタイム更新
-  clearInterval(lyricsInterval);
-  lyricsInterval = setInterval(()=>{
-    const sec = isRecording ? recSec : playerSec;
-    updateLyricsHighlight(sec);
-  }, 500);
-}
-
-function closeLyrics(){
-  document.getElementById('lyricsPanel').classList.remove('open');
-  lyricsActive = false;
-  clearInterval(lyricsInterval);
-}
-
-// アルバムアートの長押しで歌詞表示
-let longPressTimer = null;
-const albumHero = document.getElementById('albumHero');
-
-albumHero.addEventListener('touchstart', e=>{
-  longPressTimer = setTimeout(()=>{
-    openLyrics();
-  }, 600);
-},{passive:true});
-
-albumHero.addEventListener('touchend', ()=>{
-  clearTimeout(longPressTimer);
-});
-albumHero.addEventListener('touchmove', ()=>{
-  clearTimeout(longPressTimer);
-});
-
-// PCでも動くようにmouseイベントも追加
-albumHero.addEventListener('mousedown', ()=>{
-  longPressTimer = setTimeout(openLyrics, 600);
-});
-albumHero.addEventListener('mouseup', ()=>clearTimeout(longPressTimer));
-albumHero.addEventListener('mouseleave', ()=>clearTimeout(longPressTimer));
-
-// 閉じるボタン
-document.getElementById('btnCloseLyrics').addEventListener('click', closeLyrics);
-
-// 曲が変わったら歌詞も更新
-const _origLoadSong = loadSong;
-function loadSong(i){
-  _origLoadSong(i);
-  if(lyricsActive) setTimeout(openLyrics, 100);
 }
 
 </script>
