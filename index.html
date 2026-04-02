@@ -182,12 +182,15 @@ box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 0 1px var(--border);
 .album-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.6) 0%,transparent 50%)}
 .album-badge{
 position:absolute;bottom:14px;left:14px;
-background:rgba(0,0,0,0.6);backdrop-filter:blur(12px);
+background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);
 border:1px solid var(--border);border-radius:100px;padding:6px 14px;
-font-family:var(--mono);font-size:10px;letter-spacing:0.15em;color:var(--g);
+font-family:var(--mono);font-size:10px;letter-spacing:0.15em;color:var(--txt3);
 display:flex;align-items:center;gap:6px;transition:all .3s;
 }
-.album-badge-dot{width:5px;height:5px;border-radius:50%;background:var(--g);transition:all .3s}
+.album-badge.recording{
+color:var(--g);
+}
+.album-badge-dot{display:none;}
 
 /* ── Song info ── */
 .song-info{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px}
@@ -516,6 +519,10 @@ flex-shrink:0;
 .lyrics-header-title{
 font-family:var(--serif);font-size:16px;
 color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+transition:color .3s;
+}
+.lyrics-header-title.recording{
+color:var(--g);
 }
 .lyrics-header-artist{
 font-size:11px;color:var(--txt2);margin-top:2px;
@@ -564,8 +571,7 @@ font-family:var(--mono);font-size:9px;color:var(--g);letter-spacing:0.15em;
 margin-bottom:20px;
 }
 .lyrics-now-pill-dot{
-width:5px;height:5px;border-radius:50%;background:var(--g);
-animation:blink .9s ease-in-out infinite;
+display:none;
 }
 
 /* ══ LYRICS PLAYER BAR (下部) ══ */
@@ -858,7 +864,14 @@ flex-shrink:0;letter-spacing:0.05em;
     <div class="song-title" id="songTitle"><em>Midnight</em> Drive</div>
     <div class="song-artist" id="songArtist">Neon Echo · Synthwave Collection</div>
   </div>
-  <div class="btn-heart" id="btnHeart">♡</div>
+  <div style="display:flex;gap:12px;align-items:center;">
+    <button class="btn-lyrics" id="btnLyrics" onclick="toggleLyricsPanel()" style="width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--card);color:var(--txt2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+        <path d="M4 5h16M4 11h16M4 17h16"/>
+      </svg>
+    </button>
+    <div class="btn-heart" id="btnHeart">♡</div>
+  </div>
 </div>
 
 <!-- Progress -->
@@ -1563,6 +1576,8 @@ async function startRecording(){
     document.getElementById('playIcon').innerHTML='<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
     document.getElementById('albumBadge').style.background='rgba(52,199,89,0.2)';
     document.getElementById('albumBadge').style.borderColor='rgba(52,199,89,0.5)';
+    document.getElementById('albumBadge').classList.add('recording');
+    document.getElementById('lyricsSongTitle').classList.add('recording');
     document.getElementById('badgeDot').style.background='var(--g)';
     document.getElementById('badgeDot').style.boxShadow='0 0 6px var(--g)';
     setWave(true);
@@ -1593,6 +1608,8 @@ async function startRecording(){
   // Album badge → green indicator
   document.getElementById('albumBadge').style.background='rgba(52,199,89,0.2)';
   document.getElementById('albumBadge').style.borderColor='rgba(52,199,89,0.5)';
+  document.getElementById('albumBadge').classList.add('recording');
+  document.getElementById('lyricsSongTitle').classList.add('recording');
   document.getElementById('badgeDot').style.background='var(--g)';
   document.getElementById('badgeDot').style.boxShadow='0 0 6px var(--g)';
 
@@ -1616,6 +1633,8 @@ function stopRecording(){
     document.getElementById('playIcon').innerHTML='<polygon points="5,3 19,12 5,21"/>';
     document.getElementById('albumBadge').style.background='';
     document.getElementById('albumBadge').style.borderColor='';
+    document.getElementById('albumBadge').classList.remove('recording');
+    document.getElementById('lyricsSongTitle').classList.remove('recording');
     document.getElementById('badgeDot').style.background='';
     document.getElementById('badgeDot').style.boxShadow='';
     playerSec=0;
@@ -1634,6 +1653,8 @@ function stopRecording(){
   document.getElementById('playIcon').innerHTML='<polygon points="5,3 19,12 5,21"/>';
   document.getElementById('albumBadge').style.background='';
   document.getElementById('albumBadge').style.borderColor='';
+  document.getElementById('albumBadge').classList.remove('recording');
+  document.getElementById('lyricsSongTitle').classList.remove('recording');
   document.getElementById('badgeDot').style.background='';
   document.getElementById('badgeDot').style.boxShadow='';
   playerSec=0;
@@ -2347,29 +2368,16 @@ function closeLyrics(){
   clearInterval(lyricsInterval);
 }
 
-// アルバムアートの長押しで歌詞表示
-let longPressTimer = null;
-const albumHero = document.getElementById('albumHero');
-
-albumHero.addEventListener('touchstart', e=>{
-  longPressTimer = setTimeout(()=>{
+function toggleLyricsPanel(){
+  if(lyricsActive){
+    closeLyrics();
+  } else {
     openLyrics();
-  }, 600);
-},{passive:true});
+  }
+}
 
-albumHero.addEventListener('touchend', ()=>{
-  clearTimeout(longPressTimer);
-});
-albumHero.addEventListener('touchmove', ()=>{
-  clearTimeout(longPressTimer);
-});
-
-// PCでも動くようにmouseイベントも追加
-albumHero.addEventListener('mousedown', ()=>{
-  longPressTimer = setTimeout(openLyrics, 600);
-});
-albumHero.addEventListener('mouseup', ()=>clearTimeout(longPressTimer));
-albumHero.addEventListener('mouseleave', ()=>clearTimeout(longPressTimer));
+// 長押し機能は廃止（専用ボタンで制御）
+// 以前のイベントリスナーはすべて削除済み
 
 // 閉じるボタン
 document.getElementById('btnCloseLyrics').addEventListener('click', closeLyrics);
