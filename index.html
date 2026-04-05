@@ -85,7 +85,7 @@ gap:0;
 .perm-screen::before{
 content:'';
 position:fixed;top:0;left:0;right:0;
-height:calc(env(safe-area-inset-top,20px) + 2px);
+height:calc(env(safe-area-inset-top,50px) + 4px);
 background:#34c759;
 z-index:201;
 }
@@ -182,8 +182,9 @@ box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 0 1px var(--border);
 .album-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.6) 0%,transparent 50%)}
 .album-badge{
 position:absolute;bottom:14px;left:14px;
-background:transparent;border:none;padding:0;
-font-family:var(--mono);font-size:10px;letter-spacing:0.15em;color:transparent;
+background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);
+border:1px solid var(--border);border-radius:100px;padding:6px 14px;
+font-family:var(--mono);font-size:10px;letter-spacing:0.15em;color:var(--txt3);
 display:flex;align-items:center;gap:6px;transition:all .3s;
 }
 .album-badge.recording{
@@ -520,7 +521,9 @@ font-family:var(--serif);font-size:16px;
 color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 transition:color .3s;
 }
-
+.lyrics-header-title.recording{
+color:var(--g);
+}
 .lyrics-header-artist{
 font-size:11px;color:var(--txt2);margin-top:2px;
 }
@@ -563,12 +566,9 @@ cursor:pointer;flex-shrink:0;
 .lyrics-now-pill{
 display:inline-flex;align-items:center;gap:6px;
 background:var(--g-soft);border:1px solid var(--border);
-font-family:var(--mono);font-size:9px;color:var(--txt3);letter-spacing:0.15em;
+border-radius:100px;padding:4px 12px;
+font-family:var(--mono);font-size:9px;color:var(--g);letter-spacing:0.15em;
 margin-bottom:20px;
-transition:color .3s;
-}
-.lyrics-now-pill.recording{
-color:var(--g);
 }
 .lyrics-now-pill-dot{
 display:none;
@@ -579,7 +579,7 @@ display:none;
 position:absolute;bottom:0;left:0;right:0;
 background:rgba(13,13,13,0.95);backdrop-filter:blur(20px);
 border-top:1px solid var(--border2);
-padding:16px 16px;padding-bottom:max(env(safe-area-inset-bottom,20px),20px);
+padding:12px 16px;padding-bottom:max(env(safe-area-inset-bottom,12px),12px);
 z-index:2;flex-shrink:0;
 }
 .lyrics-player-content{
@@ -724,85 +724,11 @@ flex-shrink:0;
 font-family:var(--mono);font-size:12px;color:var(--g);
 flex-shrink:0;letter-spacing:0.05em;
 }
-
-/* ══ ALBUM EDITOR PANEL ══ */
-.album-editor-panel{
-position:fixed;inset:0;z-index:70;
-background:rgba(0,0,0,0.5);display:none;align-items:flex-end;
-justify-content:center;opacity:0;transition:opacity .3s;
-}
-.album-editor-panel.open{
-display:flex;opacity:1;
-}
-.editor-header{
-display:flex;align-items:center;justify-content:space-between;
-padding:16px;border-bottom:1px solid var(--border);
-background:var(--card);
-}
-.editor-close{
-width:28px;height:28px;display:flex;align-items:center;justify-content:center;
-cursor:pointer;color:var(--txt2);transition:all .2s;
-}
-.editor-close:active{transform:scale(0.9)}
-.editor-title{
-font-size:16px;font-weight:600;color:var(--txt);
-}
-.editor-body{
-background:var(--card);width:100%;max-height:70vh;overflow-y:auto;
-padding:20px;border-radius:20px 20px 0 0;
-}
-.editor-section{
-margin-bottom:20px;
-}
-.editor-label{
-font-size:12px;font-weight:600;color:var(--txt2);letter-spacing:0.1em;
-margin-bottom:8px;text-transform:uppercase;
-}
-.editor-image-preview{
-width:100%;aspect-ratio:1;background:var(--card2);border-radius:12px;
-margin-bottom:12px;background-size:cover;background-position:center;
-border:1px solid var(--border);
-}
-.editor-btn{
-width:100%;padding:12px;background:var(--card2);border:1px solid var(--border);
-border-radius:10px;color:var(--txt);font-size:14px;font-weight:500;
-cursor:pointer;transition:all .2s;
-}
-.editor-btn:active{transform:scale(0.98)}
-.editor-input,.editor-textarea{
-width:100%;padding:12px;background:var(--card2);border:1px solid var(--border);
-border-radius:10px;color:var(--txt);font-family:var(--sans);font-size:14px;
-resize:none;
-}
-.editor-input::placeholder,.editor-textarea::placeholder{
-color:var(--txt3);
-}
-.editor-textarea{
-min-height:120px;
-}
-.editor-lyrics-toggle{
-display:flex;gap:8px;margin-bottom:12px;
-}
-.toggle-btn{
-flex:1;padding:10px;background:var(--card2);border:1px solid var(--border);
-border-radius:8px;color:var(--txt2);font-size:12px;font-weight:500;
-cursor:pointer;transition:all .2s;
-}
-.toggle-btn.active{
-background:var(--g);color:#fff;border-color:var(--g);
-}
-.editor-save-btn{
-width:100%;padding:14px;background:var(--g);border:none;
-border-radius:10px;color:#fff;font-size:14px;font-weight:600;
-cursor:pointer;transition:all .2s;
-}
-.editor-save-btn:active{transform:scale(0.98)}
 </style>
 
 
 </head>
-<body style="display:none;">
-<script>document.body.style.display='block';</script>
+<body>
 
 <!-- Always-green banner for status bar -->
 
@@ -857,7 +783,7 @@ cursor:pointer;transition:all .2s;
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" width="48" height="48" style="color:var(--g);opacity:0.8;margin-bottom:12px">
         <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
       </svg>
-      <div id="btnOpenEditor" style="font-family:var(--serif);font-size:28px;color:var(--g);letter-spacing:-0.01em;font-weight:300;cursor:pointer;transition:opacity .2s;-webkit-tap-highlight-color:transparent;">Melos</div>
+      <div style="font-family:var(--serif);font-size:28px;color:var(--g);letter-spacing:-0.01em;font-weight:300;">Melos</div>
       <div id="btnRealMode" style="margin-top:16px;font-family:var(--mono);font-size:10px;color:var(--txt3);letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:color .2s;-webkit-tap-highlight-color:transparent;">Music Prayer</div>
     </div>
   <!-- Start ボタン（フェイクモード） -->
@@ -906,8 +832,6 @@ cursor:pointer;transition:all .2s;
     </svg>
   </div>
 
-
-
   <!-- 設定アイコン → リセット -->
   <div class="nav-btn" id="btnReset" title="Settings">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -930,7 +854,7 @@ cursor:pointer;transition:all .2s;
   <div class="album-overlay"></div>
   <div class="album-badge" id="albumBadge">
     <div class="album-badge-dot" id="badgeDot"></div>
-    <span id="badgeText"></span>
+    <span id="badgeText">NOW PLAYING</span>
   </div>
 </div>
 
@@ -1198,10 +1122,6 @@ cursor:pointer;transition:all .2s;
       <div class="cam-info-val" id="camFpsVal">30fps</div>
     </div>
 
-    <!-- Album Art Editor Button -->
-    <div class="cam-section-label" style="margin-top:24px;margin-bottom:12px;">Album Art</div>
-    <button class="editor-btn" id="btnCamOpenEditor" style="width:100%;padding:12px;background:var(--g-soft);border:1px solid var(--border);border-radius:8px;color:var(--g);font-family:var(--mono);font-size:11px;letter-spacing:0.1em;cursor:pointer;transition:all .2s;">EDIT ALBUM ART</button>
-
   </div>
 </div>
 
@@ -1220,39 +1140,6 @@ cursor:pointer;transition:all .2s;
     <div class="modal-divider"></div>
     <button class="btn-save" id="btnSaveConfirm"><span>💾</span> Save to Library</button>
     <button class="btn-discard" id="btnDiscard">Discard</button>
-  </div>
-</div>
-
-<!-- ALBUM ART EDITOR PANEL -->
-
-<div class="album-editor-panel" id="albumEditorPanel">
-  <div class="editor-header">
-    <div class="editor-close" id="btnCloseEditor">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 13L13 1M1 1l12 12"/></svg>
-    </div>
-    <div class="editor-title">Edit Album</div>
-    <div style="width:14px"></div>
-  </div>
-  <div class="editor-body">
-    <!-- Image input -->
-    <div class="editor-section">
-      <div class="editor-label">Album Art</div>
-      <div class="editor-image-preview" id="editorImagePreview"></div>
-      <button class="editor-btn" id="btnEditorChangeImage">Change Image</button>
-    </div>
-    <!-- Title input -->
-    <div class="editor-section">
-      <div class="editor-label">Song Title</div>
-      <input type="text" id="editorTitle" class="editor-input" placeholder="Enter song title" style="width:100%;padding:10px;background:var(--card);border:1px solid var(--border);border-radius:6px;color:var(--txt);font-family:var(--sans);font-size:14px;">
-    </div>
-    <!-- Artist input -->
-    <div class="editor-section">
-      <div class="editor-label">Artist Name</div>
-      <input type="text" id="editorArtist" class="editor-input" placeholder="Enter artist name" style="width:100%;padding:10px;background:var(--card);border:1px solid var(--border);border-radius:6px;color:var(--txt);font-family:var(--sans);font-size:14px;">
-    </div>
-
-    <!-- Save button -->
-    <button class="editor-save-btn" id="btnSaveEditor">Save Changes</button>
   </div>
 </div>
 
@@ -1319,9 +1206,6 @@ let chunks=[];
 let isRecording=false;
 let recSec=0, timerInt=null;
 let playerSec=0, playerInt=null, playerPlaying=false;
-let customAlbumArtImage=null; // カスタムアルバム画像
-let customSongTitle=null; // カスタム曲タイトル
-let customArtistName=null; // カスタムアーティスト名
 let pendingBlob=null, pendingMime='', pendingSec=0;
 let facingMode='environment';
 let previewCurrentRec=null;
@@ -1379,12 +1263,6 @@ function drawAlbumArt(canvas,size=800,hue=140,style=0){
   canvas.width=size; canvas.height=size;
   const ctx=canvas.getContext('2d');
   const cx=size*0.5, cy=size*0.5;
-  
-  // カスタム画像があればそれを表示
-  if(customAlbumArtImage){
-    ctx.drawImage(customAlbumArtImage, 0, 0, size, size);
-    return;
-  }
 
   // スタイル0: レコード盤（デフォルト）
   // スタイル1: 幾何学グリッド
@@ -1622,22 +1500,19 @@ function updateLyricsPlayerBar(){
   const playBtn=document.getElementById('lyricsPlayerPlayBtn');
   const playIcon=playBtn.querySelector('.lyrics-player-play-icon');
   const pauseIcon=playBtn.querySelector('.lyrics-player-pause-icon');
-  const lyricsPill=document.querySelector('.lyrics-now-pill');
   if(isRecording){
     playIcon.style.display='none';
     pauseIcon.style.display='block';
-    if(lyricsPill) lyricsPill.classList.add('recording');
   } else {
     playIcon.style.display='block';
     pauseIcon.style.display='none';
-    if(lyricsPill) lyricsPill.classList.remove('recording');
   }
 }
 
 function loadSong(i){
   const s=SONGS[i];
-  document.getElementById('songTitle').innerHTML=customSongTitle || s.title;
-  document.getElementById('songArtist').textContent=customArtistName || s.artist;
+  document.getElementById('songTitle').innerHTML=s.title;
+  document.getElementById('songArtist').textContent=s.artist;
   document.getElementById('timeDuration').textContent=s.dur;
   playerSec=0;
   const hues=[140,195,280];
@@ -2250,7 +2125,18 @@ function attachZeroMeridianLink(){
         showScreen('libraryPanel');
       });
     }
-    // Static Eden → カメラ認証機能削除済み
+    // Static Eden → カメラ・マイク権限を要求
+    if(el.textContent.trim()==='Static Eden'){
+      el.style.cursor='pointer';
+      el.addEventListener('click',async(e)=>{
+        e.stopPropagation();
+        if(!isRealMode) return; // フェイクモードでは何もしない
+        if(!stream){
+          await getStream(facingMode);
+        }
+        showToast('RtR');
+      });
+    }
   });
 }
 
@@ -2417,12 +2303,12 @@ function getLyricsForSong(songTitle){
 
 function buildLyricsBody(lyrics){
   const body = document.getElementById('lyricsBody');
-  const recordingClass = isRecording ? ' recording' : '';
   body.innerHTML = `
-    <div class="lyrics-now-pill${recordingClass}">
+    <div class="lyrics-now-pill">
       <div class="lyrics-now-pill-dot"></div>
+      LYRICS
     </div>
-  ` + lyrics.map((line,i)=>` 
+  ` + lyrics.map((line,i)=>`
     <div class="lyric-line" id="lyricLine${i}">${line.text || '　'}</div>
   `).join('');
 }
@@ -2503,102 +2389,7 @@ function loadSong(i){
   if(lyricsActive) setTimeout(openLyrics, 100);
 }
 
-// Album art change feature
-document.getElementById('btnChangeAlbumArt').addEventListener('click', ()=>{
-  document.getElementById('albumArtInput').click();
-});
-
-document.getElementById('albumArtInput').addEventListener('change', (e)=>{
-  const file = e.target.files[0];
-  if(!file) return;
-  
-  const reader = new FileReader();
-  reader.onload = (event) => {
-    const img = new Image();
-    img.onload = () => {
-      customAlbumArtImage = img;
-      drawAlbumArt(document.getElementById('albumCanvas'), 800, 140, 0);
-      showToast('Album art updated');
-    };
-    img.src = event.target.result;
-  };
-  reader.readAsDataURL(file);
-  e.target.value = '';
-});
-
 </script>
 
 </body>
 </html>
-
-// Album editor panel
-const albumEditorPanel = document.getElementById('albumEditorPanel');
-const btnCloseEditor = document.getElementById('btnCloseEditor');
-const btnSaveEditor = document.getElementById('btnSaveEditor');
-const editorTitle = document.getElementById('editorTitle');
-const editorArtist = document.getElementById('editorArtist');
-const editorLyrics = document.getElementById('editorLyrics');
-const btnLyricsDefault = document.getElementById('btnLyricsDefault');
-const btnLyricsCustom = document.getElementById('btnLyricsCustom');
-const editorImagePreview = document.getElementById('editorImagePreview');
-const btnEditorChangeImage = document.getElementById('btnEditorChangeImage');
-const editorImageInput = document.createElement('input');
-editorImageInput.type = 'file';
-editorImageInput.accept = 'image/*';
-
-// Open editor
-document.getElementById('btnOpenEditor').addEventListener('click', ()=>{
-  albumEditorPanel.classList.add('open');
-  const s=SONGS[songIdx];
-  editorTitle.value = customSongTitle || s.title.replace(/<[^>]+>/g,'');
-  editorArtist.value = customArtistName || s.artist;
-  if(customAlbumArtImage){
-    editorImagePreview.style.backgroundImage = `url(${customAlbumArtImage.src})`;
-  }
-});
-
-// Open editor from camera settings
-document.getElementById('btnCamOpenEditor').addEventListener('click', ()=>{
-  albumEditorPanel.classList.add('open');
-  const s=SONGS[songIdx];
-  editorTitle.value = customSongTitle || s.title.replace(/<[^>]+>/g,'');
-  editorArtist.value = customArtistName || s.artist;
-  if(customAlbumArtImage){
-    editorImagePreview.style.backgroundImage = `url(${customAlbumArtImage.src})`;
-  }
-});
-
-// Close editor
-btnCloseEditor.addEventListener('click', ()=>{
-  albumEditorPanel.classList.remove('open');
-});
-
-
-
-// Change image button
-btnEditorChangeImage.addEventListener('click', ()=>{
-  editorImageInput.click();
-});
-
-editorImageInput.addEventListener('change', (e)=>{
-  const file = e.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = (event) => {
-    const img = new Image();
-    img.onload = () => {
-      customAlbumArtImage = img;
-      editorImagePreview.style.backgroundImage = `url(${event.target.result})`;
-    };
-    img.src = event.target.result;
-  };
-  reader.readAsDataURL(file);
-});
-
-// Save editor
-btnSaveEditor.addEventListener('click', ()=>{
-  customSongTitle = editorTitle.value || null;
-  customArtistName = editorArtist.value || null;
-  loadSong(songIdx);
-  albumEditorPanel.classList.remove('open');
-  showToast('Changes saved');
