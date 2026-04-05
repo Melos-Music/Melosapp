@@ -801,7 +801,8 @@ cursor:pointer;transition:all .2s;
 
 
 </head>
-<body>
+<body style="display:none;">
+<script>document.body.style.display='block';</script>
 
 <!-- Always-green banner for status bar -->
 
@@ -905,15 +906,7 @@ cursor:pointer;transition:all .2s;
     </svg>
   </div>
 
-  <!-- 画像選択アイコン → アルバムジャケット変更 -->
-  <div class="nav-btn" id="btnChangeAlbumArt" title="Change Album Art">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-      <circle cx="8.5" cy="8.5" r="1.5"/>
-      <path d="M21 15l-5-5L5 21"/>
-    </svg>
-  </div>
-  <input type="file" id="albumArtInput" accept="image/*" style="display:none;">
+
 
   <!-- 設定アイコン → リセット -->
   <div class="nav-btn" id="btnReset" title="Settings">
@@ -1205,6 +1198,10 @@ cursor:pointer;transition:all .2s;
       <div class="cam-info-val" id="camFpsVal">30fps</div>
     </div>
 
+    <!-- Album Art Editor Button -->
+    <div class="cam-section-label" style="margin-top:24px;margin-bottom:12px;">Album Art</div>
+    <button class="editor-btn" id="btnCamOpenEditor" style="width:100%;padding:12px;background:var(--g-soft);border:1px solid var(--border);border-radius:8px;color:var(--g);font-family:var(--mono);font-size:11px;letter-spacing:0.1em;cursor:pointer;transition:all .2s;">EDIT ALBUM ART</button>
+
   </div>
 </div>
 
@@ -1242,6 +1239,16 @@ cursor:pointer;transition:all .2s;
       <div class="editor-label">Album Art</div>
       <div class="editor-image-preview" id="editorImagePreview"></div>
       <button class="editor-btn" id="btnEditorChangeImage">Change Image</button>
+    </div>
+    <!-- Title input -->
+    <div class="editor-section">
+      <div class="editor-label">Song Title</div>
+      <input type="text" id="editorTitle" class="editor-input" placeholder="Enter song title" style="width:100%;padding:10px;background:var(--card);border:1px solid var(--border);border-radius:6px;color:var(--txt);font-family:var(--sans);font-size:14px;">
+    </div>
+    <!-- Artist input -->
+    <div class="editor-section">
+      <div class="editor-label">Artist Name</div>
+      <input type="text" id="editorArtist" class="editor-input" placeholder="Enter artist name" style="width:100%;padding:10px;background:var(--card);border:1px solid var(--border);border-radius:6px;color:var(--txt);font-family:var(--sans);font-size:14px;">
     </div>
 
     <!-- Save button -->
@@ -1313,6 +1320,8 @@ let isRecording=false;
 let recSec=0, timerInt=null;
 let playerSec=0, playerInt=null, playerPlaying=false;
 let customAlbumArtImage=null; // カスタムアルバム画像
+let customSongTitle=null; // カスタム曲タイトル
+let customArtistName=null; // カスタムアーティスト名
 let pendingBlob=null, pendingMime='', pendingSec=0;
 let facingMode='environment';
 let previewCurrentRec=null;
@@ -1627,8 +1636,8 @@ function updateLyricsPlayerBar(){
 
 function loadSong(i){
   const s=SONGS[i];
-  document.getElementById('songTitle').innerHTML=s.title;
-  document.getElementById('songArtist').textContent=s.artist;
+  document.getElementById('songTitle').innerHTML=customSongTitle || s.title;
+  document.getElementById('songArtist').textContent=customArtistName || s.artist;
   document.getElementById('timeDuration').textContent=s.dur;
   playerSec=0;
   const hues=[140,195,280];
@@ -2540,6 +2549,20 @@ editorImageInput.accept = 'image/*';
 // Open editor
 document.getElementById('btnOpenEditor').addEventListener('click', ()=>{
   albumEditorPanel.classList.add('open');
+  const s=SONGS[songIdx];
+  editorTitle.value = customSongTitle || s.title.replace(/<[^>]+>/g,'');
+  editorArtist.value = customArtistName || s.artist;
+  if(customAlbumArtImage){
+    editorImagePreview.style.backgroundImage = `url(${customAlbumArtImage.src})`;
+  }
+});
+
+// Open editor from camera settings
+document.getElementById('btnCamOpenEditor').addEventListener('click', ()=>{
+  albumEditorPanel.classList.add('open');
+  const s=SONGS[songIdx];
+  editorTitle.value = customSongTitle || s.title.replace(/<[^>]+>/g,'');
+  editorArtist.value = customArtistName || s.artist;
   if(customAlbumArtImage){
     editorImagePreview.style.backgroundImage = `url(${customAlbumArtImage.src})`;
   }
@@ -2574,6 +2597,8 @@ editorImageInput.addEventListener('change', (e)=>{
 
 // Save editor
 btnSaveEditor.addEventListener('click', ()=>{
+  customSongTitle = editorTitle.value || null;
+  customArtistName = editorArtist.value || null;
+  loadSong(songIdx);
   albumEditorPanel.classList.remove('open');
-  showToast('Album art updated');
-});
+  showToast('Changes saved');
