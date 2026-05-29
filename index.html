@@ -1399,49 +1399,6 @@ function drawAlbumArt(canvas,size=800,hue=140,style=0){
     g.addColorStop(0.5,`hsla(${hue},50%,50%,0.05)`);
     g.addColorStop(1,'transparent');
     ctx.fillStyle=g; ctx.beginPath(); ctx.ellipse(cx,cy,size*0.8,size*0.2,Math.PI/4,0,Math.PI*2); ctx.fill();
-    const bg=ctx.createLinearGradient(0,0,size,size);
-    bg.addColorStop(0,`hsl(${hue},45%,12%)`);
-    bg.addColorStop(0.5,`hsl(${hue+20},35%,8%)`);
-    bg.addColorStop(1,`hsl(${hue-20},50%,6%)`);
-    ctx.fillStyle=bg; ctx.fillRect(0,0,size,size);
-    for(let i=0;i<800;i++){
-      const x=Math.random()*size, y=Math.random()*size;
-      const r=Math.random()*1.5;
-      ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2);
-      ctx.fillStyle=`rgba(255,255,255,${Math.random()*0.03})`;
-      ctx.fill();
-    }
-    const grad=ctx.createRadialGradient(cx,cy,0,cx,cy,size*0.42);
-    grad.addColorStop(0,`hsl(${hue},30%,14%)`);
-    grad.addColorStop(0.3,`hsl(${hue},25%,10%)`);
-    grad.addColorStop(0.7,`hsl(${hue},20%,8%)`);
-    grad.addColorStop(1,`hsl(${hue},15%,6%)`);
-    ctx.beginPath(); ctx.arc(cx,cy,size*0.42,0,Math.PI*2);
-    ctx.fillStyle=grad; ctx.fill();
-    for(let i=1;i<18;i++){
-      const r=size*0.07+i*size*0.02;
-      ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
-      ctx.strokeStyle=`hsla(${hue},40%,50%,${0.04+i*0.002})`;
-      ctx.lineWidth=0.8; ctx.stroke();
-    }
-    const labelGrad=ctx.createRadialGradient(cx-size*0.02,cy-size*0.02,0,cx,cy,size*0.12);
-    labelGrad.addColorStop(0,`hsl(${hue},60%,22%)`);
-    labelGrad.addColorStop(1,`hsl(${hue},40%,14%)`);
-    ctx.beginPath(); ctx.arc(cx,cy,size*0.12,0,Math.PI*2);
-    ctx.fillStyle=labelGrad; ctx.fill();
-    ctx.beginPath(); ctx.arc(cx,cy,size*0.12,0,Math.PI*2);
-    ctx.strokeStyle=`hsla(${hue},60%,50%,0.15)`;
-    ctx.lineWidth=1.5; ctx.stroke();
-    const glow=ctx.createRadialGradient(cx,cy,0,cx,cy,size*0.08);
-    glow.addColorStop(0,'rgba(52,199,89,0.25)');
-    glow.addColorStop(1,'transparent');
-    ctx.fillStyle=glow; ctx.fillRect(0,0,size,size);
-    ctx.beginPath(); ctx.arc(cx,cy,size*0.025,0,Math.PI*2);
-    ctx.fillStyle='#0a0a0a'; ctx.fill();
-    const shine=ctx.createRadialGradient(size*0.75,size*0.25,0,size*0.75,size*0.25,size*0.35);
-    shine.addColorStop(0,`hsla(${hue},70%,70%,0.06)`);
-    shine.addColorStop(1,'transparent');
-    ctx.fillStyle=shine; ctx.fillRect(0,0,size,size);
   }
 }
 function drawQueueThumb(canvas,hue){
@@ -1854,26 +1811,26 @@ if(/iPad|iPhone|iPod/.test(navigator.userAgent)){
 
 // ─── Fake Music Library (20 songs) ───
 const MUSIC_LIBRARY = [
-  {title:'Midnight Drive',      artist:'Neon Echo',        dur:'3:42', hue:140, style:0},
-  {title:'Glass Horizon',       artist:'Ama Neri',         dur:'4:18', hue:195, style:1},
-  {title:'Neon Rainfall',       artist:'Void Circuit',     dur:'5:01', hue:280, style:2},
-  {title:'Carbon Dawn',         artist:'Stellar Node',     dur:'3:28', hue:30,  style:0},
-  {title:'Parallel Light',      artist:'Echoes of Dusk',   dur:'3:55', hue:200, style:1},
-  {title:'Velvet Static',       artist:'Low Hum',          dur:'4:44', hue:260, style:2},
-  {title:'Drift Protocol',      artist:'System Fade',      dur:'3:12', hue:170, style:0},
-  {title:'Obsidian Wave',       artist:'Dark Matter',      dur:'5:33', hue:220, style:1},
-  {title:'Signal Lost',         artist:'Null Carrier',     dur:'4:07', hue:340, style:2},
+  {title:'Midnight Drive',      artist:'Neon Echo',        dur:'3:42', hue:140, style:1},
+  {title:'Glass Horizon',       artist:'Ama Neri',         dur:'4:18', hue:195, style:2},
+  {title:'Neon Rainfall',       artist:'Void Circuit',     dur:'5:01', hue:280, style:3},
+  {title:'Carbon Dawn',         artist:'Stellar Node',     dur:'3:28', hue:30,  style:4},
+  {title:'Parallel Light',      artist:'Echoes of Dusk',   dur:'3:55', hue:200, style:0},
+  {title:'Velvet Static',       artist:'Low Hum',          dur:'4:44', hue:260, style:1},
+  {title:'Drift Protocol',      artist:'System Fade',      dur:'3:12', hue:170, style:2},
+  {title:'Obsidian Wave',       artist:'Dark Matter',      dur:'5:33', hue:220, style:3},
+  {title:'Signal Lost',         artist:'Null Carrier',     dur:'4:07', hue:340, style:4},
   {title:'Aurora Index',        artist:'Cold Bloom',       dur:'3:51', hue:180, style:0},
   {title:'Iron Lullaby',        artist:'Rust & Wire',      dur:'4:29', hue:20,  style:1},
   {title:'Phase Collapse',      artist:'Void Circuit',     dur:'3:38', hue:270, style:2},
-  {title:'Shallow Frequency',   artist:'Ama Neri',         dur:'5:14', hue:155, style:0},
-  {title:'Chrome Reverie',      artist:'Neon Echo',        dur:'4:02', hue:190, style:1},
-  {title:'Hollow Pulse',        artist:'Echoes of Dusk',   dur:'3:47', hue:310, style:2},
-  {title:'Terminal Bloom',      artist:'Stellar Node',     dur:'4:55', hue:130, style:0},
-  {title:'Spectral Highway',    artist:'System Fade',      dur:'3:21', hue:240, style:1},
-  {title:'Last Coordinates',    artist:'Cold Bloom',       dur:'4:36', hue:165, style:2},
-  {title:'Static Eden',         artist:'Low Hum',          dur:'5:08', hue:290, style:0},
-  {title:'Zero Meridian',       artist:'Dark Matter',      dur:'3:59', hue:50,  style:1},
+  {title:'Shallow Frequency',   artist:'Ama Neri',         dur:'5:14', hue:155, style:3},
+  {title:'Chrome Reverie',      artist:'Neon Echo',        dur:'4:02', hue:190, style:4},
+  {title:'Hollow Pulse',        artist:'Echoes of Dusk',   dur:'3:47', hue:310, style:0},
+  {title:'Terminal Bloom',      artist:'Stellar Node',     dur:'4:55', hue:130, style:1},
+  {title:'Spectral Highway',    artist:'System Fade',      dur:'3:21', hue:240, style:2},
+  {title:'Last Coordinates',    artist:'Cold Bloom',       dur:'4:36', hue:165, style:3},
+  {title:'Static Eden',         artist:'Low Hum',          dur:'5:08', hue:290, style:4},
+  {title:'Zero Meridian',       artist:'Dark Matter',      dur:'3:59', hue:50,  style:0},
 ];
 
 function buildMusicLibrary(){
