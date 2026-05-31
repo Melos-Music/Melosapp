@@ -3,7 +3,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#34c759">
@@ -29,6 +29,23 @@
   --sans:    '-apple-system', 'BlinkMacSystemFont', 'Helvetica Neue', sans-serif;
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bot: env(safe-area-inset-bottom, 0px);
+}
+/* PWA standalone mode adjustments for safe-area integration */
+@media (display-mode: standalone) {
+  html, body {
+    background: var(--bg); /* Default */
+    transition: background-color 0.3s ease;
+  }
+  body.pwa-recording {
+    background: #34c759 !important;
+  }
+  .app {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  /* Ensure top UI elements blend with safe-area */
+  .status-strip, .site-banner, .perm-screen::before {
+    height: calc(env(safe-area-inset-top, 0px) + 4px) !important;
+  }
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--txt);font-family:var(--sans);-webkit-font-smoothing:antialiased}
@@ -1565,6 +1582,10 @@ async function switchCamera(){
 
 // ─── Recording ───
 async function startRecording(){
+  // PWA standalone表示時の背景色制御
+  if(window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches) {
+    document.body.classList.add('pwa-recording');
+  }
   // ② フェイクモードでは録画しない（UIだけ動く）
   if(!isRealMode){
     isRecording=true; // UIのtoggle用
@@ -1622,6 +1643,8 @@ async function startRecording(){
 
 function stopRecording(){
   clearInterval(timerInt);
+  // PWA standalone表示時の背景色リセット
+  document.body.classList.remove('pwa-recording');
   // フェイクモードはエイだけ戻す
   if(!isRealMode){
     isRecording=false;
