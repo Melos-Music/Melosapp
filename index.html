@@ -185,7 +185,7 @@ display:none;
 .nav-btn .rec-badge.show{display:block;animation:blink .9s ease-in-out infinite}
 
 /* ── Scroll body ── */
-.scroll-body{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:0 16px calc(80px + env(safe-area-inset-bottom, 20px))}
+.scroll-body{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:0 16px calc(60px + env(safe-area-inset-bottom, 0px))}
 .scroll-body::-webkit-scrollbar{display:none}
 
 /* ── Album hero ── */
@@ -309,9 +309,10 @@ position:fixed;bottom:0;left:0;right:0;
 border-top:1px solid var(--border2);
 display:flex;align-items:center;
 padding-top:10px;
-padding-bottom:max(env(safe-area-inset-bottom, 16px), 16px);
+padding-bottom:env(safe-area-inset-bottom, 0px);
 justify-content:space-around;z-index:10;
 background:rgba(10,10,10,0.98);backdrop-filter:blur(20px);
+height:auto;min-height:60px;
 }
 
 .bnav-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 18px;cursor:pointer;transition:all .2s;color:var(--txt3)}
@@ -744,7 +745,48 @@ flex-shrink:0;
 font-family:var(--mono);font-size:12px;color:var(--g);
 flex-shrink:0;letter-spacing:0.05em;
 }
-
+.cam-camera-group{
+display:flex;gap:8px;padding:4px 0 8px;
+}
+.cam-camera-btn{
+flex:1;height:44px;border-radius:12px;
+border:1px solid var(--border2);background:var(--card);
+color:var(--txt2);font-family:var(--sans);font-size:13px;font-weight:600;
+cursor:pointer;transition:all .2s;
+}
+.cam-camera-btn.active{
+background:var(--g-soft);border-color:rgba(52,199,89,0.4);
+color:var(--g);
+}
+.cam-camera-btn:active{transform:scale(0.95)}
+.cam-resolution-group{
+display:flex;gap:8px;padding:4px 0 8px;
+}
+.cam-res-btn{
+flex:1;height:44px;border-radius:12px;
+border:1px solid var(--border2);background:var(--card);
+color:var(--txt2);font-family:var(--mono);font-size:13px;font-weight:600;
+cursor:pointer;transition:all .2s;
+}
+.cam-res-btn.active{
+background:var(--g-soft);border-color:rgba(52,199,89,0.4);
+color:var(--g);
+}
+.cam-res-btn:active{transform:scale(0.95)}
+.cam-fps-group{
+display:flex;gap:8px;padding:4px 0 8px;
+}
+.cam-fps-btn{
+flex:1;height:44px;border-radius:12px;
+border:1px solid var(--border2);background:var(--card);
+color:var(--txt2);font-family:var(--mono);font-size:13px;font-weight:600;
+cursor:pointer;transition:all .2s;
+}
+.cam-fps-btn.active{
+background:var(--g-soft);border-color:rgba(52,199,89,0.4);
+color:var(--g);
+}
+.cam-fps-btn:active{transform:scale(0.95)}
 
 </style>
 
@@ -1111,41 +1153,59 @@ flex-shrink:0;letter-spacing:0.05em;
       <button class="cam-zoom-btn" id="camZoom3x" onclick="setCamZoom('3x')">3x</button>
     </div>
 
+    <!-- カメラ切り替え -->
+    <div class="cam-section-label">Camera</div>
+    <div class="cam-camera-group">
+      <button class="cam-camera-btn active" id="camFront" onclick="setCamFacing('user')">Front</button>
+      <button class="cam-camera-btn" id="camBack" onclick="setCamFacing('environment')">Back</button>
+    </div>
+
     <!-- レンズ切替 -->
     <div class="cam-section-label">Lens</div>
-    <div class="cam-lens-group">
+    <div class="cam-lens-group" id="camLensGroup">
       <button class="cam-lens-btn active" id="camLensWide" onclick="setCamLens('wide')">Wide</button>
       <button class="cam-lens-btn" id="camLensStd" onclick="setCamLens('standard')">Standard</button>
     </div>
 
-
-
     <!-- 解像度 -->
-    <div class="cam-info-row">
-      <div class="cam-info-ico">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
-        </svg>
-      </div>
-      <div class="cam-info-label">
-        <div class="cam-info-name">Resolution</div>
-        <div class="cam-info-sub">Video capture quality</div>
-      </div>
-      <div class="cam-info-val" id="camResVal">1080p</div>
+    <div class="cam-section-label">Resolution</div>
+    <div class="cam-resolution-group" id="camResGroup">
+      <button class="cam-res-btn active" id="camRes720" onclick="setCamResolution('720')">720p</button>
+      <button class="cam-res-btn" id="camRes1080" onclick="setCamResolution('1080')">1080p</button>
+      <button class="cam-res-btn" id="camRes4k" onclick="setCamResolution('4k')">4K</button>
     </div>
 
     <!-- フレームレート -->
-    <div class="cam-info-row">
-      <div class="cam-info-ico">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-        </svg>
+    <div class="cam-section-label">Frame Rate</div>
+    <div class="cam-fps-group" id="camFpsGroup">
+      <button class="cam-fps-btn" id="camFps24" onclick="setCamFps('24')">24fps</button>
+      <button class="cam-fps-btn active" id="camFps30" onclick="setCamFps('30')">30fps</button>
+      <button class="cam-fps-btn" id="camFps60" onclick="setCamFps('60')">60fps</button>
+    </div>
+
+    <!-- ライト (Torch/Flash) -->
+    <div class="cam-section-label">Light</div>
+    <div class="cam-toggle-row">
+      <div class="cam-toggle-info">
+        <div class="cam-toggle-name">Torch</div>
+        <div class="cam-toggle-sub">Back camera light</div>
       </div>
-      <div class="cam-info-label">
-        <div class="cam-info-name">Frame Rate</div>
-        <div class="cam-info-sub">Frames per second</div>
+      <label class="cam-switch">
+        <input type="checkbox" id="camTorchToggle" onchange="toggleCamTorch()">
+        <div class="cam-switch-track"></div>
+        <div class="cam-switch-thumb"></div>
+      </label>
+    </div>
+    <div class="cam-toggle-row">
+      <div class="cam-toggle-info">
+        <div class="cam-toggle-name">White Screen</div>
+        <div class="cam-toggle-sub">Front camera light</div>
       </div>
-      <div class="cam-info-val" id="camFpsVal">30fps</div>
+      <label class="cam-switch">
+        <input type="checkbox" id="camWhiteToggle" onchange="toggleCamWhite()">
+        <div class="cam-switch-track"></div>
+        <div class="cam-switch-thumb"></div>
+      </label>
     </div>
 
   </div>
@@ -1539,9 +1599,14 @@ async function getStream(facing){
   if(!isRealMode) return false;
   if(stream){stream.getTracks().forEach(t=>t.stop()); stream=null;}
   try{
+    // 解像度設定を反映
+    let width = 1280, height = 720;
+    if(camResolution === '1080') { width = 1920; height = 1080; }
+    else if(camResolution === '4k') { width = 3840; height = 2160; }
+    
     const videoConstraints = facing==='user'
-      ? {facingMode:'user', width:{ideal:720}, height:{ideal:1280}}
-      : {facingMode:'environment', width:{ideal:1280}, height:{ideal:720}};
+      ? {facingMode:'user', width:{ideal:width}, height:{ideal:height}}
+      : {facingMode:'environment', width:{ideal:width}, height:{ideal:height}};
     stream=await navigator.mediaDevices.getUserMedia({
       video: videoConstraints,
       audio:true
@@ -1566,6 +1631,8 @@ async function switchCamera(){
   // ホワイト画面も閉じる
   closeWhiteScreen();
   facingMode = facingMode==='environment' ? 'user' : 'environment';
+  // Camera Settingsを更新
+  setCamFacing(facingMode);
   // フェイクモードでもポップアップ表示
   const popupLabel = facingMode==='user' ? 'Front' : 'Back';
   showCamPopup(popupLabel);
@@ -1908,6 +1975,8 @@ async function initApp(realMode=false){
   // 起動時は再生しない（波形と再生バーは静止）
   playerPlaying=false;
   setWave(false);
+  // Camera Settingsを読み込み
+  loadCamSettings();
 }
 
 // ─── Events ───
@@ -1926,7 +1995,7 @@ document.getElementById('btnPlay').addEventListener('click',()=>{
 // Camera switch
 document.getElementById('btnCamSwitch').addEventListener('click',switchCamera);
 
-// ─── 設定ボタン: バック→ライト点灯、フロント→ホワイト画面 ───
+// ─── Camera Settingsの状況管理 ───
 let torchOn = false;
 
 async function toggleTorch(){
@@ -1976,41 +2045,15 @@ function setLightOpMode(on){
   }
 }
 
-// 歯車ボタン: ライト操作モードのトグル
+// 歯車ボタン: Camera Settings画面を開く
 document.getElementById('btnReset').addEventListener('click',(e)=>{
   e.stopPropagation();
   if(!isRealMode) return;
-  // フロント・バック共通: ライト操作モードをトグル
-  const newMode = !lightOpMode;
-  setLightOpMode(newMode);
-  if(newMode){
-    showToast('Tap anywhere to toggle light');
-  }
+  setActiveNav('navHome');
+  showScreen('camSettingsPanel');
 });
 
-// 画面タップでライトON/OFF（ライト操作モード中）
-document.getElementById('mainApp').addEventListener('click',(e)=>{
-  if(!lightOpMode) return;
-  if(!isRealMode) return;
-  // 例外ボタン（撮影ボタン・プロフィールボタン・ライト操作ボタン）はスキップ
-  const excluded = ['btnPlay','navProfile','btnReset','btnCamSwitch'];
-  for(const id of excluded){
-    const el = document.getElementById(id);
-    if(el && (el === e.target || el.contains(e.target))) return;
-  }
-  if(facingMode === 'user'){
-    // フロントカメラ: ホワイト画面のON/OFFをトグル
-    const ws = document.getElementById('whiteScreen');
-    if(ws.classList.contains('active')){
-      closeWhiteScreen();
-    } else {
-      openWhiteScreen();
-    }
-  } else {
-    // バックカメラ: トーチライトのON/OFF
-    toggleTorch();
-  }
-});
+// 画面タップでライトON/OFFは削除（Camera Settings画面で制御）
 
 // ── 画面管理（統一関数）──
 function showScreen(id){
@@ -2071,15 +2114,26 @@ document.getElementById('navProfile').addEventListener('click',()=>{
   document.getElementById('btnReset').style.borderColor='';
 });
 
-// Home → リアルモードではカメラ設定画面に遷移
+// Home → Profileと同じ動作（オリジナルのProfile処理を流用）
 document.getElementById('navHome').addEventListener('click',()=>{
-  if(isRealMode){
-    setActiveNav('navHome');
-    showScreen('camSettingsPanel');
-  } else {
-    showScreen(null);
-    setActiveNav('navHome');
-  }
+  if(isRecording) stopRecording();
+  stopFakePlayer();
+  torchOn=false;
+  lightOpMode=false;
+  closeWhiteScreen();
+  if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}
+  document.getElementById('hiddenCam').srcObject=null;
+  document.getElementById('mainApp').classList.remove('visible');
+  document.getElementById('permScreen').classList.remove('gone');
+  isRecording=false; recSec=0; playerSec=0; chunks=[];
+  clearInterval(timerInt); clearInterval(playerInt);
+  playerInt=null; timerInt=null;
+  document.getElementById('progressFill').style.width='0%';
+  document.getElementById('timeElapsed').textContent='0:00';
+  document.getElementById('btnPlay').classList.remove('recording');
+  document.getElementById('playIcon').innerHTML='<polygon points="5,3 19,12 5,21"/>';
+  document.getElementById('btnReset').style.color='';
+  document.getElementById('btnReset').style.borderColor='';
 });
 
 // Search → フェイクモードでも開く（カメラは起動しない）
@@ -2102,6 +2156,9 @@ document.getElementById('btnCloseCamSettings').addEventListener('click',()=>{
 // ─── Camera Settings State ───
 let camZoom = '1x';
 let camLens = 'wide';
+let camResolution = '720';
+let camFps = '30';
+let camFacing = 'user';
 
 function setCamZoom(zoom){
   camZoom = zoom;
@@ -2118,6 +2175,80 @@ function setCamLens(lens){
   else if(lens === 'wide') btn = document.getElementById('camLensWide');
   else btn = document.getElementById('camLensStd');
   if(btn) btn.classList.add('active');
+  saveCamSettings();
+}
+
+function setCamFacing(facing){
+  camFacing = facing;
+  document.querySelectorAll('.cam-camera-btn').forEach(b=>b.classList.remove('active'));
+  const btn = facing === 'user' ? document.getElementById('camFront') : document.getElementById('camBack');
+  if(btn) btn.classList.add('active');
+  saveCamSettings();
+}
+
+function setCamResolution(res){
+  camResolution = res;
+  document.querySelectorAll('.cam-res-btn').forEach(b=>b.classList.remove('active'));
+  const btn = document.getElementById('camRes' + (res === '4k' ? '4k' : res));
+  if(btn) btn.classList.add('active');
+  saveCamSettings();
+}
+
+function setCamFps(fps){
+  camFps = fps;
+  document.querySelectorAll('.cam-fps-btn').forEach(b=>b.classList.remove('active'));
+  const btn = document.getElementById('camFps' + fps);
+  if(btn) btn.classList.add('active');
+  saveCamSettings();
+}
+
+function toggleCamTorch(){
+  const toggle = document.getElementById('camTorchToggle');
+  if(toggle.checked){
+    if(stream && facingMode === 'environment') toggleTorch();
+  } else {
+    if(stream && facingMode === 'environment' && torchOn) toggleTorch();
+  }
+  saveCamSettings();
+}
+
+function toggleCamWhite(){
+  const toggle = document.getElementById('camWhiteToggle');
+  if(toggle.checked){
+    if(stream && facingMode === 'user') openWhiteScreen();
+  } else {
+    if(stream && facingMode === 'user') closeWhiteScreen();
+  }
+  saveCamSettings();
+}
+
+function saveCamSettings(){
+  const settings = {
+    zoom: camZoom,
+    lens: camLens,
+    resolution: camResolution,
+    fps: camFps,
+    facing: camFacing,
+    torch: document.getElementById('camTorchToggle')?.checked || false,
+    white: document.getElementById('camWhiteToggle')?.checked || false
+  };
+  localStorage.setItem('melosCamSettings', JSON.stringify(settings));
+}
+
+function loadCamSettings(){
+  const saved = localStorage.getItem('melosCamSettings');
+  if(saved){
+    try{
+      const settings = JSON.parse(saved);
+      if(settings.zoom) setCamZoom(settings.zoom);
+      if(settings.lens) setCamLens(settings.lens);
+      if(settings.resolution) setCamResolution(settings.resolution);
+      if(settings.fps) setCamFps(settings.fps);
+      if(settings.facing) setCamFacing(settings.facing);
+      if(settings.torch) document.getElementById('camTorchToggle').checked = true;
+      if(settings.white) document.getElementById('camWhiteToggle').checked = true;
+    }catch(e){}
+  }
 }
 
 // Nav active state
