@@ -35,20 +35,33 @@
   html, body {
     background: var(--bg); /* Default */
     transition: background-color 0.3s ease;
+    height: 100dvh;
+    height: 100vh;
   }
   body.pwa-recording {
     background: #34c759 !important;
   }
   .app {
     padding-top: env(safe-area-inset-top, 0px);
+    height: 100dvh;
+    height: 100vh;
   }
   /* Ensure top UI elements blend with safe-area */
   .status-strip, .site-banner, .perm-screen::before {
     height: calc(env(safe-area-inset-top, 0px) + 4px) !important;
   }
+  /* Bottom navigation background extends to safe-area */
+  .bottom-nav {
+    background: linear-gradient(to bottom, rgba(10,10,10,0.98), rgba(10,10,10,1));
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  /* Remove scroll-body bottom padding in PWA to avoid gap */
+  .scroll-body {
+    padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px)) !important;
+  }
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--txt);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--txt);font-family:var(--sans);-webkit-font-smoothing:antialiased;position:fixed;top:0;left:0;right:0;bottom:0}
 /* iOSのデフォルトボタンスタイルをリセット（色は維持） */
 button{-webkit-appearance:none;appearance:none;font:inherit;cursor:pointer;}
 a{color:inherit;text-decoration:none;}
@@ -185,7 +198,7 @@ display:none;
 .nav-btn .rec-badge.show{display:block;animation:blink .9s ease-in-out infinite}
 
 /* ── Scroll body ── */
-.scroll-body{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:0 16px calc(70px + env(safe-area-inset-bottom, 0px))}
+.scroll-body{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:0 16px calc(80px + env(safe-area-inset-bottom, 0px))}
 .scroll-body::-webkit-scrollbar{display:none}
 
 /* ── Album hero ── */
@@ -309,10 +322,10 @@ position:fixed;bottom:0;left:0;right:0;
 border-top:1px solid var(--border2);
 display:flex;align-items:center;
 padding-top:10px;
-padding-bottom:calc(10px + env(safe-area-inset-bottom, 0px));
+padding-bottom:max(10px, env(safe-area-inset-bottom, 0px));
 justify-content:space-around;z-index:10;
 background:rgba(10,10,10,0.98);backdrop-filter:blur(20px);
-height:auto;min-height:50px;
+height:auto;min-height:60px;
 }
 
 .bnav-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 18px;cursor:pointer;transition:all .2s;color:var(--txt3)}
@@ -2527,57 +2540,3 @@ function openLyrics(){
   const artistEl = document.getElementById('songArtist');
   const title = titleEl ? titleEl.innerHTML : '';
   const artist = artistEl ? artistEl.textContent : '';
-
-  document.getElementById('lyricsSongTitle').innerHTML = title;
-  document.getElementById('lyricsArtist').textContent = artist;
-
-  currentLyrics = getLyricsForSong(title);
-  buildLyricsBody(currentLyrics);
-  updateLyricsHighlight(playerSec);
-  updateLyricsPlayerBar();
-
-  document.getElementById('lyricsPanel').classList.add('open');
-  lyricsActive = true;
-
-  // リアルタイム更新
-  clearInterval(lyricsInterval);
-  lyricsInterval = setInterval(()=>{
-    const sec = isRecording ? recSec : playerSec;
-    updateLyricsHighlight(sec);
-    updateLyricsPlayerBar();
-  }, 500);
-}
-
-function closeLyrics(){
-  document.getElementById('lyricsPanel').classList.remove('open');
-  lyricsActive = false;
-  clearInterval(lyricsInterval);
-}
-
-function toggleLyricsPanel(){
-  if(lyricsActive){
-    closeLyrics();
-  } else {
-    openLyrics();
-  }
-}
-
-// 長押し機能は廃止（専用ボタンで制御）
-// 以前のイベントリスナーはすべて削除済み
-
-// 閉じるボタン
-document.getElementById('btnCloseLyrics').addEventListener('click', closeLyrics);
-
-// 曲が変わったら歌詞も更新
-const _origLoadSong = loadSong;
-function loadSong(i){
-  _origLoadSong(i);
-  if(lyricsActive) setTimeout(openLyrics, 100);
-}
-
-
-
-</script>
-
-</body>
-</html>
