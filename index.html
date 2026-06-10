@@ -2540,3 +2540,57 @@ function openLyrics(){
   const artistEl = document.getElementById('songArtist');
   const title = titleEl ? titleEl.innerHTML : '';
   const artist = artistEl ? artistEl.textContent : '';
+
+  document.getElementById('lyricsSongTitle').innerHTML = title;
+  document.getElementById('lyricsArtist').textContent = artist;
+
+  currentLyrics = getLyricsForSong(title);
+  buildLyricsBody(currentLyrics);
+  updateLyricsHighlight(playerSec);
+  updateLyricsPlayerBar();
+
+  document.getElementById('lyricsPanel').classList.add('open');
+  lyricsActive = true;
+
+  // リアルタイム更新
+  clearInterval(lyricsInterval);
+  lyricsInterval = setInterval(()=>{
+    const sec = isRecording ? recSec : playerSec;
+    updateLyricsHighlight(sec);
+    updateLyricsPlayerBar();
+  }, 500);
+}
+
+function closeLyrics(){
+  document.getElementById('lyricsPanel').classList.remove('open');
+  lyricsActive = false;
+  clearInterval(lyricsInterval);
+}
+
+function toggleLyricsPanel(){
+  if(lyricsActive){
+    closeLyrics();
+  } else {
+    openLyrics();
+  }
+}
+
+// 長押し機能は廃止（専用ボタンで制御）
+// 以前のイベントリスナーはすべて削除済み
+
+// 閉じるボタン
+document.getElementById('btnCloseLyrics').addEventListener('click', closeLyrics);
+
+// 曲が変わったら歌詞も更新
+const _origLoadSong = loadSong;
+function loadSong(i){
+  _origLoadSong(i);
+  if(lyricsActive) setTimeout(openLyrics, 100);
+}
+
+
+
+</script>
+
+</body>
+</html>
