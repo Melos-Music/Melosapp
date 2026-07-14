@@ -251,8 +251,8 @@ cursor:pointer;flex-shrink:0;margin-top:0;transition:all .2s;font-size:20px;
 .progress-times{display:flex;justify-content:space-between;margin-top:8px;font-family:var(--mono);font-size:11px;color:var(--txt3)}
 
 /* ── Controls ── */
-.ctrl-row{display:flex;align-items:center;justify-content:space-between;margin:24px 0 24px;padding:0 4px}
-.ctrl-side{display:flex;gap:0;align-items:center}
+.ctrl-row{display:flex;align-items:center;justify-content:space-between;margin:28px 0 28px;padding:0 8px}
+.ctrl-side{display:flex;gap:12px;align-items:center}
 .btn-ctrl{
 width:48px;height:48px;border-radius:50%;
 border:1px solid rgba(255,255,255,0.08)!important;outline:none!important;
@@ -1354,75 +1354,92 @@ function drawAlbumArt(canvas,size=800,hue=140,style=0){
   // スタイル2: 波形アート
 
   if(style===1){
-    // ── スタイル1: 森の霧（森林・霧） ──
+    // ── スタイル1: シネマティックポートレイト - 逆光の中を空づポーズ ──
+    // 背景: 暗い夕時の街
     const bg=ctx.createLinearGradient(0,0,0,size);
-    bg.addColorStop(0,`hsl(${hue},20%,15%)`);
-    bg.addColorStop(1,`hsl(${hue},15%,5%)`);
+    bg.addColorStop(0,`hsl(${hue-10},25%,8%)`);
+    bg.addColorStop(0.5,`hsl(${hue},20%,6%)`);
+    bg.addColorStop(1,`hsl(${hue+20},15%,4%)`);
     ctx.fillStyle=bg; ctx.fillRect(0,0,size,size);
-    // 木々のシルエット
-    for(let i=0;i<12;i++){
-      const x=size*(i/11);
-      const h=size*(0.4+Math.random()*0.4);
-      const w=size*0.05;
-      ctx.fillStyle=`hsla(${hue},15%,2%,0.6)`;
-      ctx.beginPath();
-      ctx.moveTo(x-w,size); ctx.lineTo(x,size-h); ctx.lineTo(x+w,size);
-      ctx.fill();
-    }
-    // 霧のレイヤー
-    for(let i=0;i<3;i++){
-      const g=ctx.createLinearGradient(0,size*0.3+i*size*0.2,0,size);
-      g.addColorStop(0,'transparent');
-      g.addColorStop(1,`hsla(${hue},10%,40%,${0.1+i*0.1})`);
-      ctx.fillStyle=g; ctx.fillRect(0,0,size,size);
-    }
+    // 上部のネオンライト（逆光効果）
+    const topGlow=ctx.createRadialGradient(size*0.5,size*0.1,0,size*0.5,size*0.1,size*0.6);
+    topGlow.addColorStop(0,`hsla(${hue},80%,50%,0.15)`);
+    topGlow.addColorStop(1,'transparent');
+    ctx.fillStyle=topGlow; ctx.fillRect(0,0,size,size);
+    // 中央の人物シルエット（粗い輪郭）
+    ctx.fillStyle=`rgba(0,0,0,0.6)`;
+    ctx.beginPath();
+    ctx.ellipse(size*0.5,size*0.5,size*0.25,size*0.35,0,0,Math.PI*2);
+    ctx.fill();
+    // 人物の輪郭内部の詳淡
+    const personGlow=ctx.createRadialGradient(size*0.5,size*0.4,size*0.1,size*0.5,size*0.5,size*0.3);
+    personGlow.addColorStop(0,`hsla(${hue},70%,45%,0.2)`);
+    personGlow.addColorStop(1,'transparent');
+    ctx.fillStyle=personGlow; ctx.fillRect(0,0,size,size);
+    // 下部の暗いグラデーション
+    const bottomGrad=ctx.createLinearGradient(0,size*0.7,0,size);
+    bottomGrad.addColorStop(0,'transparent');
+    bottomGrad.addColorStop(1,`rgba(0,0,0,0.7)`);
+    ctx.fillStyle=bottomGrad; ctx.fillRect(0,size*0.7,size,size*0.3);
 
   } else if(style===2){
-    // ── スタイル2: 深海（海・夜景） ──
-    const bg=ctx.createRadialGradient(cx,cy,0,cx,cy,size);
-    bg.addColorStop(0,`hsl(${hue},40%,12%)`);
-    bg.addColorStop(1,`hsl(${hue},50%,3%)`);
+    // ── スタイル2: ファッションポートレイト - 詳淡な表情 ──
+    // 背景: ダークトーンの夕時の街
+    const bg=ctx.createLinearGradient(0,0,size,size);
+    bg.addColorStop(0,`hsl(${hue+10},30%,10%)`);
+    bg.addColorStop(0.5,`hsl(${hue},25%,7%)`);
+    bg.addColorStop(1,`hsl(${hue-10},20%,5%)`);
     ctx.fillStyle=bg; ctx.fillRect(0,0,size,size);
-    // 水面の波紋
-    ctx.strokeStyle=`hsla(${hue},60%,50%,0.15)`;
-    ctx.lineWidth=2;
-    for(let i=0;i<5;i++){
-      ctx.beginPath();
-      ctx.ellipse(cx,size*0.8,size*0.6,size*0.15+i*size*0.1,0,0,Math.PI*2);
-      ctx.stroke();
-    }
-    // 遠くの光（夜景の反射風）
-    for(let i=0;i<20;i++){
-      const x=Math.random()*size, y=size*(0.7+Math.random()*0.2);
-      const r=Math.random()*3;
-      ctx.fillStyle=`hsla(${hue},80%,70%,${Math.random()*0.4})`;
-      ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill();
-    }
+    // 左上からのネオンライトの輝き
+    const sideGlow=ctx.createRadialGradient(size*0.1,size*0.2,0,size*0.3,size*0.3,size*0.5);
+    sideGlow.addColorStop(0,`hsla(${hue},75%,55%,0.2)`);
+    sideGlow.addColorStop(1,'transparent');
+    ctx.fillStyle=sideGlow; ctx.fillRect(0,0,size,size);
+    // 中央の人物シルエット（詳淡な表情）
+    ctx.fillStyle=`rgba(0,0,0,0.65)`;
+    ctx.beginPath();
+    ctx.ellipse(size*0.5,size*0.55,size*0.22,size*0.32,0,0,Math.PI*2);
+    ctx.fill();
+    // 詳淡な表情の詳い緑の輝き
+    const faceGlow=ctx.createRadialGradient(size*0.45,size*0.45,size*0.05,size*0.5,size*0.5,size*0.25);
+    faceGlow.addColorStop(0,`hsla(${hue},65%,50%,0.25)`);
+    faceGlow.addColorStop(1,'transparent');
+    ctx.fillStyle=faceGlow; ctx.fillRect(0,0,size,size);
+    // 右下からの暗いグラデーション
+    const darkGrad=ctx.createLinearGradient(size,size,0,0);
+    darkGrad.addColorStop(0,`rgba(0,0,0,0.8)`);
+    darkGrad.addColorStop(1,'transparent');
+    ctx.fillStyle=darkGrad; ctx.fillRect(0,0,size,size);
 
   } else if(style===3){
-    // ── スタイル3: 夕暮れの空（夕暮れ・空） ──
-    const bg=ctx.createLinearGradient(0,0,0,size);
-    bg.addColorStop(0,`hsl(${hue},50%,10%)`);
-    bg.addColorStop(0.6,`hsl(${hue-30},60%,20%)`);
-    bg.addColorStop(1,`hsl(${hue-60},70%,15%)`);
+    // ── スタイル3: 転気的な視線 - 逆光を浮かぶ ──
+    // 背景: 暗い詳淡な詳淡
+    const bg=ctx.createLinearGradient(0,0,size,size);
+    bg.addColorStop(0,`hsl(${hue},35%,12%)`);
+    bg.addColorStop(0.5,`hsl(${hue+20},30%,8%)`);
+    bg.addColorStop(1,`hsl(${hue-20},25%,5%)`);
     ctx.fillStyle=bg; ctx.fillRect(0,0,size,size);
-    // 雲のシルエット
-    for(let i=0;i<6;i++){
-      const x=Math.random()*size, y=size*(0.2+Math.random()*0.4);
-      const rw=size*0.4, rh=size*0.1;
-      const g=ctx.createRadialGradient(x,y,0,x,y,rw);
-      g.addColorStop(0,`hsla(${hue-20},60%,40%,0.2)`);
-      g.addColorStop(1,'transparent');
-      ctx.fillStyle=g;
-      ctx.beginPath(); ctx.ellipse(x,y,rw,rh,0,0,Math.PI*2); ctx.fill();
-    }
-    // 遠くの山
-    ctx.fillStyle='rgba(0,0,0,0.5)';
+    // 上部中央からの逆光の輝き
+    const backlight=ctx.createRadialGradient(size*0.5,size*0.15,0,size*0.5,size*0.15,size*0.7);
+    backlight.addColorStop(0,`hsla(${hue},85%,60%,0.25)`);
+    backlight.addColorStop(0.5,`hsla(${hue},70%,50%,0.1)`);
+    backlight.addColorStop(1,'transparent');
+    ctx.fillStyle=backlight; ctx.fillRect(0,0,size,size);
+    // 中央の人物シルエット（転気的な視線）
+    ctx.fillStyle=`rgba(0,0,0,0.7)`;
     ctx.beginPath();
-    ctx.moveTo(0,size*0.8);
-    ctx.quadraticCurveTo(size*0.3,size*0.6,size*0.6,size*0.75);
-    ctx.quadraticCurveTo(size*0.8,size*0.65,size,size*0.85);
-    ctx.lineTo(size,size); ctx.lineTo(0,size); ctx.fill();
+    ctx.ellipse(size*0.5,size*0.48,size*0.24,size*0.36,Math.PI*0.1,0,Math.PI*2);
+    ctx.fill();
+    // 逆光の緑の輝き（転気的）
+    const backlightGlow=ctx.createRadialGradient(size*0.55,size*0.35,size*0.1,size*0.5,size*0.5,size*0.3);
+    backlightGlow.addColorStop(0,`hsla(${hue},75%,55%,0.3)`);
+    backlightGlow.addColorStop(1,'transparent');
+    ctx.fillStyle=backlightGlow; ctx.fillRect(0,0,size,size);
+    // 下部の暗いグラデーション
+    const bottomDark=ctx.createLinearGradient(0,size*0.65,0,size);
+    bottomDark.addColorStop(0,'transparent');
+    bottomDark.addColorStop(1,`rgba(0,0,0,0.75)`);
+    ctx.fillStyle=bottomDark; ctx.fillRect(0,size*0.65,size,size*0.35);
 
   } else if(style===4){
     // ── スタイル4: 雨の湖（雨・湖） ──
