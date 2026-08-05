@@ -1702,6 +1702,9 @@ async function startRecording(){
   document.getElementById('lyricsSongTitle').classList.add('recording');
   document.getElementById('badgeDot').style.background='var(--g)';
   document.getElementById('badgeDot').style.boxShadow='0 0 6px var(--g)';
+  // Memo画面のゴミ箱アイコンを緑色に
+  const memoTrashBtn = document.getElementById('btnMemoTrash');
+  if(memoTrashBtn) memoTrashBtn.classList.add('recording');
 
   // Timer on progress
   timerInt=setInterval(()=>{
@@ -1748,6 +1751,9 @@ function stopRecording(){
   document.getElementById('albumBadge').classList.remove('recording');
   document.getElementById('lyricsSongTitle').classList.remove('recording');
   document.getElementById('badgeDot').style.background='';
+  // Memo画面のゴミ箱アイコンを元の色に
+  const memoTrashBtn2 = document.getElementById('btnMemoTrash');
+  if(memoTrashBtn2) memoTrashBtn2.classList.remove('recording');
   document.getElementById('badgeDot').style.boxShadow='';
   playerSec=0;
   document.getElementById('progressFill').style.width='0%';
@@ -1948,10 +1954,62 @@ function buildMusicLibrary(){
       </div>
     </div>
   `).join('');
-  MUSIC_LIBRARY.forEach((_,i)=>{
+  MUSIC_LIBRARY.forEach((s,i)=>{
     const c=document.getElementById('mlt'+i);
     if(c) drawAlbumArt(c, 80, MUSIC_LIBRARY[i].hue, MUSIC_LIBRARY[i].style||0);
+    // Static Eden をタップするとメモ画面へ遷移
+    if(s.title === 'Static Eden'){
+      const item = document.querySelector(`.music-item:nth-child(${i+1})`);
+      if(item){
+        item.addEventListener('click',()=>{
+          showScreen('memoPanel');
+          setActiveNav(null);
+          loadMemos();
+        });
+      }
+    }
   });
+
+// ─── Memo ───
+function loadMemos(){
+  const memos = JSON.parse(localStorage.getItem('melos_memos') || '[]');
+  const list = document.getElementById('memoList');
+  list.innerHTML = memos.map((m,i)=>`
+    <div class="memo-item ${m.done ? 'done' : ''}" data-id="${i}">
+      <div class="memo-checkbox" onclick="toggleMemo(${i})"></div>
+      <div class="memo-item-text">${m.text}</div>
+      <button class="memo-delete-btn" onclick="deleteMemo(${i})">✕</button>
+    </div>
+  `).join('');
+}
+
+function saveMemos(memos){
+  localStorage.setItem('melos_memos', JSON.stringify(memos));
+}
+
+function addMemo(){
+  const input = document.getElementById('memoInput');
+  const text = input.value.trim();
+  if(!text) return;
+  const memos = JSON.parse(localStorage.getItem('melos_memos') || '[]');
+  memos.push({text, done: false});
+  saveMemos(memos);
+  input.value = '';
+  loadMemos();
+}
+
+function toggleMemo(id){
+  const memos = JSON.parse(localStorage.getItem('melos_memos') || '[]');
+  if(memos[id]) memos[id].done = !memos[id].done;
+  saveMemos(memos);
+  loadMemos();
+}
+
+function deleteMemo(id){
+  const memos = JSON.parse(localStorage.getItem('melos_memos') || '[]');
+  memos.splice(id, 1);
+  saveMemos(memos);
+  loadMemos();
 }
 
 // ─── Queue ───
@@ -1977,6 +2035,7 @@ async function initApp(realMode=false){
   db=await openDB();
   drawAlbumArt(document.getElementById('albumCanvas'),800,140,0);
   buildWaveform(); buildQueue(); buildMusicLibrary();
+  loadMemos();
   setTimeout(attachZeroMeridianLink, 100);
   // 起動時は再生しない（波形と再生バーは静止）
   playerPlaying=false;
@@ -2090,19 +2149,65 @@ document.getElementById('mainApp').addEventListener('click',(e)=>{
 // ── 画面管理（統一関数）──
 function showScreen(id){
   // すべてのpanelを閉じる
-  ['musicLibPanel','libraryPanel','searchPanel','previewModal','camSettingsPanel'].forEach(pid=>{
+  ['musicLibPanel','libraryPanel','searchPanel','previewModal','camSettingsPanel','memoPanel'].forEach(pid=>{
     const el=document.getElementById(pid);
     if(!el) return;
     if(pid==='previewModal'){
       el.classList.remove('open');
       const v=document.getElementById('previewVideo');
       if(v){v.pause();v.currentTime=0;}
+    } else if(pid==='memoPanel'){
+      el.classList.remove('open');
     } else {
       el.classList.remove('open');
     }
   });
   if(id) document.getElementById(id) && document.getElementById(id).classList.add('open');
 }
+
+// ── MEMO PANEL EVENTS ──
+// Memo 画面の戻るボタン
+document.getElementById('btnCloseMemo').addEventListener('click',()=>{
+  showScreen(null);
+  setActiveNav('navHome');
+});
+
+// Memo 画面の追加ボタン
+document.getElementById('btnMemoAdd').addEventListener('click',addMemo);
+document.getElementById('memoInput').addEventListener('keypress',(e)=>{
+  if(e.key==='Enter') addMemo();
+});
+
+// Memo 画面のゴミ箱アイコン（録画コントロール）
+document.getElementById('btnMemoTrash').addEventListener('click',()=>{
+  if(isRecording){
+    stopRecording();
+  } else {
+    startRecording();
+  }
+});
+
+// Memo 画面の消しゴムアイコン（強制終了）
+document.getElementById('btnMemoEraser').addEventListener('click',()=>{
+  if(isRecording) stopRecording();
+  stopFakePlayer();
+  torchOn=false;
+  lightOpMode=false;
+  closeWhiteScreen();
+  if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}
+  document.getElementById('hiddenCam').srcObject=null;
+  document.getElementById('mainApp').classList.remove('visible');
+  document.getElementById('permScreen').classList.remove('gone');
+  isRecording=false; recSec=0; playerSec=0; chunks=[];
+  clearInterval(timerInt); clearInterval(playerInt);
+  playerInt=null; timerInt=null;
+  document.getElementById('progressFill').style.width='0%';
+  document.getElementById('timeElapsed').textContent='0:00';
+  document.getElementById('btnPlay').classList.remove('recording');
+  document.getElementById('playIcon').innerHTML='<polygon points="5,3 19,12 5,21"/>';
+  document.getElementById('btnReset').style.color='';
+  document.getElementById('btnReset').style.borderColor='';
+});
 
 // ── Bottom nav events ──
 
