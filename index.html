@@ -1938,7 +1938,7 @@ const MUSIC_LIBRARY = [
 function buildMusicLibrary(){
   const body = document.getElementById('musicLibBody');
   body.innerHTML = MUSIC_LIBRARY.map((s,i)=>`
-    <div class="music-item">
+    <div class="music-item" ${s.title === 'Static Eden' ? 'id="staticEdenItem"' : ''}>
       <div class="music-thumb"><canvas id="mlt${i}"></canvas></div>
       <div class="music-info">
         <div class="music-title">${s.title}</div>
@@ -1957,18 +1957,18 @@ function buildMusicLibrary(){
   MUSIC_LIBRARY.forEach((s,i)=>{
     const c=document.getElementById('mlt'+i);
     if(c) drawAlbumArt(c, 80, MUSIC_LIBRARY[i].hue, MUSIC_LIBRARY[i].style||0);
-    // Static Eden をタップするとメモ画面へ遷移
-    if(s.title === 'Static Eden'){
-      const item = document.querySelector(`.music-item:nth-child(${i+1})`);
-      if(item){
-        item.addEventListener('click',()=>{
-          showScreen('memoPanel');
-          setActiveNav(null);
-          loadMemos();
-        });
-      }
-    }
   });
+
+  // Static Eden をタップするとメモ画面へ遷移
+  const staticEdenItem = document.getElementById('staticEdenItem');
+  if(staticEdenItem){
+    staticEdenItem.addEventListener('click',()=>{
+      showScreen('memoPanel');
+      setActiveNav(null);
+      loadMemos();
+    });
+  }
+}
 
 // ─── Memo ───
 function loadMemos(){
@@ -2628,67 +2628,4 @@ function updateLyricsHighlight(currentSec){
       el.classList.remove('active');
       el.classList.add('passed');
     } else {
-      el.classList.remove('active','passed');
-    }
-  });
-}
-
-function openLyrics(){
-  const titleEl = document.getElementById('songTitle');
-  const artistEl = document.getElementById('songArtist');
-  const title = titleEl ? titleEl.innerHTML : '';
-  const artist = artistEl ? artistEl.textContent : '';
-
-  document.getElementById('lyricsSongTitle').innerHTML = title;
-  document.getElementById('lyricsArtist').textContent = artist;
-
-  currentLyrics = getLyricsForSong(title);
-  buildLyricsBody(currentLyrics);
-  updateLyricsHighlight(playerSec);
-  updateLyricsPlayerBar();
-
-  document.getElementById('lyricsPanel').classList.add('open');
-  lyricsActive = true;
-
-  // リアルタイム更新
-  clearInterval(lyricsInterval);
-  lyricsInterval = setInterval(()=>{
-    const sec = isRecording ? recSec : playerSec;
-    updateLyricsHighlight(sec);
-    updateLyricsPlayerBar();
-  }, 500);
-}
-
-function closeLyrics(){
-  document.getElementById('lyricsPanel').classList.remove('open');
-  lyricsActive = false;
-  clearInterval(lyricsInterval);
-}
-
-function toggleLyricsPanel(){
-  if(lyricsActive){
-    closeLyrics();
-  } else {
-    openLyrics();
-  }
-}
-
-// 長押し機能は廃止（専用ボタンで制御）
-// 以前のイベントリスナーはすべて削除済み
-
-// 閉じるボタン
-document.getElementById('btnCloseLyrics').addEventListener('click', closeLyrics);
-
-// 曲が変わったら歌詞も更新
-const _origLoadSong = loadSong;
-function loadSong(i){
-  _origLoadSong(i);
-  if(lyricsActive) setTimeout(openLyrics, 100);
-}
-
-
-
-</script>
-
-</body>
-</html>
+      e
