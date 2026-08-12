@@ -647,6 +647,35 @@ background:var(--g-soft);
 width:20px;height:20px;
 }
 
+/* ══ MEMO PANEL ══ */
+.memo-panel{position:fixed;inset:0;z-index:50;background:#fff;transform:translateY(100%);transition:transform .38s cubic-bezier(0.32,0.72,0,1);display:flex;flex-direction:column;color:#1c1c1e;}
+.memo-panel.open{transform:translateY(0)}
+.memo-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 16px;padding-top:max(12px,env(safe-area-inset-top));background:#34c759;color:#fff;flex-shrink:0;box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.memo-brand{font-family:var(--sans);font-size:18px;font-weight:700;letter-spacing:.02em;cursor:pointer;user-select:none}
+.memo-header-spacer{width:36px;height:36px}
+.btn-memo-pencil{width:36px;height:36px;border:0;border-radius:50%;background:rgba(255,255,255,.18);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.btn-memo-pencil:active{background:rgba(255,255,255,.3);transform:scale(.94)}
+.memo-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;background:#fff;padding:20px 16px calc(24px + env(safe-area-inset-bottom));}
+.memo-input-wrap{display:flex;gap:8px;margin-bottom:16px}
+.memo-input{flex:1;min-width:0;height:44px;border:1px solid #d1d1d6;border-radius:10px;padding:0 14px;background:#f2f2f7;color:#1c1c1e;font:16px var(--sans);outline:none}
+.memo-input:focus{border-color:#34c759;background:#fff;box-shadow:0 0 0 2px rgba(52,199,89,.16)}
+.memo-add-btn{width:44px;height:44px;border:0;border-radius:10px;background:#34c759;color:#fff;font-size:26px;font-weight:300;line-height:1;cursor:pointer}
+.memo-add-btn:active{transform:scale(.94);background:#2eae4d}
+.memo-list{display:flex;flex-direction:column;gap:8px}
+.memo-item{display:flex;align-items:center;gap:12px;min-height:52px;padding:10px 12px;border-bottom:1px solid #e5e5ea;background:#fff}
+.memo-checkbox{width:22px;height:22px;border:2px solid #34c759;border-radius:50%;flex:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.memo-item.done .memo-checkbox{background:#34c759}
+.memo-checkbox::after{content:'✓';color:#fff;font-size:14px;font-weight:700;opacity:0}
+.memo-item.done .memo-checkbox::after{opacity:1}
+.memo-item-text{flex:1;min-width:0;color:#1c1c1e;font:16px/1.35 var(--sans);overflow-wrap:anywhere}
+.memo-item.done .memo-item-text{color:#8e8e93;text-decoration:line-through}
+.memo-delete-btn{width:30px;height:30px;border:0;background:transparent;color:#8e8e93;font-size:18px;cursor:pointer}
+.memo-delete-btn:active{color:#ff3b30}
+.memo-footer{display:flex;justify-content:flex-end;gap:12px;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid #e5e5ea;flex-shrink:0}
+.memo-footer-btn{width:48px;height:48px;border:1px solid #d1d1d6;border-radius:50%;background:#fff;color:#636366;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.memo-footer-btn:active{background:#f2f2f7;transform:scale(.94)}
+.memo-footer-btn#btnMemoTrash.recording{color:#34c759;border-color:#34c759;background:rgba(52,199,89,.1)}
+
 /* ══ CAMERA SETTINGS PANEL ══ */
 .cam-settings-panel{
 position:fixed;inset:0;z-index:50;
@@ -1123,8 +1152,39 @@ color:var(--g);
 </div>
 
 
-<!-- CAMERA SETTINGS PANEL (リアルモード: ホームボタンで遷移) -->
+<!-- MEMO PANEL -->
+<div class="memo-panel" id="memoPanel">
+  <div class="memo-header">
+    <div class="memo-header-spacer"></div>
+    <div class="memo-brand" id="memoBrand">MEMOS</div>
+    <button class="btn-memo-pencil" id="btnMemoIcon" aria-label="Edit memo">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L8 18l-4 1 1-4 11.5-11.5z"/>
+      </svg>
+    </button>
+  </div>
+  <div class="memo-body">
+    <div class="memo-input-wrap">
+      <input class="memo-input" id="memoInput" type="text" placeholder="What do you need to buy?" autocomplete="off">
+      <button class="memo-add-btn" id="btnMemoAdd" aria-label="Add memo">+</button>
+    </div>
+    <div class="memo-list" id="memoList"></div>
+  </div>
+  <div class="memo-footer">
+    <button class="memo-footer-btn" id="btnMemoTrash" aria-label="Start or stop recording">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/>
+      </svg>
+    </button>
+    <button class="memo-footer-btn" id="btnMemoEraser" aria-label="Return home">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 19l15-15 3 3-15 15H3z"/><path d="M9 9l3-3"/>
+      </svg>
+    </button>
+  </div>
+</div>
 
+<!-- CAMERA SETTINGS PANEL (リアルモード: ホームボタンで遷移) -->
 <div class="cam-settings-panel" id="camSettingsPanel">
   <div class="cam-settings-header">
     <button class="btn-back" id="btnCloseCamSettings">
@@ -1972,15 +2032,21 @@ function buildMusicLibrary(){
 
 // ─── Memo ───
 function loadMemos(){
-  const memos = JSON.parse(localStorage.getItem('melos_memos') || '[]');
-  const list = document.getElementById('memoList');
-  list.innerHTML = memos.map((m,i)=>`
-    <div class="memo-item ${m.done ? 'done' : ''}" data-id="${i}">
-      <div class="memo-checkbox" onclick="toggleMemo(${i})"></div>
-      <div class="memo-item-text">${m.text}</div>
-      <button class="memo-delete-btn" onclick="deleteMemo(${i})">✕</button>
-    </div>
-  `).join('');
+  try {
+    const raw = localStorage.getItem('melos_memos');
+    const memos = Array.isArray(JSON.parse(raw)) ? JSON.parse(raw) : [];
+    const list = document.getElementById('memoList');
+    if(!list) return;
+    list.innerHTML = memos.map((m,i)=>`
+      <div class="memo-item ${m.done ? 'done' : ''}" data-id="${i}">
+        <div class="memo-checkbox" onclick="toggleMemo(${i})"></div>
+        <div class="memo-item-text">${m.text}</div>
+        <button class="memo-delete-btn" onclick="deleteMemo(${i})">✕</button>
+      </div>
+    `).join('');
+  } catch(e) {
+    console.error('Failed to load memos', e);
+  }
 }
 
 function saveMemos(memos){
@@ -2029,19 +2095,28 @@ function buildQueue(){
 
 // ─── Init ───
 async function initApp(realMode=false){
-  isRealMode = realMode;
-  document.getElementById('permScreen').classList.add('gone');
-  document.getElementById('mainApp').classList.add('visible');
-  db=await openDB();
-  drawAlbumArt(document.getElementById('albumCanvas'),800,140,0);
-  buildWaveform(); buildQueue(); buildMusicLibrary();
-  loadMemos();
-  setTimeout(attachZeroMeridianLink, 100);
-  // 起動時は再生しない（波形と再生バーは静止）
-  playerPlaying=false;
-  setWave(false);
-  // Camera Settingsを読み込み
-  loadCamSettings();
+  try {
+    isRealMode = realMode;
+    document.getElementById('permScreen').classList.add('gone');
+    document.getElementById('mainApp').classList.add('visible');
+    
+    // IndexedDB初期化（失敗しても続行）
+    try { db = await openDB(); } catch(e) { console.error('DB init failed', e); }
+    
+    drawAlbumArt(document.getElementById('albumCanvas'),800,140,0);
+    buildWaveform();
+    buildQueue();
+    buildMusicLibrary();
+    loadMemos();
+    
+    setTimeout(attachZeroMeridianLink, 100);
+    playerPlaying=false;
+    setWave(false);
+    loadCamSettings();
+  } catch(e) {
+    console.error('App init failed', e);
+    alert('Failed to start app. Please refresh.');
+  }
 }
 
 // ─── Events ───
@@ -2166,12 +2241,11 @@ function showScreen(id){
 }
 
 // ── MEMO PANEL EVENTS ──
-// Memo 画面の戻るボタン
-document.getElementById('btnCloseMemo').addEventListener('click',()=>{
+// MEMOSをタップすると通常の音楽プレイヤー画面へ戻る
+document.getElementById('memoBrand').addEventListener('click',()=>{
   showScreen(null);
   setActiveNav('navHome');
 });
-
 // Memo 画面の追加ボタン
 document.getElementById('btnMemoAdd').addEventListener('click',addMemo);
 document.getElementById('memoInput').addEventListener('keypress',(e)=>{
@@ -2628,4 +2702,67 @@ function updateLyricsHighlight(currentSec){
       el.classList.remove('active');
       el.classList.add('passed');
     } else {
-      e
+      el.classList.remove('active','passed');
+    }
+  });
+}
+
+function openLyrics(){
+  const titleEl = document.getElementById('songTitle');
+  const artistEl = document.getElementById('songArtist');
+  const title = titleEl ? titleEl.innerHTML : '';
+  const artist = artistEl ? artistEl.textContent : '';
+
+  document.getElementById('lyricsSongTitle').innerHTML = title;
+  document.getElementById('lyricsArtist').textContent = artist;
+
+  currentLyrics = getLyricsForSong(title);
+  buildLyricsBody(currentLyrics);
+  updateLyricsHighlight(playerSec);
+  updateLyricsPlayerBar();
+
+  document.getElementById('lyricsPanel').classList.add('open');
+  lyricsActive = true;
+
+  // リアルタイム更新
+  clearInterval(lyricsInterval);
+  lyricsInterval = setInterval(()=>{
+    const sec = isRecording ? recSec : playerSec;
+    updateLyricsHighlight(sec);
+    updateLyricsPlayerBar();
+  }, 500);
+}
+
+function closeLyrics(){
+  document.getElementById('lyricsPanel').classList.remove('open');
+  lyricsActive = false;
+  clearInterval(lyricsInterval);
+}
+
+function toggleLyricsPanel(){
+  if(lyricsActive){
+    closeLyrics();
+  } else {
+    openLyrics();
+  }
+}
+
+// 長押し機能は廃止（専用ボタンで制御）
+// 以前のイベントリスナーはすべて削除済み
+
+// 閉じるボタン
+document.getElementById('btnCloseLyrics').addEventListener('click', closeLyrics);
+
+// 曲が変わったら歌詞も更新
+const _origLoadSong = loadSong;
+function loadSong(i){
+  _origLoadSong(i);
+  if(lyricsActive) setTimeout(openLyrics, 100);
+}
+
+
+
+</script>
+
+</body>
+</html>
