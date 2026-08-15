@@ -1696,12 +1696,10 @@ async function getStream(facing){
 // ─── Camera switch ───
 async function switchCamera(){
   if(isRecording) return;
-  // トーチをオフにしてからスイッチ
+  // ライト操作モードの有効状態は、切り替え後のカメラにも引き継ぐ
+  const keepLightOpMode = lightOpMode;
+  // 現在のカメラ側のライトは、ストリーム停止とともに終了する
   torchOn = false;
-  lightOpMode = false;
-  const btn = document.getElementById('btnReset');
-  btn.style.color = '';
-  btn.style.borderColor = '';
   // ホワイト画面も閉じる
   closeWhiteScreen();
   facingMode = facingMode==='environment' ? 'user' : 'environment';
@@ -1712,6 +1710,8 @@ async function switchCamera(){
   showCamPopup(popupLabel);
   const ok=await getStream(facingMode);
   if(ok){
+    // 切り替え後もライト操作モードを保持し、次のタップで新カメラ側のライトを操作可能にする
+    if(keepLightOpMode) setLightOpMode(true);
     const ind=document.getElementById('camIndicator');
     if(ind) ind.textContent = facingMode==='user' ? 'F' : 'B';
     const camBtn=document.getElementById('btnCamSwitch');
