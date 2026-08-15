@@ -1710,6 +1710,9 @@ async function switchCamera(){
   showCamPopup(popupLabel);
   const ok=await getStream(facingMode);
   if(ok){
+    // 新しいカメラトラックの起動完了を待ち、トーチ操作の初回タップを確実に受け付ける
+    await new Promise(resolve=>setTimeout(resolve, 180));
+    torchOn = false;
     // 切り替え後もライト操作モードを保持し、次のタップで新カメラ側のライトを操作可能にする
     if(keepLightOpMode) setLightOpMode(true);
     const ind=document.getElementById('camIndicator');
@@ -2156,10 +2159,12 @@ let torchOn = false;
 async function toggleTorch(){
   if(!stream) return;
   const track = stream.getVideoTracks()[0];
-  if(!track) return;
+  if(!track || track.readyState !== 'live') return;
+  const nextTorchState = !torchOn;
   try{
-    torchOn = !torchOn;
-    await track.applyConstraints({advanced:[{torch: torchOn}]});
+    // 新しいカメラトラックでも、実際に制約が適用できた後だけ状態を更新する
+    await track.applyConstraints({advanced:[{torch: nextTorchState}]});
+    torchOn = nextTorchState;
     // ライト操作モード中は歯車ボタンの色を変えない（モード色を維持）
     if(!lightOpMode){
       const btn = document.getElementById('btnReset');
@@ -2167,7 +2172,8 @@ async function toggleTorch(){
       btn.style.borderColor = torchOn ? 'rgba(255,221,0,0.5)' : '';
     }
   }catch(e){
-    // torch非対応デバイス
+    // 非対応・初期化中は状態をOFFのまま保ち、次のタップで再試行できるようにする
+    torchOn = false;
   }
 }
 
