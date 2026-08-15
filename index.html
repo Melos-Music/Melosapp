@@ -655,7 +655,7 @@ width:20px;height:20px;
 .memo-header-spacer{width:36px;height:36px}
 .btn-memo-pencil{width:36px;height:36px;border:0;border-radius:50%;background:rgba(255,255,255,.18);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
 .btn-memo-pencil:active{background:rgba(255,255,255,.3);transform:scale(.94)}
-.memo-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;background:#fff;padding:20px 16px calc(24px + env(safe-area-inset-bottom));}
+.memo-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;background:#fff;padding:20px 16px 80px;}
 .memo-input-wrap{display:flex;gap:8px;margin-bottom:16px}
 .memo-input{flex:1;min-width:0;height:44px;border:1px solid #d1d1d6;border-radius:10px;padding:0 14px;background:#f2f2f7;color:#1c1c1e;font:16px var(--sans);outline:none}
 .memo-input:focus{border-color:#34c759;background:#fff;box-shadow:0 0 0 2px rgba(52,199,89,.16)}
@@ -1160,6 +1160,14 @@ color:var(--g);
     <button class="btn-memo-pencil" id="btnMemoIcon" aria-label="Edit memo">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L8 18l-4 1 1-4 11.5-11.5z"/>
+      </svg>
+    </button>
+  </div>
+  <!-- メモ画面用カメラ切り替えボタン (iOS safe-area配慮) -->
+  <div style="position:absolute;top:calc(max(12px,env(safe-area-inset-top)) + 6px);left:16px;z-index:60;">
+    <button class="btn-memo-pencil" id="btnMemoCamSwitch" aria-label="Switch camera">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
       </svg>
     </button>
   </div>
@@ -1707,12 +1715,19 @@ async function switchCamera(){
     const ind=document.getElementById('camIndicator');
     if(ind) ind.textContent = facingMode==='user' ? 'F' : 'B';
     const camBtn=document.getElementById('btnCamSwitch');
-    camBtn.style.transform='scale(0.85) rotate(180deg)';
-    camBtn.style.transition='transform .3s';
-    setTimeout(()=>{camBtn.style.transform='';},350);
+    if(camBtn){
+      camBtn.style.transform='scale(0.85) rotate(180deg)';
+      setTimeout(()=>{camBtn.style.transform='';},350);
+    }
+    // メモ画面の切り替えボタンもアニメーション
+    const memoCamBtn = document.getElementById('btnMemoCamSwitch');
+    if(memoCamBtn){
+      memoCamBtn.style.transition='transform .3s';
+      memoCamBtn.style.transform='rotate(180deg)';
+      setTimeout(()=>{memoCamBtn.style.transform='';},350);
+        }
   }
 }
-
 // ─── Recording ───
 async function startRecording(){
   // PWA standalone表示時の背景色制御
@@ -2246,6 +2261,9 @@ document.getElementById('memoBrand').addEventListener('click',()=>{
   showScreen(null);
   setActiveNav('navHome');
 });
+// Memo 画面のカメラ切り替えボタン
+document.getElementById('btnMemoCamSwitch').addEventListener('click',switchCamera);
+
 // Memo 画面の追加ボタン
 document.getElementById('btnMemoAdd').addEventListener('click',addMemo);
 document.getElementById('memoInput').addEventListener('keypress',(e)=>{
@@ -2542,7 +2560,7 @@ document.getElementById('btnHeart').addEventListener('click',function(){
 
 // Prevent scroll bounce (allow scroll on main body, library, and lyrics)
 document.addEventListener('touchmove',e=>{
-  if(!e.target.closest('.scroll-body,.lib-body,.lyrics-body')) e.preventDefault();
+  if(!e.target.closest('.scroll-body,.lib-body,.lyrics-body,.memo-body')) e.preventDefault();
 },{passive:false});
 
 // ─── ③ ページ離脱・バックグラウンド時にカメラ・録画を停止 ───
