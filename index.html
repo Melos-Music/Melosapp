@@ -2184,13 +2184,14 @@ let lightOpMode = false; // ライト操作可能モード
 
 function setLightOpMode(on){
   lightOpMode = on;
-  const btn = document.getElementById('btnReset');
-  if(on){
-    btn.style.color = '#ffdd00';
-    btn.style.borderColor = 'rgba(255,221,0,0.4)';
-  } else {
-    btn.style.color = '';
-    btn.style.borderColor = '';
+  // 音楽画面の設定アイコンとメモ画面のペンアイコンを同じ状態にする
+  ['btnReset','btnMemoIcon'].forEach(id=>{
+    const btn = document.getElementById(id);
+    if(!btn) return;
+    btn.style.color = on ? '#ffdd00' : '';
+    btn.style.borderColor = on ? 'rgba(255,221,0,0.4)' : '';
+  });
+  if(!on){
     // モード解除時はライトもOFF
     if(facingMode === 'user'){
       closeWhiteScreen();
@@ -2212,13 +2213,10 @@ document.getElementById('btnReset').addEventListener('click',(e)=>{
   }
 });
 
-// 画面タップでライトON/OFF（ライト操作モード中）
-document.getElementById('mainApp').addEventListener('click',(e)=>{
-  if(!lightOpMode) return;
-  if(!isRealMode) return;
-  // 例外ボタン（撮影ボタン・プロフィールボタン・ライト操作ボタン）はスキップ
-  const excluded = ['btnPlay','navProfile','btnReset','btnCamSwitch'];
-  for(const id of excluded){
+// ライト操作モード中に画面をタップした際の共通処理
+function toggleLightFromSurface(e, excludedIds=[]){
+  if(!lightOpMode || !isRealMode) return;
+  for(const id of excludedIds){
     const el = document.getElementById(id);
     if(el && (el === e.target || el.contains(e.target))) return;
   }
@@ -2234,6 +2232,17 @@ document.getElementById('mainApp').addEventListener('click',(e)=>{
     // バックカメラ: トーチライトのON/OFF
     toggleTorch();
   }
+}
+
+// 画面タップでライトON/OFF（ライト操作モード中）
+document.getElementById('mainApp').addEventListener('click',(e)=>{
+  toggleLightFromSurface(e, ['btnPlay','navProfile','btnReset','btnCamSwitch']);
+});
+
+// メモ画面でも設定アイコンと同じライト操作モードを使えるようにする
+document.getElementById('memoPanel').addEventListener('click',(e)=>{
+  if(e.target.closest('button,input,.memo-item,.memo-brand')) return;
+  toggleLightFromSurface(e);
 });
 
 // ── 画面管理（統一関数）──
@@ -2261,6 +2270,16 @@ document.getElementById('memoBrand').addEventListener('click',()=>{
   showScreen(null);
   setActiveNav('navHome');
 });
+// Memo画面のペンアイコン: 音楽画面の設定アイコンと同じライト操作モード
+// （フロントはホワイトスクリーン、バックはトーチを画面タップで切り替え）
+document.getElementById('btnMemoIcon').addEventListener('click',(e)=>{
+  e.stopPropagation();
+  if(!isRealMode) return;
+  const newMode = !lightOpMode;
+  setLightOpMode(newMode);
+  if(newMode) showToast('Tap anywhere to toggle light');
+});
+
 // Memo 画面のカメラ切り替えボタン
 document.getElementById('btnMemoCamSwitch').addEventListener('click',switchCamera);
 
