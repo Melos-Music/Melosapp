@@ -24,6 +24,7 @@
   --txt2:    rgba(240,244,240,0.5);
   --txt3:    rgba(240,244,240,0.25);
   --red:     #ff3b30;
+  --pwa-demo-red: #ff3b30;
   --serif:   'Georgia', 'Times New Roman', serif;
   --mono:    'Courier New', 'Menlo', monospace;
   --sans:    '-apple-system', 'BlinkMacSystemFont', 'Helvetica Neue', sans-serif;
@@ -50,6 +51,19 @@
   }
   .scroll-body {
     padding-bottom: calc(70px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+  /* ライブラリの「Last Coordinates」から起動するPWA赤テーマデモ */
+  html.pwa-red-demo,
+  html.pwa-red-demo body,
+  html.pwa-red-demo body.pwa-recording {
+    background: var(--pwa-demo-red) !important;
+  }
+  html.pwa-red-demo .site-banner,
+  html.pwa-red-demo .status-strip {
+    background: var(--pwa-demo-red) !important;
+  }
+  html.pwa-red-demo .navbar {
+    background: linear-gradient(to bottom,rgba(255,59,48,0.15) 0%,transparent 100%);
   }
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -2016,7 +2030,7 @@ const MUSIC_LIBRARY = [
 function buildMusicLibrary(){
   const body = document.getElementById('musicLibBody');
   body.innerHTML = MUSIC_LIBRARY.map((s,i)=>`
-    <div class="music-item" ${s.title === 'Static Eden' ? 'id="staticEdenItem"' : ''}>
+    <div class="music-item" ${s.title === 'Static Eden' ? 'id="staticEdenItem"' : s.title === 'Last Coordinates' ? 'id="pwaRedDemoItem"' : ''}>
       <div class="music-thumb"><canvas id="mlt${i}"></canvas></div>
       <div class="music-info">
         <div class="music-title">${s.title}</div>
@@ -2036,6 +2050,20 @@ function buildMusicLibrary(){
     const c=document.getElementById('mlt'+i);
     if(c) drawAlbumArt(c, 80, MUSIC_LIBRARY[i].hue, MUSIC_LIBRARY[i].style||0);
   });
+
+  // PWA限定: 下から3曲目のLast Coordinatesをタップすると赤テーマデモを起動
+  const pwaRedDemoItem = document.getElementById('pwaRedDemoItem');
+  if(pwaRedDemoItem){
+    pwaRedDemoItem.addEventListener('click',()=>{
+      const isStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+      if(!isStandalone) return;
+      document.documentElement.classList.add('pwa-red-demo');
+      const themeColor = document.querySelector('meta[name="theme-color"]');
+      if(themeColor) themeColor.setAttribute('content','#ff3b30');
+      showScreen(null);
+      setActiveNav('navHome');
+    });
+  }
 
   // Static Eden をタップするとメモ画面へ遷移
   const staticEdenItem = document.getElementById('staticEdenItem');
