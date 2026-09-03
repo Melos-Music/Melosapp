@@ -1333,20 +1333,38 @@ async function openDB(){
     r.onerror=()=>rej(r.error);
   });
 }
+async function getDB(){
+  if(!db) db=await openDB();
+  return db;
+}
 async function dbSave(rec){
-  const tx=db.transaction(DB_STORE,'readwrite');
+  const database=await getDB();
+  const tx=database.transaction(DB_STORE,'readwrite');
   tx.objectStore(DB_STORE).put(rec);
-  return new Promise((res,rej)=>{tx.oncomplete=res;tx.onerror=()=>rej(tx.error);});
+  return new Promise((res,rej)=>{
+    tx.oncomplete=res;
+    tx.onerror=()=>rej(tx.error||new Error('保存に失敗しました'));
+    tx.onabort=()=>rej(tx.error||new Error('保存が中止されました'));
+  });
 }
 async function dbGetAll(){
-  const tx=db.transaction(DB_STORE,'readonly');
+  const database=await getDB();
+  const tx=database.transaction(DB_STORE,'readonly');
   const req=tx.objectStore(DB_STORE).getAll();
-  return new Promise((res,rej)=>{req.onsuccess=()=>res(req.result||[]);req.onerror=()=>rej(req.error);});
+  return new Promise((res,rej)=>{
+    req.onsuccess=()=>res(req.result||[]);
+    req.onerror=()=>rej(req.error||new Error('動画一覧を取得できません'));
+  });
 }
 async function dbDel(id){
-  const tx=db.transaction(DB_STORE,'readwrite');
+  const database=await getDB();
+  const tx=database.transaction(DB_STORE,'readwrite');
   tx.objectStore(DB_STORE).delete(id);
-  return new Promise((res,rej)=>{tx.oncomplete=res;tx.onerror=()=>rej(tx.error);});
+  return new Promise((res,rej)=>{
+    tx.oncomplete=res;
+    tx.onerror=()=>rej(tx.error||new Error('削除に失敗しました'));
+    tx.onabort=()=>rej(tx.error||new Error('削除が中止されました'));
+  });
 }
 
 // ─── State ───
@@ -1923,26 +1941,38 @@ async function renderLibrary(){
     });
   });
   body.querySelectorAll('.rec-btn').forEach(btn=>{
-    btn.addEventListener('click',async()=>{
+    btn.addEventListener('click',async e=>{
+      // カード本体のクリック処理へバブリングさせない
+      e.preventDefault();
+      e.stopPropagation();
       const {action,id}=btn.dataset;
-      const all=await dbGetAll();
-      const v=all.find(x=>x.id===id);
-      if(!v) return;
-      if(action==='dl') dlVideo(v);
-      else if(action==='del'){
-        // confirmなし・DOM操作のみで削除（ツールバー表示防止）
-        await dbDel(id);
-        const card=btn.closest('.rec-card');
-        if(card) card.remove();
-        // 件数更新
-        const remaining=document.querySelectorAll('.rec-card').length;
-        const countEl=document.getElementById('libCount');
-        if(countEl) countEl.textContent=`${remaining} FILE${remaining!==1?'S':''}`;
-        if(remaining===0){
-          document.getElementById('libBody').innerHTML=`<div class="lib-empty"><div style="font-size:36px;opacity:0.3">🎬</div><div>NO RECORDINGS YET</div></div>`;
+      try{
+        const all=await dbGetAll();
+        const v=all.find(x=>String(x.id)===String(id));
+        if(!v){
+          showToast('動画が見つかりません');
+          return;
         }
+        if(action==='dl'){
+          dlVideo(v);
+        } else if(action==='del'){
+          await dbDel(id);
+          const card=btn.closest('.rec-card');
+          if(card) card.remove();
+          const remaining=document.querySelectorAll('.rec-card').length;
+          const countEl=document.getElementById('libCount');
+          if(countEl) countEl.textContent=`${remaining} FILE${remaining!==1?'S':''}`;
+          if(remaining===0){
+            document.getElementById('libBody').innerHTML=`<div class="lib-empty"><div style="font-size:36px;opacity:0.3">🎬</div><div>NO RECORDINGS YET</div></div>`;
+          }
+          showToast('削除しました');
+        } else if(action==='preview'){
+          openPreview(v);
+        }
+      }catch(err){
+        console.error('Library action failed',err);
+        showToast(action==='del'?'削除できませんでした':'動画を開けませんでした');
       }
-      else if(action==='preview') openPreview(v);
     });
   });
 }
@@ -2020,6 +2050,9 @@ function openPreview(v){
     ` · ${fmtTime(v.duration||0)}`;
   previewCurrentRec=v;
   showScreen('previewModal');
+  // クリック操作を起点にした場合は、可能ならすぐ再生する。
+  const playPromise=vid.play();
+  if(playPromise&&typeof playPromise.catch==='function') playPromise.catch(()=>{});
 }
 function closePreview(){
   clearPreviewVideo();
