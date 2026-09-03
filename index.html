@@ -401,7 +401,8 @@ overflow:hidden;position:relative;
 .music-artist{font-size:11px;color:var(--txt2);margin-top:2px}
 .music-dur{font-family:var(--mono);font-size:11px;color:var(--txt3);flex-shrink:0}
 .music-more{display:none}
-.rec-card{display:flex;align-items:center;gap:12px;padding:14px;border:1px solid var(--border2);border-radius:14px;margin-bottom:8px;background:var(--card);position:relative;overflow:hidden}
+.rec-card{display:flex;align-items:center;gap:12px;padding:14px;border:1px solid var(--border2);border-radius:14px;margin-bottom:8px;background:var(--card);position:relative;overflow:hidden;cursor:pointer}
+.rec-card:focus-visible{outline:2px solid var(--g);outline-offset:2px}
 .rec-card::before{content:’’;position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--g);opacity:0.4}
 .rec-thumb{width:46px;height:46px;border-radius:10px;background:var(--g-soft);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
 .rec-info{flex:1;min-width:0}
@@ -1359,6 +1360,7 @@ let customAlbumArtImage=null; // カスタムアルバム画像
 let pendingBlob=null, pendingMime='', pendingSec=0;
 let facingMode='environment';
 let previewCurrentRec=null;
+let previewUrl=null;
 let songIdx=0;
 // ② フェイクモード vs 本物モード
 let isRealMode=false;
@@ -1771,10 +1773,12 @@ async function startRecording(){
   }
   chunks=[]; const mime=getSupportedMime();
   mediaRecorder=new MediaRecorder(stream,mime?{mimeType:mime}:{});
+  // 実際にレコーダーが採用したMIMEタイプを保存し、再生側との不整合を防ぐ
+  pendingMime=mediaRecorder.mimeType||mime||'video/webm';
   mediaRecorder.ondataavailable=e=>{if(e.data.size>0)chunks.push(e.data);};
   mediaRecorder.onstop=onRecStop;
   mediaRecorder.start(500); // 500ms毎にデータ収集（安定化）
-  isRecording=true; recSec=0; pendingMime=mime||'video/webm';
+  isRecording=true; recSec=0;
 
   // UI changes
   document.getElementById('btnPlay').classList.add('recording');
@@ -1887,7 +1891,7 @@ async function renderLibrary(){
     const ts=`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
     const cam=v.facing==='user'?'Front':'Back';
     return `
-      <div class="rec-card">
+      <div class="rec-card" data-id="${v.id}" role="button" tabindex="0" aria-label="録画を開く">
         <div class="rec-thumb">🎬</div>
         <div class="rec-info">
           <div class="rec-date">${ds} ${ts}</div>
@@ -1900,6 +1904,24 @@ async function renderLibrary(){
         </div>
       </div>`;
   }).join('');
+  // カード全体のタップでもプレビューを開けるようにする。
+  // 操作ボタン上のタップは、各ボタン固有の処理へ委譲する。
+  body.querySelectorAll('.rec-card').forEach(card=>{
+    const openCard=async()=>{
+      const all=await dbGetAll();
+      const v=all.find(x=>x.id===card.dataset.id);
+      if(v) openPreview(v);
+    };
+    card.addEventListener('click',e=>{
+      if(!e.target.closest('.rec-btn')) openCard();
+    });
+    card.addEventListener('keydown',e=>{
+      if((e.key==='Enter'||e.key===' ')&&!e.target.closest('.rec-btn')){
+        e.preventDefault();
+        openCard();
+      }
+    });
+  });
   body.querySelectorAll('.rec-btn').forEach(btn=>{
     btn.addEventListener('click',async()=>{
       const {action,id}=btn.dataset;
@@ -1955,23 +1977,52 @@ function dlVideo(v){
 }
 
 // ─── Preview (from library or gallery button) ───
-function openPreview(v){
-  const blob=new Blob([v.data],{type:v.mimeType});
-  const url=URL.createObjectURL(blob);
+function getVideoBlob(v){
+  if(!v||!v.data) return null;
+  const fallbackMime=v.ext==='mp4'?'video/mp4':'video/webm';
+  const mimeType=v.mimeType||fallbackMime;
+  // IndexedDBの旧データ（Blob）と現行データ（ArrayBuffer）の両方を再生可能にする
+  if(v.data instanceof Blob){
+    return v.data.type?v.data:v.data.slice(0,v.data.size,mimeType);
+  }
+  return new Blob([v.data],{type:mimeType});
+}
+function clearPreviewVideo(){
   const vid=document.getElementById('previewVideo');
+  vid.onerror=null;
   vid.pause();
-  vid.src=url;
+  vid.removeAttribute('src');
+  vid.load();
+  if(previewUrl){
+    URL.revokeObjectURL(previewUrl);
+    previewUrl=null;
+  }
+}
+function openPreview(v){
+  const blob=getVideoBlob(v);
+  if(!blob||blob.size===0){
+    showToast('動画データを読み込めません');
+    return;
+  }
+  clearPreviewVideo();
+  const vid=document.getElementById('previewVideo');
+  previewUrl=URL.createObjectURL(blob);
+  vid.onerror=()=>{
+    document.getElementById('previewMeta').textContent='この動画は再生できません';
+    showToast('動画を再生できません');
+  };
+  vid.src=previewUrl;
   vid.load();
   vid.autoplay=false;
   const d=new Date(v.timestamp);
   document.getElementById('previewMeta').textContent=
-    `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')} · ${fmtTime(v.duration||0)}`;
+    `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`+
+    ` · ${fmtTime(v.duration||0)}`;
   previewCurrentRec=v;
   showScreen('previewModal');
 }
 function closePreview(){
-  const vid=document.getElementById('previewVideo');
-  vid.pause(); vid.src='';
+  clearPreviewVideo();
   previewCurrentRec=null;
   showScreen('libraryPanel');
 }
