@@ -1371,6 +1371,11 @@ async function dbDel(id){
 let stream=null;
 let mediaRecorder=null;
 let chunks=[];
+let appInitPromise=null;
+let appInitialized=false;
+let libraryOpenPromise=null;
+let libraryRenderPromise=null;
+let libraryActionBusy=false;
 let isRecording=false;
 let recSec=0, timerInt=null;
 let playerSec=0, playerInt=null, playerPlaying=false;
@@ -1397,14 +1402,18 @@ const QUEUE=[
 ];
 
 function getSupportedMime(){
-  const t=[
-    'video/mp4;codecs=avc1,mp4a.40.2',
-    'video/mp4',
-    'video/webm;codecs=vp9,opus',
-    'video/webm;codecs=vp8,opus',
-    'video/webm'
+  if(typeof MediaRecorder==='undefined') return '';
+  // Chrome/AndroidではWebMを優先する。MP4を先に選ぶと、環境によって
+  // コンテナだけMP4で中身が再生できない録画になることがある。
+  const isApple=/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent);
+  const types=isApple?[
+    'video/mp4;codecs=avc1.42E01E,mp4a.40.2','video/mp4',
+    'video/webm;codecs=vp8,opus','video/webm'
+  ]:[
+    'video/webm;codecs=vp8,opus','video/webm;codecs=vp9,opus','video/webm',
+    'video/mp4;codecs=avc1,mp4a.40.2','video/mp4'
   ];
-  return t.find(m=>MediaRecorder.isTypeSupported(m))||'';
+  return types.find(m=>MediaRecorder.isTypeSupported(m))||'';
 }
 function fmtTime(s){return `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`}
 let toastTm;
@@ -1790,7 +1799,12 @@ async function startRecording(){
     if(!ok) return;
   }
   chunks=[]; const mime=getSupportedMime();
-  mediaRecorder=new MediaRecorder(stream,mime?{mimeType:mime}:{});
+  try{
+    mediaRecorder=new MediaRecorder(stream,mime?{mimeType:mime}:{});
+  }catch(err){
+    console.warn('Preferred recorder format unavailable; using browser default',err);
+    mediaRecorder=new MediaRecorder(stream);
+  }
   // 実際にレコーダーが採用したMIMEタイプを保存し、再生側との不整合を防ぐ
   pendingMime=mediaRecorder.mimeType||mime||'video/webm';
   mediaRecorder.ondataavailable=e=>{if(e.data.size>0)chunks.push(e.data);};
@@ -1888,14 +1902,29 @@ document.getElementById('btnDiscard').addEventListener('click',()=>{
 
 // ─── Library ───
 async function openLibrary(){
-  await renderLibrary();
-  showScreen('libraryPanel');
+  // ライブラリの連打による並列描画・イベント重複を防ぐ
+  if(libraryOpenPromise) return libraryOpenPromise;
+  libraryOpenPromise=(async()=>{
+    try{
+      await renderLibrary();
+      showScreen('libraryPanel');
+      setActiveNav('navMusicLib');
+    }catch(e){
+      console.error('Open library failed',e);
+      showToast('動画ライブラリを開けませんでした');
+    }finally{
+      libraryOpenPromise=null;
+    }
+  })();
+  return libraryOpenPromise;
 }
 function closeLibrary(){
   showScreen('musicLibPanel');
   setActiveNav('navMusicLib');
 }
 async function renderLibrary(){
+  if(libraryRenderPromise) return libraryRenderPromise;
+  libraryRenderPromise=(async()=>{
   const vids=(await dbGetAll()).sort((a,b)=>b.timestamp-a.timestamp);
   document.getElementById('libCount').textContent=`${vids.length} FILE${vids.length!==1?'S':''}`;
   const body=document.getElementById('libBody');
@@ -1944,6 +1973,8 @@ async function renderLibrary(){
     btn.addEventListener('click',async e=>{
       // カード本体のクリック処理へバブリングさせない
       e.preventDefault();
+      if(libraryActionBusy) return;
+      libraryActionBusy=true;
       e.stopPropagation();
       const {action,id}=btn.dataset;
       try{
@@ -1972,12 +2003,20 @@ async function renderLibrary(){
       }catch(err){
         console.error('Library action failed',err);
         showToast(action==='del'?'削除できませんでした':'動画を開けませんでした');
+      }finally{
+        libraryActionBusy=false;
       }
     });
   });
+  })().finally(()=>{libraryRenderPromise=null;});
+  return libraryRenderPromise;
 }
 function dlVideo(v){
-  const blob=new Blob([v.data],{type:v.mimeType});
+  const blob=getVideoBlob(v);
+  if(!blob||blob.size===0){
+    showToast('動画データを読み込めません');
+    return;
+  }
   const url=URL.createObjectURL(blob);
   const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
   const d=new Date(v.timestamp);
@@ -2204,27 +2243,39 @@ function buildQueue(){
 
 // ─── Init ───
 async function initApp(realMode=false){
-  try {
-    isRealMode = realMode;
+  // Start / MUSIC PRAYER の連打で初期化処理が重複しないようにする
+  if(appInitPromise){
+    await appInitPromise;
+    if(appInitialized) isRealMode=realMode;
+    return;
+  }
+  if(appInitialized){
+    isRealMode=realMode;
+    return;
+  }
+  appInitPromise=(async()=>{
+    isRealMode=realMode;
     document.getElementById('permScreen').classList.add('gone');
     document.getElementById('mainApp').classList.add('visible');
-    
-    // IndexedDB初期化（失敗しても続行）
-    try { db = await openDB(); } catch(e) { console.error('DB init failed', e); }
-    
+    try { db=await openDB(); } catch(e) { console.error('DB init failed',e); }
     drawAlbumArt(document.getElementById('albumCanvas'),800,140,0);
     buildWaveform();
     buildQueue();
     buildMusicLibrary();
     loadMemos();
-    
-    setTimeout(attachZeroMeridianLink, 100);
+    attachZeroMeridianLink();
     playerPlaying=false;
     setWave(false);
     loadCamSettings();
-  } catch(e) {
-    console.error('App init failed', e);
-    alert('Failed to start app. Please refresh.');
+    appInitialized=true;
+  })();
+  try{
+    await appInitPromise;
+  }catch(e){
+    console.error('App init failed',e);
+    showToast('アプリを初期化できませんでした');
+  }finally{
+    appInitPromise=null;
   }
 }
 
@@ -2419,11 +2470,14 @@ document.getElementById('btnMemoEraser').addEventListener('click',()=>{
 
 // ── Bottom nav events ──
 
-// 下のLibrary → フェイクモードでも開く（ただしカメラライブラリには遷移不可）
-document.getElementById('navMusicLib').addEventListener('click',()=>{
-  setActiveNav('navMusicLib');
-  showScreen('musicLibPanel');
-});
+  // 下のLibraryから録画ライブラリを直接開く
+  document.getElementById('navMusicLib').addEventListener('click',()=>{
+    if(isRecording){
+      showToast('録画を停止してから開いてください');
+      return;
+    }
+    openLibrary();
+  });
 
 // 音楽ライブラリの戻るボタン → ホームへ
 document.getElementById('btnCloseMusicLib').addEventListener('click',()=>{
@@ -2431,10 +2485,10 @@ document.getElementById('btnCloseMusicLib').addEventListener('click',()=>{
   setActiveNav('navHome');
 });
 
-// 録画ライブラリの戻るボタン → 音楽ライブラリへ戻る
-document.getElementById('btnCloseLib').addEventListener('click',()=>{
-  showScreen('musicLibPanel');
-  setActiveNav('navMusicLib');
+// 録画ライブラリの戻るボタン → ホームへ戻る
+ document.getElementById('btnCloseLib').addEventListener('click',()=>{
+  showScreen(null);
+  setActiveNav('navHome');
 });
 
 // Profile → リセット機能（スタート画面に戻る）
