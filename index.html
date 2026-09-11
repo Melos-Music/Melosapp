@@ -348,6 +348,23 @@ height:auto;min-height:64px;
 .clock-actions{display:flex;justify-content:center;gap:10px}.clock-action{min-width:110px;padding:12px 18px;border:1px solid var(--border);border-radius:12px;background:var(--card);color:var(--txt);font-weight:700;cursor:pointer}.clock-action.primary{background:var(--g);border-color:var(--g);color:#081009}
 .timer-inputs{display:flex;justify-content:center;gap:8px;margin:24px 0}.timer-inputs input{width:82px;padding:12px 8px;border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--txt);font-family:var(--mono);font-size:20px;text-align:center}.timer-inputs label{display:flex;flex-direction:column;gap:5px;font-size:10px;color:var(--txt3);letter-spacing:.08em}
 
+/* Apple-style clock overrides */
+.clock-panel{background:#f2f2f7;color:#1c1c1e;backdrop-filter:none;opacity:1}
+.clock-header{background:#fff;border-bottom:1px solid #d1d1d6;padding:16px 20px}
+.clock-brand,.tattoo-wordmark{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;font-size:23px;font-weight:800;letter-spacing:.08em;color:#1c1c1e;text-shadow:none}
+.clock-header .btn-back{background:#f2f2f7;color:#007aff;border:1px solid #d1d1d6}
+.clock-body{background:#f2f2f7;color:#1c1c1e;padding:32px 20px 112px}
+.clock-face{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;font-size:58px;font-weight:300;letter-spacing:-.04em;color:#1c1c1e;text-shadow:none;margin:36px 0 6px}
+.clock-face.recording{color:#34c759;text-shadow:none}
+.clock-date{color:#8e8e93;font-size:15px;margin-bottom:28px}
+.clock-tabs{background:rgba(255,255,255,.98);border-top:1px solid #d1d1d6;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));backdrop-filter:none}
+.clock-tab{border:0;border-radius:9px;background:#e5e5ea;color:#3a3a3c;font-size:13px;font-weight:600;padding:12px 8px}
+.clock-tab.active{background:#007aff;border-color:#007aff;color:#fff}
+.clock-mode{color:#3a3a3c}.clock-mode>div:first-child{color:#8e8e93!important}
+.clock-value{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;font-size:54px;font-weight:300;letter-spacing:-.04em;color:#1c1c1e;margin:28px 0}
+.clock-actions{gap:12px}.clock-action{min-width:120px;padding:13px 20px;border:0;border-radius:12px;background:#e5e5ea;color:#1c1c1e;font-size:15px;font-weight:600}.clock-action.primary{background:#007aff;border-color:#007aff;color:#fff}
+.timer-fixed{margin:24px auto 4px;color:#8e8e93;font-size:15px}.timer-fixed strong{display:block;margin-top:6px;color:#1c1c1e;font-size:17px;font-weight:600}
+
 /* ══ LIBRARY PANEL ══ */
 .library-panel{
 position:fixed;inset:0;z-index:50;
@@ -1107,8 +1124,8 @@ color:var(--g);
       <div class="clock-actions"><button class="clock-action primary" id="stopwatchStart">開始</button><button class="clock-action" id="stopwatchReset">リセット</button></div>
     </section>
     <section class="clock-mode" id="clockModeTimer">
-      <div class="timer-inputs"><label>分<input id="timerMinutes" type="number" min="0" max="999" value="1"></label><label>秒<input id="timerSeconds" type="number" min="0" max="59" value="0"></label></div>
-      <div class="clock-value" id="timerDisplay">01:00</div>
+      <div class="timer-fixed">固定タイマー<strong>60分</strong></div>
+      <div class="clock-value" id="timerDisplay">60:00</div>
       <div class="clock-actions"><button class="clock-action primary" id="timerStart">開始</button><button class="clock-action" id="timerReset">リセット</button></div>
     </section>
   </div>
@@ -2393,8 +2410,9 @@ let stopwatchTicker=null;
 let stopwatchElapsed=0;
 let stopwatchRunning=false;
 let timerTicker=null;
-let timerRemaining=0;
+let timerRemaining=60*60;
 let timerRunning=false;
+let timerAudioContext=null;
 function pad2(n){return String(n).padStart(2,'0');}
 function formatStopwatch(ms){const tenths=Math.floor(ms/100)%10;const total=Math.floor(ms/1000);return `${pad2(Math.floor(total/60))}:${pad2(total%60)}.${tenths}`;}
 function formatTimer(sec){return `${pad2(Math.floor(Math.max(0,sec)/60))}:${pad2(Math.max(0,sec)%60)}`;}
@@ -2428,21 +2446,32 @@ function toggleStopwatch(){
   else{window._stopwatchStarted=Date.now();stopwatchRunning=true;document.getElementById('stopwatchStart').textContent='停止';stopwatchTicker=setInterval(()=>{document.getElementById('stopwatchDisplay').textContent=formatStopwatch(stopwatchElapsed+Date.now()-window._stopwatchStarted);},50);}
 }
 function renderTimer(){document.getElementById('timerDisplay').textContent=formatTimer(timerRemaining);}
-function resetTimer(){timerRunning=false;timerRemaining=(Number(document.getElementById('timerMinutes').value)||0)*60+(Number(document.getElementById('timerSeconds').value)||0);if(timerTicker){clearInterval(timerTicker);timerTicker=null;}renderTimer();document.getElementById('timerStart').textContent='開始';}
+function resetTimer(){timerRunning=false;timerRemaining=60*60;if(timerTicker){clearInterval(timerTicker);timerTicker=null;}renderTimer();document.getElementById('timerStart').textContent='開始';}
+function playTimerSound(){
+  try{
+    const AudioCtx=window.AudioContext||window.webkitAudioContext;
+    if(!AudioCtx) return;
+    timerAudioContext=timerAudioContext||new AudioCtx();
+    timerAudioContext.resume();
+    [0,0.35,0.7].forEach((delay,i)=>{
+      const osc=timerAudioContext.createOscillator();const gain=timerAudioContext.createGain();
+      osc.type='sine';osc.frequency.value=i===1?1046.5:880;gain.gain.setValueAtTime(.0001,timerAudioContext.currentTime+delay);gain.gain.exponentialRampToValueAtTime(.28,timerAudioContext.currentTime+delay+.02);gain.gain.exponentialRampToValueAtTime(.0001,timerAudioContext.currentTime+delay+.25);osc.connect(gain).connect(timerAudioContext.destination);osc.start(timerAudioContext.currentTime+delay);osc.stop(timerAudioContext.currentTime+delay+.27);
+    });
+  }catch(e){console.warn('Timer sound unavailable',e);}
+}
 function toggleTimer(){
   if(timerRunning){timerRunning=false;clearInterval(timerTicker);timerTicker=null;document.getElementById('timerStart').textContent='再開';return;}
   if(timerRemaining<=0) resetTimer();
-  if(timerRemaining<=0){showToast('時間を設定してください');return;}
+  timerAudioContext=timerAudioContext||((window.AudioContext||window.webkitAudioContext)?new (window.AudioContext||window.webkitAudioContext)():null);
+  if(timerAudioContext) timerAudioContext.resume();
   timerRunning=true;document.getElementById('timerStart').textContent='停止';
-  timerTicker=setInterval(()=>{timerRemaining--;renderTimer();if(timerRemaining<=0){timerRunning=false;clearInterval(timerTicker);timerTicker=null;document.getElementById('timerStart').textContent='開始';showToast('タイマー終了');}},1000);
+  timerTicker=setInterval(()=>{timerRemaining--;renderTimer();if(timerRemaining<=0){timerRunning=false;clearInterval(timerTicker);timerTicker=null;document.getElementById('timerStart').textContent='開始';playTimerSound();showToast('タイマー終了');}},1000);
 }
 document.querySelectorAll('.clock-tab').forEach(tab=>tab.addEventListener('click',()=>setClockMode(tab.dataset.clockMode)));
 document.getElementById('stopwatchStart').addEventListener('click',toggleStopwatch);
 document.getElementById('stopwatchReset').addEventListener('click',resetStopwatch);
 document.getElementById('timerStart').addEventListener('click',toggleTimer);
 document.getElementById('timerReset').addEventListener('click',resetTimer);
-document.getElementById('timerMinutes').addEventListener('input',()=>{if(!timerRunning) resetTimer();});
-document.getElementById('timerSeconds').addEventListener('input',()=>{if(!timerRunning) resetTimer();});
 document.getElementById('currentTimeDisplay').addEventListener('click',toggleClockRecording);
 document.getElementById('clockHomeButton').addEventListener('click',()=>{showScreen(null);setActiveNav('navHome');});
 document.getElementById('btnCloseClock').addEventListener('click',()=>{showScreen(null);setActiveNav('navHome');});
