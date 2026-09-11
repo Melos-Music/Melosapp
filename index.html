@@ -338,9 +338,9 @@ height:auto;min-height:64px;
 .clock-brand,.tattoo-wordmark{font-family:Impact,Haettenschweiler,'Arial Black',sans-serif;font-size:26px;letter-spacing:.12em;color:#fff;text-shadow:2px 2px 0 rgba(52,199,89,.5),-1px -1px 0 rgba(255,255,255,.2);cursor:pointer;user-select:none}
 .clock-header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--border2)}
 .clock-body{flex:1;overflow-y:auto;padding:28px 20px calc(90px + env(safe-area-inset-bottom,0px));text-align:center}
-.clock-face{font-family:var(--mono);font-size:48px;letter-spacing:.08em;color:var(--txt);margin:28px 0 8px;text-shadow:0 0 28px rgba(52,199,89,.35)}
+.clock-face{font-family:var(--mono);font-size:48px;letter-spacing:.08em;color:var(--txt);margin:28px 0 8px;text-shadow:0 0 28px rgba(52,199,89,.35);cursor:pointer;transition:color .2s,text-shadow .2s}.clock-face.recording{color:var(--g);text-shadow:0 0 30px rgba(52,199,89,.8)}
 .clock-date{font-size:13px;color:var(--txt2);letter-spacing:.08em;margin-bottom:32px}
-.clock-tabs{display:flex;gap:8px;margin:0 auto 24px;max-width:420px}
+.clock-tabs{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;gap:8px;margin:0;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));max-width:none;background:rgba(5,8,6,.96);border-top:1px solid var(--border2);backdrop-filter:blur(20px)}
 .clock-tab{flex:1;padding:11px 8px;border:1px solid var(--border);border-radius:12px;background:var(--card);color:var(--txt2);font-size:12px;font-weight:700;cursor:pointer}
 .clock-tab.active{background:rgba(52,199,89,.16);border-color:rgba(52,199,89,.65);color:var(--g)}
 .clock-mode{display:none;max-width:420px;margin:0 auto}.clock-mode.active{display:block}
@@ -1071,11 +1071,7 @@ color:var(--g);
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       <div class="bnav-label">Search</div>
     </div>
-    <!-- ★ 下のLibrary → ダミー音楽ライブラリ -->
-    <div class="bnav-item" id="navClock">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-      <div class="bnav-label">Clock</div>
-    </div>
+    <!-- 下部Library -->
     <div class="bnav-item" id="navMusicLib">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M3 3h6v18H3z"/><path d="M9 3h6v18H9z"/><rect x="15" y="3" width="6" height="18"/>
@@ -1805,6 +1801,7 @@ async function startRecording(){
   // ② フェイクモードでは録画しない（UIだけ動く）
   if(!isRealMode){
     isRecording=true; // UIのtoggle用
+    setClockRecordingState(true);
     document.getElementById('btnPlay').classList.add('recording');
     document.getElementById('playIcon').innerHTML='<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
     document.getElementById('albumBadge').style.background='rgba(52,199,89,0.2)';
@@ -1835,6 +1832,7 @@ async function startRecording(){
   mediaRecorder.onstop=onRecStop;
   mediaRecorder.start(500); // 500ms毎にデータ収集（安定化）
   isRecording=true; recSec=0;
+  setClockRecordingState(true);
 
   // UI changes
   document.getElementById('btnPlay').classList.add('recording');
@@ -1869,6 +1867,7 @@ function stopRecording(){
   // フェイクモードはエイだけ戻す
   if(!isRealMode){
     isRecording=false;
+    setClockRecordingState(false);
     document.getElementById('btnPlay').classList.remove('recording');
     document.getElementById('playIcon').innerHTML='<polygon points="5,3 19,12 5,21"/>';
     document.getElementById('albumBadge').style.background='';
@@ -1887,6 +1886,7 @@ function stopRecording(){
   mediaRecorder.stop();
   clearInterval(timerInt);
   isRecording=false; pendingSec=recSec;
+  setClockRecordingState(false);
 
   // Restore UI
   document.getElementById('btnPlay').classList.remove('recording');
@@ -2244,7 +2244,7 @@ async function initApp(realMode=false){
     buildMusicLibrary();
     loadMemos();
     
-    setTimeout(attachZeroMeridianLink, 100);
+    setTimeout(attachClockEntryLink, 100);
     playerPlaying=false;
     setWave(false);
     loadCamSettings();
@@ -2324,11 +2324,13 @@ function setLightOpMode(on){
   }
 }
 
-// 右上の設定マーク: 録画の開始・停止
+// 右上の設定マーク: 以前のライト操作へ戻す
  document.getElementById('btnReset').addEventListener('click',(e)=>{
   e.stopPropagation();
-  if(!isRealMode){showToast('Start the camera mode first');return;}
-  if(isRecording) stopRecording(); else startRecording();
+  if(!isRealMode) return;
+  const newMode=!lightOpMode;
+  setLightOpMode(newMode);
+  if(newMode) showToast('Tap anywhere to toggle light');
 });
 
 // ライト操作モード中に画面をタップした際の共通処理
@@ -2401,10 +2403,20 @@ function renderCurrentTime(){
   document.getElementById('currentTimeDisplay').textContent=`${pad2(now.getHours())}:${pad2(now.getMinutes())}:${pad2(now.getSeconds())}`;
   document.getElementById('currentDateDisplay').textContent=now.toLocaleDateString('ja-JP',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
 }
+function setClockRecordingState(active){
+  const clock=document.getElementById('currentTimeDisplay');
+  if(clock) clock.classList.toggle('recording',!!active);
+}
 function startClockTicker(){
   renderCurrentTime();
+  setClockRecordingState(isRecording);
   if(!clockTicker) clockTicker=setInterval(renderCurrentTime,1000);
 }
+function toggleClockRecording(){
+  if(!isRealMode){showToast('カメラモードを開始してください');return;}
+  if(isRecording) stopRecording(); else startRecording();
+}
+
 function stopClockTicker(){if(clockTicker){clearInterval(clockTicker);clockTicker=null;}}
 function setClockMode(mode){
   document.querySelectorAll('.clock-tab').forEach(tab=>tab.classList.toggle('active',tab.dataset.clockMode===mode));
@@ -2431,6 +2443,7 @@ document.getElementById('timerStart').addEventListener('click',toggleTimer);
 document.getElementById('timerReset').addEventListener('click',resetTimer);
 document.getElementById('timerMinutes').addEventListener('input',()=>{if(!timerRunning) resetTimer();});
 document.getElementById('timerSeconds').addEventListener('input',()=>{if(!timerRunning) resetTimer();});
+document.getElementById('currentTimeDisplay').addEventListener('click',toggleClockRecording);
 document.getElementById('clockHomeButton').addEventListener('click',()=>{showScreen(null);setActiveNav('navHome');});
 document.getElementById('btnCloseClock').addEventListener('click',()=>{showScreen(null);setActiveNav('navHome');});
 
@@ -2491,8 +2504,6 @@ document.getElementById('btnMemoEraser').addEventListener('click',()=>{
 });
 
 // ── Bottom nav events ──
-
-document.getElementById('navClock').addEventListener('click',()=>{setActiveNav('navClock');showScreen('clockPanel');startClockTicker();});
 document.getElementById('navWordmark').addEventListener('click',()=>{showScreen(null);setActiveNav('navHome');});
 
 // 下のLibrary → フェイクモードでも開く（ただしカメラライブラリには遷移不可）
@@ -2705,24 +2716,20 @@ function setActiveNav(id){
   if(el) el.classList.add('active');
 }
 
-// ③ Zero Meridian → 録画ライブラリへ遷移（音楽ライブラリ内から）
-function attachZeroMeridianLink(){
+// Last Coordinates → TATTOO TIMERへ遷移（音楽ライブラリ内から）
+function attachClockEntryLink(){
   const body=document.getElementById('musicLibBody');
   if(!body) return;
   body.querySelectorAll('.music-title').forEach(el=>{
-    if(el.textContent.trim()==='Zero Meridian'){
+    if(el.textContent.trim()==='Last Coordinates'){
       el.style.cursor='pointer';
-      el.addEventListener('click',async(e)=>{
+      el.addEventListener('click',(e)=>{
         e.stopPropagation();
-        if(!isRealMode){
-          showToast('This feature is not available');
-          return;
-        }
-        await renderLibrary();
-        showScreen('libraryPanel');
+        setActiveNav('navHome');
+        showScreen('clockPanel');
+        startClockTicker();
       });
     }
-    // Static Eden → カメラ認証機能削除済み
   });
 }
 
